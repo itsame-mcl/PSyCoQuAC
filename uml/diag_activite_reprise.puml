@@ -1,0 +1,25 @@
+@startuml "Reprise d'une fiche"
+start
+:Chargement de la fiche à reprendre;
+while (Corrections à appliquer ?) is (oui)
+    if (Choix de l'utilisateur ?) then (adresse)
+        :Correction de l'adresse;
+        :Recherche API;
+    else (géocodage)
+        :Saisie manuelle de la géolocalisation;
+        :Recherche inverse API;
+    endif
+    :Contrôle du résultat API;
+    if (Résultat API valide ?) then (oui)
+        break
+    else (non)
+    endif
+endwhile (non)
+if (Fiche exploitable ?) then (oui)
+    :Valider la fiche;
+else (non)
+    :Rejeter la fiche;
+endif
+:Enregistrement de la fiche reprise;
+stop
+@enduml

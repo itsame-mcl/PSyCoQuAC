@@ -1,0 +1,53 @@
+@startuml "Diagramme de Cas d'Utilisation"
+left to right direction
+
+rectangle "Equipe" {
+    :Gestionnaire: as user
+    :Superviseur: as admin
+    user <|-- admin
+}
+
+rectangle "Fiches Adresses" {
+    usecase "Importer un lot" as importer
+    usecase api as "Géocoder une/des fiche(s)
+    via l'API BAN"
+    (importer) .> (api) : includes
+    usecase "Exporter un lot" as exporter
+    usecase "Contrôler une fiche" as controler
+    usecase "Reprendre une fiche" as reprendre
+    (api) .> (reprendre) : extends
+    (reprendre) .> (controler) : extends
+}
+
+rectangle "Ressources Humaines"{
+    usecase viewwork as "Visualiser le travail
+    à réaliser"
+    usecase adduser as "Ajouter
+    un gestionnaire"
+    usecase edituser as "Modifier
+    un gestionnaire"
+    usecase deluser as "Supprimer
+    un gestionnaire"
+    usecase "Gérer l'équipe" as usermgt
+    (adduser) .> (usermgt) : extends
+    (edituser) .> (usermgt) : extends
+    (deluser) .> (usermgt) : extends
+    usecase affecter as "Répartir le travail
+    entre les gestionnaires"
+    usecase calcwork as "Calculer la capacité
+    de travail de l'équipe"
+    (affecter) .> (calcwork) : includes
+    usecase deleguer as "Déléguer le travail
+    à une autre équipe"
+}
+
+user --> controler
+user -> reprendre
+user --> viewwork
+admin -> importer
+admin --> exporter
+admin --> affecter
+admin ---> usermgt
+admin ---> deleguer
+
+@enduml
