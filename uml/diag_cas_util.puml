@@ -1,49 +1,43 @@
 @startuml "uml_cas"
 left to right direction
 
-rectangle "Equipe" {
-    :Gestionnaire: as user
-    :Superviseur: as admin
-    user <|-- admin
-}
+:Gestionnaire: as user
+:Superviseur: as admin
+user <|-- admin
 
-rectangle "Fiches Adresses" {
-    usecase "Importer un lot" as importer
-    usecase api as "Géocoder une/des fiche(s)
-    via l'API BAN"
-    (importer) .> (api) : includes
-    usecase "Exporter un lot" as exporter
-    usecase "Contrôler une fiche" as controler
-    usecase "Reprendre une fiche" as reprendre
-    (api) .> (reprendre) : extends
-    (reprendre) .> (controler) : extends
+rectangle {
+    package "Fiches Adresses" {
+        usecase "Importer un lot" as importer
+        usecase api as "Géocoder une/des fiche(s)
+        via l'API BAN"
+        (importer) .> (api) : includes
+        usecase "Exporter un lot" as exporter
+        usecase "Contrôler une fiche" as controler
+        usecase "Reprendre une fiche" as reprendre
+        (api) .> (reprendre) : extends
+        (reprendre) .> (controler) : extends
+        usecase "Consulter le pot de fiches à traiter" as viewpot
+    }
+    package "Ressources Humaines"{
+        usecase viewwork as "Visualiser le travail
+        à réaliser par toute l'équipe"
+        usecase usermgt as "Gérer l'équipe
+        ==
+        Ajouter, modifier ou supprimer
+        un gestionnaire ou un superviseur"
+        usecase affecter as "Répartir le travail
+        entre les gestionnaires"
+        usecase calcwork as "Calculer la capacité
+        de travail de l'équipe"
+        (affecter) .> (calcwork) : includes
+        usecase deleguer as "Déléguer le travail
+        à une autre équipe"
+    }
 }
-
-rectangle "Ressources Humaines"{
-    usecase viewwork as "Visualiser le travail
-    à réaliser"
-    usecase adduser as "Ajouter
-    un gestionnaire"
-    usecase edituser as "Modifier
-    un gestionnaire"
-    usecase deluser as "Supprimer
-    un gestionnaire"
-    usecase "Gérer l'équipe" as usermgt
-    (adduser) .> (usermgt) : extends
-    (edituser) .> (usermgt) : extends
-    (deluser) .> (usermgt) : extends
-    usecase affecter as "Répartir le travail
-    entre les gestionnaires"
-    usecase calcwork as "Calculer la capacité
-    de travail de l'équipe"
-    (affecter) .> (calcwork) : includes
-    usecase deleguer as "Déléguer le travail
-    à une autre équipe"
-}
-
 user --> controler
 user -> reprendre
-user --> viewwork
+user ---> viewpot
+admin ---> viewwork
 admin -> importer
 admin --> exporter
 admin --> affecter
