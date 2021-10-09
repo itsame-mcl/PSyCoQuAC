@@ -1,4 +1,4 @@
-@startuml "Reprise d'une fiche"
+@startuml "uml_activite_reprise"
 start
 :Chargement de la fiche à reprendre;
 while (Corrections à appliquer ?) is (oui)

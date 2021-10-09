@@ -1,4 +1,4 @@
-@startuml FA
+@startuml "uml_etat"
 hide empty description
 state imp <<choice>>
 state api <<choice>>
