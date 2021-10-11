@@ -6,21 +6,24 @@ state ech <<choice>>
 state ctr <<choice>>
 state rep <<choice>>
 
-[*] -> imp
-imp -> Importée
-imp --> Déchet : inexploitable
-Importée -> api
-api -> Traitée : réussite API
-Traitée -> ech
-api --> Reprise : échec API
-ech -> Validée : non échantillonnée
-ech --> Contrôle : échantillonnée
-Contrôle -> ctr
-ctr -> Validée : correcte
-ctr --> Reprise : incorrecte
-Reprise -> rep
-rep --> Validée : corrigée
-rep -> Déchet : impossible à reprendre
-Validée --> [*]
-Déchet --> [*]
+[*] -> imp : importation
+imp -> TA : exploitable
+imp --> DI : inexploitable
+TA -> api : traitement API
+api -> TE : réussite
+TE -> ech : échantillonnage
+api --> TR : échec
+ech --> VA : non
+ech --> TC : oui
+TC -> ctr : contrôle
+ctr -> VC : correct
+ctr --> TR : incorrect
+TR -> rep : reprise
+rep --> VR : réussite
+rep -> ER : échec
+VA --> [*]
+VC --> [*]
+VR --> [*]
+ER --> [*]
+DI --> [*]
 @enduml
