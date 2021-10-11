@@ -1,7 +1,7 @@
 @startuml "uml_activite_repartition"
 skinparam ConditionEndStyle hline
 start
-group Sélection des agents
+group Affectation
 fork
 :Chargement de la liste des agents;
 :Sélection du premier agent de la liste;
@@ -20,29 +20,14 @@ fiches à reprendre;
 de reprise à affecter;
 end merge
 :Sélection des agents par le superviseur;
-:Calcul de la capacité de travail totale
-des agents sélectionnés;
+:Affectation d'une quantité de travail à
+chaque agent sélectionné par le superviseur;
+:Calcul du nombre total
+de fiches affectées;
 end group
-group Répartition des fiches
-:Initialisation d'une
-proposition de répartition;
-if (Capacité inférieure au nombre de fiches à reprendre ?) then (oui)
-    :Saturation de la capacité de
-    travail de chaque agent;
-    :Répartition des fiches supplémentaires
-    au prorata de la quotité;
-else (non)
-    :Calcul du nombre de fiches
-    pouvant être contrôlées;
-    :Saturation de la capacité de
-    travail de chaque agent;
-endif
-:Affichage de la proposition de répartition;
-if (Proposition validée par le superviseur ?) then (oui)
-else (non)
-    :Modification manuelle de la répartition;
-endif
-if (Nombre de fiches à contrôler > 0 ?) then (oui)
+group Répartiton
+if (Nombre de fiches affectées > Nombre de fiches à reprendre ?) then (oui)
+    :Calcul du nombre de fiches à contrôler;
     :Echantillonnage de la liste des
     fiches traitées par l'API;
     :Fusion des listes de contrôle
