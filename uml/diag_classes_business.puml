@@ -1,0 +1,28 @@
+@startuml "classes_business"
+class BusinessObjects.FicheAdresse
+class BusinessObjects.Modele
+class BusinessObjects.Agent
+class BusinessObjects.Session
+
+class LocalServices.Traitements.Affectation << (S,#FF7700) Singleton >>
+class LocalServices.Traitements.Echantillonnage << (S,#FF7700) Singleton >>
+class LocalServices.Traitements.FicheAdresseService << (S,#FF7700) Singleton >>
+
+abstract LocalServices.IO.Importation
+class LocalServices.IO.ImportationCSV << (S,#FF7700) Singleton >>
+LocalServices.IO.Importation <|-- LocalServices.IO.ImportationCSV
+abstract LocalServices.IO.Exportation
+class LocalServices.IO.ExportationCSV << (S,#FF7700) Singleton >>
+LocalServices.IO.Exportation <|-- LocalServices.IO.ExportationCSV
+class LocalServices.IO.ModeleService << (S,#FF7700) Singleton >>    
+
+class LocalServices.Gestion.SessionService << (S,#FF7700) Singleton >>
+class LocalServices.Gestion.AgentService << (S,#FF7700) Singleton >>
+
+class WebServices.BANClient << (S,#FF7700) Singleton >>
+class WebServices.BANInverseClient << (S,#FF7700) Singleton >>
+
+BusinessObjects.Agent -[hidden]--> LocalServices.Traitements.Affectation
+LocalServices.Traitements.Affectation -[hidden]> LocalServices.IO.ModeleService
+LocalServices.IO.ModeleService -[hidden]> LocalServices.Gestion.AgentService
+@enduml
