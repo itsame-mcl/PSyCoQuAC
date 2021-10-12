@@ -1,0 +1,22 @@
+@startuml "packages"
+skinparam componentStyle rectangle
+
+folder ViewLayer {
+    package UI {
+    }
+}
+folder BusinessLayer {
+    package BusinessObjects {
+    }
+    package LocalServices {
+    }
+    package WebServices {
+    }
+}
+folder DataLayer {
+    package DAO {
+    }
+    database PostgreSQL {
+    }
+}
+@enduml
