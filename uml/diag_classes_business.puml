@@ -1,12 +1,46 @@
 @startuml "classes_business"
-class BusinessObjects.FicheAdresse
-class BusinessObjects.Modele
-class BusinessObjects.Agent
-class BusinessObjects.Session
+skinparam classAttributeIconSize 0
+hide empty members
 
-class LocalServices.Traitements.Affectation << (S,#FF7700) Singleton >>
-class LocalServices.Traitements.Echantillonnage << (S,#FF7700) Singleton >>
-class LocalServices.Traitements.FicheAdresseService << (S,#FF7700) Singleton >>
+class BusinessObjects.FicheAdresse {
+    <<get>> -fiche_id : Integer
+    <<get/set>> -agent_id : Integer
+    <<get/set>> -lot_id : Integer
+    <<get>> -code_res : String
+    {field} <<get>> -adresse_initiale : Dict{numero, voie, code_postal, ville}
+    {field} <<get/set>> -adresse_finale : Dict{numero, voie, code_postal, ville}
+    {field} <<get/set>> -coords_WGS84 : Tuple(longitude, latitude)
+    <<get/set>> -additional_fields : Dict{}
+    +void modifier_code_res(String nouveau_code)
+    +String generer_adresse_requete()
+}
+abstract BusinessObjects.Agent {
+    <<get>> -agent_id : Integer
+    {field} <<get/set>> -identite : Tuple(prenom, nom)
+}
+class BusinessObjects.Superviseur
+class BusinessObjects.Gestionnaire
+BusinessObjects.Agent <|-- BusinessObjects.Superviseur
+BusinessObjects.Agent <|-- BusinessObjects.Gestionnaire
+class BusinessObjects.Modele
+class BusinessObjects.Session {
+    -utilisateur_connecte : Agent
+    +bool droits_superviseur()
+    +void fermer_session()
+}
+
+class LocalServices.TraitementsFA.AffectationService << (S,#FF7700) Singleton >> {
+    -void echantillonner_fiches(List[FicheAdresse] echantillon,
+    Integer taille_echantillon)
+    +void appliquer_affectation(Session session_utilisateur,
+    Dict {Integer id_agent, Integer fiches_affectees} repartition)
+}
+class LocalServices.TraitementsFA.ControleRepriseService << (S,#FF7700) Singleton >> {
+    +Tuple consulter_fiche(Session session_utilisateur,
+    FicheAdresse fiche, bool etat_final)
+    +void modifier_fiche(Session session_utilisateur,
+    FicheAdresse fiche, Dict{} nouvelles_informations)
+}
 
 abstract LocalServices.IO.Importation
 class LocalServices.IO.ImportationCSV << (S,#FF7700) Singleton >>
@@ -19,10 +53,12 @@ class LocalServices.IO.ModeleService << (S,#FF7700) Singleton >>
 class LocalServices.Gestion.SessionService << (S,#FF7700) Singleton >>
 class LocalServices.Gestion.AgentService << (S,#FF7700) Singleton >>
 
-class WebServices.BANClient << (S,#FF7700) Singleton >>
+class WebServices.BANClient << (S,#FF7700) Singleton >> {
+    +void 
+}
 class WebServices.BANInverseClient << (S,#FF7700) Singleton >>
 
-BusinessObjects.Agent -[hidden]--> LocalServices.Traitements.Affectation
-LocalServices.Traitements.Affectation -[hidden]> LocalServices.IO.ModeleService
+BusinessObjects.Agent -[hidden]--> LocalServices.TraitementsFA.AffectationService
+LocalServices.TraitementsFA.AffectationService -[hidden]> LocalServices.IO.ModeleService
 LocalServices.IO.ModeleService -[hidden]> LocalServices.Gestion.AgentService
 @enduml
