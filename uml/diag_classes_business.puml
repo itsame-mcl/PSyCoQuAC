@@ -11,54 +11,80 @@ class BusinessObjects.FicheAdresse {
     {field} <<get/set>> -adresse_finale : Dict{numero, voie, code_postal, ville}
     {field} <<get/set>> -coords_WGS84 : Tuple(longitude, latitude)
     <<get/set>> -additional_fields : Dict{}
-    +void modifier_code_res(String nouveau_code)
+    +bool modifier_code_res(String nouveau_code)
     +String generer_adresse_requete()
 }
 abstract BusinessObjects.Agent {
     <<get>> -agent_id : Integer
+    <<get>> -nom_utilisateur : String
     {field} <<get/set>> -identite : Tuple(prenom, nom)
 }
 class BusinessObjects.Superviseur
-class BusinessObjects.Gestionnaire
+class BusinessObjects.Gestionnaire {
+    <<get>> -superviseur_id : Integer
+}
 BusinessObjects.Agent <|-- BusinessObjects.Superviseur
 BusinessObjects.Agent <|-- BusinessObjects.Gestionnaire
 class BusinessObjects.Modele
 class BusinessObjects.Session {
-    -utilisateur_connecte : Agent
+    <<get>> -utilisateur_connecte : Agent
     +bool droits_superviseur()
-    +void fermer_session()
 }
 
 class LocalServices.TraitementsFA.AffectationService << (S,#FF7700) Singleton >> {
-    -void echantillonner_fiches(List[FicheAdresse] echantillon,
+    -List[FicheAdresse] echantillonner_fiches(List[FicheAdresse] echantillon,
     Integer taille_echantillon)
-    +void appliquer_affectation(Session session_utilisateur,
+    +bool appliquer_repartition(Session session_utilisateur,
     Dict {Integer id_agent, Integer fiches_affectees} repartition)
 }
 class LocalServices.TraitementsFA.ControleRepriseService << (S,#FF7700) Singleton >> {
     +Tuple consulter_fiche(Session session_utilisateur,
     FicheAdresse fiche, bool etat_final)
-    +void modifier_fiche(Session session_utilisateur,
+    +FicheAdresse modifier_fiche(Session session_utilisateur,
     FicheAdresse fiche, Dict{} nouvelles_informations)
+    +List[FicheAdresse] liste_fiches_a_traiter(Session session_utilisateur)
 }
 
-abstract LocalServices.IO.Importation
+abstract LocalServices.IO.ImportationService
 class LocalServices.IO.ImportationCSV << (S,#FF7700) Singleton >>
-LocalServices.IO.Importation <|-- LocalServices.IO.ImportationCSV
-abstract LocalServices.IO.Exportation
+LocalServices.IO.ImportationService <|-- LocalServices.IO.ImportationCSV
+abstract LocalServices.IO.ExportationService
 class LocalServices.IO.ExportationCSV << (S,#FF7700) Singleton >>
-LocalServices.IO.Exportation <|-- LocalServices.IO.ExportationCSV
+LocalServices.IO.ExportationService <|-- LocalServices.IO.ExportationCSV
 class LocalServices.IO.ModeleService << (S,#FF7700) Singleton >>    
 
-class LocalServices.Gestion.SessionService << (S,#FF7700) Singleton >>
-class LocalServices.Gestion.AgentService << (S,#FF7700) Singleton >>
+class LocalServices.Gestion.SessionService << (S,#FF7700) Singleton >> {
+    +Session ouvrir_session(string nom_utilisateur,
+    string mot_de_passe)
+    +bool fermer_session(Session session_a_fermer)
+}
+class LocalServices.Gestion.AgentService << (S,#FF7700) Singleton >> {
+    +Agent creer_agent(Session session_utilisateur, string prenom, string nom,
+    string nom_utilisateur, string mot_de_passe, bool est_superviseur)
+    +Agent modifier_agent(Session session_utilsateur, Agent agent_a_modifier,
+    string prenom, string nom, string mot_de_passe)
+    +Agent changer_droits(Session session_utilisateur,
+    Agent agent_a_modifier)
+    +bool supprimer_agent(Session session_utilisateur,
+    Agent agent_a_supprimer)
+}
+class LocalServices.Gestion.StatistiquesService << (S,#FF7700) Singleton >> {
+    +Dict{} fiches_par_agent(Session session_utilisateur)
+    +Dict{} fiches_par_lot(Session session_utilisateur)
+    +Dict{} fiches_par_code_res(Session session_utilisateur)
+    }
 
 class WebServices.BANClient << (S,#FF7700) Singleton >> {
-    +void 
+    +FicheAdresse geocodage_par_fiche(Session session_utilisateur,
+    FicheAdresse fiche_a_traiter)
+    +FicheAdresse reverse_par_fiche(Session session_utilisateur,
+    FicheAdresse fiche_a_traiter)
+    +List[FicheAdresse] geocodage_par_lot(Session session_utilisateur,
+    List[FicheAdresse] fiches_a_traiter)
+    +List[FicheAdresse] reverse_par_lot(Session session_utilisateur,
+    List[FicheAdresse] fiches_a_traiter)
 }
-class WebServices.BANInverseClient << (S,#FF7700) Singleton >>
 
 BusinessObjects.Agent -[hidden]--> LocalServices.TraitementsFA.AffectationService
-LocalServices.TraitementsFA.AffectationService -[hidden]> LocalServices.IO.ModeleService
-LocalServices.IO.ModeleService -[hidden]> LocalServices.Gestion.AgentService
+LocalServices.TraitementsFA.AffectationService -[hidden]> LocalServices.Gestion.AgentService
 @enduml
