@@ -1,0 +1,55 @@
+@startuml "er_bdd"
+hide circle
+hide empty methods
+skinparam linetype ortho
+
+entity "Lots" as Lots {
+    * **identifiant_lot** : integer <<generated>>
+    * date_importation : date
+}
+
+entity "FA" as FA {
+    * **identifiant_fa** : integer <<generated>>
+    identifiant_pot : smallint
+    * identifiant_lot : integer
+    * {field} code_resultat : char(2)
+    * date_dernier_traitement : date
+    {field} initial_numero : varchar(10)
+    {field} initial_voie : varchar(60)
+    {field} initial_code_postal : char(5)
+    {field} initial_ville : varchar(45)
+    {field} final_numero : varchar(10)
+    {field} final_voie : varchar(60)
+    {field} final_code_postal : char(5)
+    {field} final_ville : varchar(45)
+    coordonnees_WGS84 : point
+    champs_supplementaires : text[][]
+}
+
+entity "Agents" as Agents {
+    * **identifiant_agent** : integer <<generated>>
+    * est_superviseur : boolean
+    identifiant_superviseur : integer
+    identifiant_delegue : integer
+    * {field} nom_utilisateur : varchar(20)
+    * {field} mot_de_passe : char(128)
+    * {field} prenom : varchar(50)
+    * {field} nom : varchar(100)
+}
+
+entity "Modeles" as Modeles {
+    * **identifiant_modele** : integer <<generated>>
+    * {field} nom_modele : varchar(50)
+    regex_nom_fichier : text
+    position_champ_numero : smallint
+    position_champ_voie : smallint
+    position_champ_code_postal : smallint
+    position_champ_ville : smallint
+    position_champs_supplementaires : text[][]
+}
+
+Lots "1..*" ||--|{ "1" FA : contient >
+Agents "1..*" ||--|{ "1" FA : traite >
+Agents "1..*" ||--|{ "1" Agents : supervise >
+Agents "1" ||--|| "1" Agents : délègue >
+@enduml
