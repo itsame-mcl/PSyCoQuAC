@@ -1,0 +1,39 @@
+@startuml "sequence_api"
+participant ImportationService as Importation
+participant BANClient as Client
+entity "API BAN" as BAN
+participant FicheAdresse as FA
+participant DAOFicheAdresse as DAO
+database PostgreSQL as SQL
+
+activate Importation
+Importation -> Client : geocodage_par_lot([])
+activate Client
+loop pour chaque fiche
+    Client -> FA : generer_adresse_requete()
+    activate FA
+    Client <-- FA : string "query"
+    Client -> BAN : GET /search/
+    activate BAN
+    Client <-- BAN : JSON
+    deactivate BAN
+    alt score >= seuil
+    Client -> FA : modifier_code_res("TH")
+    else score < seuil
+    Client -> FA : modifier_code_res("TR")
+    end
+    Client <-- FA : FicheAdresse (modifiée)
+    deactivate FA
+    Client -> DAO : creer_fa(FicheAdresse)
+    activate DAO
+    DAO -> SQL : INSERT INTO FA
+    activate SQL
+    DAO <-- SQL : OK
+    deactivate SQL
+    Client <-- DAO : bool True
+    deactivate DAO
+end
+Importation <- Client : List[FicheAdresse]
+deactivate Client
+deactivate Importation
+@enduml
