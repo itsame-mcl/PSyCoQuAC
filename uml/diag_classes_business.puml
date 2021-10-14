@@ -10,7 +10,7 @@ class BusinessObjects.FicheAdresse {
     {field} <<get>> -adresse_initiale : Dict{numero, voie, code_postal, ville}
     {field} <<get/set>> -adresse_finale : Dict{numero, voie, code_postal, ville}
     {field} <<get/set>> -coords_WGS84 : Tuple(longitude, latitude)
-    <<get/set>> -additional_fields : Dict{}
+    <<get/set>> -champs_supplementaires : Dict{}
     +bool modifier_code_res(String nouveau_code)
     +String generer_adresse_requete()
 }
@@ -19,13 +19,19 @@ abstract BusinessObjects.Agent {
     <<get>> -nom_utilisateur : String
     {field} <<get/set>> -identite : Tuple(prenom, nom)
 }
-class BusinessObjects.Superviseur
+class BusinessObjects.Superviseur {
+    <<get>> -equipe_deleguee_a : Integer
+}
 class BusinessObjects.Gestionnaire {
     <<get>> -superviseur_id : Integer
 }
 BusinessObjects.Agent <|-- BusinessObjects.Superviseur
 BusinessObjects.Agent <|-- BusinessObjects.Gestionnaire
-class BusinessObjects.Modele
+class BusinessObjects.Modele {
+    <<get>> -nom_modele : String
+    <<get>> -regex_nom_fichier : RE
+    <<get>> -correspondances : Dict{champ: position}
+}
 class BusinessObjects.Session {
     <<get>> -utilisateur_connecte : Agent
     +bool droits_superviseur()
@@ -42,16 +48,29 @@ class LocalServices.TraitementsFA.ControleRepriseService << (S,#FF7700) Singleto
     FicheAdresse fiche, bool etat_final)
     +FicheAdresse modifier_fiche(Session session_utilisateur,
     FicheAdresse fiche, Dict{} nouvelles_informations)
-    +List[FicheAdresse] liste_fiches_a_traiter(Session session_utilisateur)
+    +List[FicheAdresse] consulter_pot(Session session_utilisateur)
 }
 
-abstract LocalServices.IO.ImportationService
+abstract LocalServices.IO.ImportationService {
+    +List[FicheAdresse] importer_lot(Session session_utilisateur,
+    String chemin_vers_fichier, Modele modele_a_utiliser)
+}
 class LocalServices.IO.ImportationCSV << (S,#FF7700) Singleton >>
 LocalServices.IO.ImportationService <|-- LocalServices.IO.ImportationCSV
-abstract LocalServices.IO.ExportationService
+abstract LocalServices.IO.ExportationService {
+    +bool exporter_lot(Session session_utilisateur, Integer id_lot,
+    String chemin_vers_fichier)
+}
 class LocalServices.IO.ExportationCSV << (S,#FF7700) Singleton >>
 LocalServices.IO.ExportationService <|-- LocalServices.IO.ExportationCSV
-class LocalServices.IO.ModeleService << (S,#FF7700) Singleton >>    
+class LocalServices.IO.ModeleService << (S,#FF7700) Singleton >> {
+    +Modele creer_modele(Session session_utilisateur, String nom_modele,
+    RE regex_nom_fichier, Dict correspondances)
+    +Modele modifier_modele(Session session_utilisateur, Modele modele_modif,
+    String nom_modele, RE regex_nom_fichier, Dict correspondances)
+    +bool supprimer_modele(Session session_utilisateur, Modele modele_a_suppr)
+    +Modele chercher_modele(Session session_utilisateur, String nom_fichier)
+}
 
 class LocalServices.Gestion.SessionService << (S,#FF7700) Singleton >> {
     +Session ouvrir_session(string nom_utilisateur,
