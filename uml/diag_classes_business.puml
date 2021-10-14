@@ -104,6 +104,24 @@ class WebServices.BANClient << (S,#FF7700) Singleton >> {
     List[FicheAdresse] fiches_a_traiter)
 }
 
+BusinessObjects.FicheAdresse -- LocalServices.TraitementsFA.AffectationService
+BusinessObjects.FicheAdresse -- LocalServices.TraitementsFA.ControleRepriseService
+BusinessObjects.FicheAdresse -- LocalServices.IO.ImportationService
+BusinessObjects.FicheAdresse -- LocalServices.IO.ExportationService
+BusinessObjects.FicheAdresse -- WebServices.BANClient
+BusinessObjects.Agent -- LocalServices.Gestion.AgentService
+BusinessObjects.Session o-- BusinessObjects.Agent
+BusinessObjects.Session -- LocalServices.TraitementsFA.AffectationService
+BusinessObjects.Session -- LocalServices.TraitementsFA.ControleRepriseService
+BusinessObjects.Session -- LocalServices.IO.ImportationService
+BusinessObjects.Session -- LocalServices.IO.ExportationService
+BusinessObjects.Session -- LocalServices.IO.ModeleService
+BusinessObjects.Session -- LocalServices.Gestion.SessionService
+BusinessObjects.Session -- LocalServices.Gestion.AgentService
+BusinessObjects.Session -- LocalServices.Gestion.StatistiquesService
+BusinessObjects.Session -- WebServices.BANClient
+BusinessObjects.Modele -- LocalServices.IO.ModeleService
+BusinessObjects.Modele -- LocalServices.IO.ImportationService
+
 BusinessObjects.Agent -[hidden]--> LocalServices.TraitementsFA.AffectationService
-LocalServices.TraitementsFA.AffectationService -[hidden]> LocalServices.Gestion.AgentService
 @enduml
