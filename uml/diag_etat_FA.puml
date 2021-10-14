@@ -10,8 +10,8 @@ state rep <<choice>>
 imp -> TA : exploitable
 imp --> DI : inexploitable
 TA -> api : traitement API
-api -> TE : réussite
-TE -> ech : échantillonnage
+api -> TH : réussite
+TH -> ech : échantillonnage
 api --> TR : échec
 ech --> VA : non
 ech --> TC : oui
