@@ -25,6 +25,7 @@ entity "FA" as FA {
 entity "Agents" as Agents {
     * **identifiant_agent** : integer <<generated>>
     * est_superviseur : boolean
+    * quotite : decimal
     identifiant_superviseur : integer
     identifiant_delegue : integer
     * {field} nom_utilisateur : varchar(20)
