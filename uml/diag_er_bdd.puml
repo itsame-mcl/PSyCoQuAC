@@ -3,16 +3,12 @@ hide circle
 hide empty methods
 skinparam linetype ortho
 
-entity "Lots" as Lots {
-    * **identifiant_lot** : integer <<generated>>
-    * date_importation : date
-}
-
 entity "FA" as FA {
     * **identifiant_fa** : integer <<generated>>
     identifiant_pot : smallint
-    * identifiant_lot : integer
+    * identifiant_lot : integer <<generated>>
     * {field} code_resultat : char(2)
+    * date_importation : date
     * date_dernier_traitement : date
     {field} initial_numero : varchar(10)
     {field} initial_voie : varchar(60)
@@ -48,7 +44,6 @@ entity "Modeles" as Modeles {
     position_champs_supplementaires : text[][]
 }
 
-Lots "1..*" ||--|{ "1" FA : contient >
 Agents "1..*" ||--|{ "1" FA : traite >
 Agents "1..*" ||--|{ "1" Agents : supervise >
 Agents "1" ||--|| "1" Agents : délègue >
