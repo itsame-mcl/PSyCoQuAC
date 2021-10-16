@@ -1,5 +1,7 @@
 @startuml "classes_business"
+top to bottom direction
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
 hide empty members
 
 class BusinessObjects.FicheAdresse {
@@ -123,5 +125,8 @@ BusinessObjects.Session -- WebServices.BANClient
 BusinessObjects.Modele -- LocalServices.IO.ModeleService
 BusinessObjects.Modele -- LocalServices.IO.ImportationService
 
-BusinessObjects.Agent -[hidden]--> LocalServices.TraitementsFA.AffectationService
+BusinessObjects -[hidden]d-> LocalServices.TraitementsFA
+LocalServices.TraitementsFA -[hidden]d-> LocalServices.Gestion
+LocalServices.Gestion -[hidden]d-> LocalServices.IO
+LocalServices.IO -[hidden]l-> WebServices
 @enduml
