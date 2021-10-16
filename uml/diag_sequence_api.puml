@@ -17,18 +17,20 @@ loop pour chaque fiche
     activate BAN
     Client <-- BAN : JSON
     deactivate BAN
+    Client -> FA : set_adresse_finale(réponse API)
+    Client -> FA : set_coords_WGS84(réponse API)
     alt score >= seuil
     Client -> FA : modifier_code_res("TH")
     else score < seuil
     Client -> FA : modifier_code_res("TR")
     end
-    Client <-- FA : FicheAdresse (modifiée)
+    Client <-- FA : FicheAdresse modifiée
     deactivate FA
-    Client -> DAO : creer_fa(FicheAdresse)
+    Client -> DAO : mise_a_jour_fa(FicheAdresse)
     activate DAO
-    DAO -> SQL : INSERT INTO FA
+    DAO -> SQL : UPDATE FA
     activate SQL
-    DAO <-- SQL : OK
+    DAO <-- SQL : RETURNING
     deactivate SQL
     Client <-- DAO : bool True
     deactivate DAO
