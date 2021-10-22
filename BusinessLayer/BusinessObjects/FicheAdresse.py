@@ -14,13 +14,13 @@ class FicheAdresse:
         else:
             self._adresse_finale = adresse_finale
         if coords_wgs84 is None:
-            self.coords_WGS84 = dict()
+            self.coords_wgs84 = dict()
         else:
-            self._coords_WGS84 = coords_wgs84
+            self._coords_wgs84 = coords_wgs84
         if champs_supplementaires is None:
-            self._champs_suplementaires = dict()
+            self._champs_supplementaires = dict()
         else:
-            self._champs_suplementaires = champs_supplementaires
+            self._champs_supplementaires = champs_supplementaires
 
     @property
     def fiche_id(self):
@@ -94,16 +94,16 @@ class FicheAdresse:
 
     @property
     def coords_wgs84(self):
-        return self._coords_WGS84
+        return self._coords_wgs84
 
     @coords_wgs84.setter
     def coords_wgs84(self, value):
-        self._coords_WGS84 = value
+        self._coords_wgs84 = value
 
     @property
     def champs_supplementaires(self):
-        return self._champs_suplementaires
+        return self._champs_supplementaires
 
     @champs_supplementaires.setter
     def champs_supplementaires(self, value):
-        self._champs_suplementaires = value
+        self._champs_supplementaires = value
