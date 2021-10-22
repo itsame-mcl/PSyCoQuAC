@@ -1,5 +1,5 @@
 class FicheAdresse:
-    def __init__(self, fiche_id, agent_id, lot_id, adresse_initiale, adresse_finale, coords_WGS84, champs_supplementaires, code_res="TI"):
+    def __init__(self, fiche_id, agent_id, lot_id, adresse_initiale, adresse_finale=None, coords_WGS84=None, champs_supplementaires=None, code_res="TI"):
         self._fiche_id = fiche_id
         self._agent_id = agent_id
         self._lot_id = lot_id
@@ -8,9 +8,18 @@ class FicheAdresse:
         else:
             raise ValueError("Impossible d'initialiser un objet FicheAdresse avec un code résultat illégal.")
         self._adresse_initiale = adresse_initiale
-        self._adresse_finale = adresse_finale
-        self._coords_WGS84 = coords_WGS84
-        self._champs_suplementaires = champs_supplementaires
+        if adresse_finale is None:
+            self._adresse_finale = adresse_initiale
+        else:
+            self._adresse_finale = adresse_finale
+        if coords_WGS84 is None:
+            self.coords_WGS84 = dict()
+        else:
+            self._coords_WGS84 = coords_WGS84
+        if champs_supplementaires is None:
+            self._champs_suplementaires = dict()
+        else:
+            self._champs_suplementaires = champs_supplementaires
     
     @property
     def fiche_id(self):
