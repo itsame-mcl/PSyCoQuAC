@@ -10,8 +10,7 @@ class SessionServices:
         mdp = 
         if hache == mdp:
             agent_id = recuperer_agent_id(nom_utilisateur, mot_de_passe) # On fait appel à une méthode de la DAO qui récupère l'id de l'agent
-            nom_utilisateur = nom_utilisateur
-            identité = 
+            identité = recuperer_agent_identite(nom_utilisateur, mot_de_passe) # On fait appel à une méthode de la DAO qui récupère le prénom et le nom de l'agent
             # On fait appel à une méthode de la DAO qui regarde si l'Agent qui se connecte est un gestionnaire ou un superviseur
             if regarder_si_superviseur(nom_utilisateur, mot_de_passe):
                 return Session()
