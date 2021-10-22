@@ -19,7 +19,6 @@ class FicheAdresse:
     
     @agent_id.setter
     def agent_id(self, value):
-        #ajouter condition ? seulement superviseur ?
         self._agent_id = value
     
     @property
@@ -40,7 +39,6 @@ class FicheAdresse:
     
     @adresse_finale.setter
     def adresse_finale(self, value):
-        #ajouter condition ?
         self._adresse_finale = value
     
     @property
@@ -49,7 +47,6 @@ class FicheAdresse:
     
     @coords_WGS84.setter
     def coords_WGS84(self, value):
-        #ajouter condition ?
         self._coords_WGS84 = value
     
     @property
@@ -58,7 +55,6 @@ class FicheAdresse:
     
     @champs_supplementaires.setter
     def champs_supplementaires(self, value):
-        #ajouter condition ?
         self._champs_suplementaires = value
     
     def modifier_code_res(self, new_code):
