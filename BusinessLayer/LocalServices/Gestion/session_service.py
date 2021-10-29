@@ -26,3 +26,6 @@ class SessionServices:
                 return Session(Gestionnaire(agent_id, nom_utilisateur, identite, id_superviseur), False)
         else:
             return "Ah ah ah ! Vous n'avez pas dis le mot magique !"
+
+    def fermer_session(Bool): # Prend un booléen en argument car on valide la fermeture
+        
