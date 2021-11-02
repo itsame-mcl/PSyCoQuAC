@@ -2,14 +2,14 @@ from BusinessLayer.LocalServices.Gestion.interface_fiche_agent import InterfaceF
 
 class FicheSuperviseur(InterfaceFicheAgent):
 
-    def creer_agent(self, nom_utilisateur, mot_de_passe):
+    def creer_agent(self, session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur):
         raise NotImplemented
 
-    def modifier_agent(self):
+    def modifier_agent(self, agent_a_modifier, prenom, nom, mot_de_passe):
         raise NotImplemented
 
     def changer_droits(self, agent_a_modifier): # On change le Superviseur en Gestionnaire
-        agent_a_modifier.
+        raise NotImplemented
 
-    def supprimer_agent(self):
+    def supprimer_agent(self, agent_a_supprimer):
         raise NotImplemented
