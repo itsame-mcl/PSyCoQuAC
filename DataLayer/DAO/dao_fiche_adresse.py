@@ -26,10 +26,10 @@ class DAOFicheAdresse(metaclass=Singleton):
 
     def recuperer_lot(self, identifiant : int) -> List[FicheAdresse]:
         data = self.__interface.recuperer_liste_fiches_adresse(-1, identifiant)
-        pot = list()
+        lot = list()
         for row in data:
-            pot.append(FicheAdresse.from_dict(row))
-        return pot
+            lot.append(FicheAdresse.from_dict(row))
+        return lot
 
     def creer_fiche_adresse(self, fa: FicheAdresse) -> bool:
         res = self.__interface.creer_fiche_adresse(fa.as_dict())
