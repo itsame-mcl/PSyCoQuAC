@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class Interfaceagent(ABC):
+class InterfaceFicheAgent(ABC):
 
     @abstractmethod
     def creer_agent(self, nom_utilisateur, mot_de_passe):

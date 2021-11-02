@@ -10,25 +10,25 @@ class AgentServices: # S'exécute sur les sessions
             self.__interface = FicheSuperviseur()
         else:
             self.__interface = FicheGestionnaire()
-        return self.__fiche_agent = self.__interface.creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur)
+        return self.__interface.creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur)
 
     def modifier_agent(self, agent_a_modifier, prenom, nom, mot_de_passe):
         if self.droits_superviseurs:
             self.__interface = FicheSuperviseur()
         else:
             self.__interface = FicheGestionnaire()
-        return self.__fiche_agent = self.__interface.modifier_agent(agent_a_modifier, prenom, nom, mot_de_passe)
+        return self.__interface.modifier_agent(agent_a_modifier, prenom, nom, mot_de_passe)
 
     def changer_droits(self, agent_a_modifier):
         if self.droits_superviseurs:
             self.__interface = FicheSuperviseur()
         else:
             self.__interface = FicheGestionnaire()
-        return self.__fiche_agent = self.__interface.changer_droits(agent_a_modifier)
+        return self.__interface.changer_droits(agent_a_modifier)
 
     def supprimer_agent(self, agent_a_supprimer):
         if self.droits_superviseurs:
             self.__interface = FicheSuperviseur()
         else:
             self.__interface = FicheGestionnaire()
-        return self.__fiche_agent = self.__interface.supprimer_agent(agent_a_supprimer)
+        return self.__interface.supprimer_agent(agent_a_supprimer)

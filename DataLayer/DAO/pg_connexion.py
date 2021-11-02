@@ -1,7 +1,6 @@
 import psycopg
 from DataLayer.DAO.interface_connexion import InterfaceConnexion
 
-
 class PGConnexion(InterfaceConnexion):
     
     def ouvrir_connexion(self, host, port, database, user, password):
