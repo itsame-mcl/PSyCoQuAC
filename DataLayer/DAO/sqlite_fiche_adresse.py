@@ -1,19 +1,20 @@
 from ast import literal_eval
 from datetime import datetime
+from typing import List
 
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_fiche_adresse import InterfaceFicheAdresse
 
 
 class SQLiteFicheAdresse(InterfaceFicheAdresse):
-    def __sqlite_to_dao(self, data : dict) -> dict:
+    def __sqlite_to_dao(self, data: dict) -> dict:
         data["date_importation"] = datetime.fromisoformat(data["date_importation"]).date()
         data["date_dernier_traitement"] = datetime.fromisoformat(data["date_dernier_traitement"]).date()
         data["coordonnees_wgs84"] = literal_eval(data["coordonnees_wgs84"])
         data["champs_supplementaires"] = literal_eval(data["champs_supplementaires"])
         return data
 
-    def __dao_to_sqlite(self, data : dict) -> dict:
+    def __dao_to_sqlite(self, data: dict) -> dict:
         data["date_importation"] = str(data["date_importation"])
         data["date_dernier_traitement"] = str(data["date_dernier_traitement"])
         data["coordonnees_wgs84"] = repr(data["coordonnees_wgs84"])
@@ -28,6 +29,26 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         data: dict = dict(zip(row.keys(), row))
         data = self.__sqlite_to_dao(data)
         return data
+
+    def recuperer_liste_fiches_adresse(self, id_agent: int, id_lot: int) -> List[dict]:
+        if id_agent > 0 and id_lot < 0:
+            request = "SELECT * FROM fa WHERE identifiant_pot=:id_agent"
+        elif id_agent < 0 and id_lot > 0:
+            request = "SELECT * FROM fa WHERE identifiant_lot=:id_lot"
+        elif id_agent > 0 and id_lot > 0:
+            request = "SELECT * FROM fa WHERE identifiant_pot=:id_agent AND identifiant_lot=:id_lot"
+        else:
+            request = "SELECT * FROM fa"
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute(request, {"id_agent": id_agent})
+        rows = curseur.fetchall()
+        curseur.close()
+        answer = list()
+        for row in rows:
+            data: dict = dict(zip(row.keys(), row))
+            data = self.__sqlite_to_dao(data)
+            answer.append(data)
+        return answer
 
     def creer_fiche_adresse(self, data: dict) -> bool:
         data = self.__dao_to_sqlite(data)
@@ -48,7 +69,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
-    def modifier_fiche_adresse(self, data : dict) -> bool:
+    def modifier_fiche_adresse(self, data: dict) -> bool:
         data = self.__dao_to_sqlite(data)
         try:
             curseur = DBConnexion().connexion.cursor()
@@ -66,8 +87,8 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         except Exception as e:
             print(e)
             return False
-        
-    def supprimer_fiche_adresse(self, identifiant : int) -> bool:
+
+    def supprimer_fiche_adresse(self, identifiant: int) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("DELETE FROM fa WHERE identifiant_fa=:id", {"id": identifiant})

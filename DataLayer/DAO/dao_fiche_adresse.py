@@ -1,4 +1,5 @@
 import dotenv
+from typing import List
 
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
@@ -15,6 +16,20 @@ class DAOFicheAdresse(metaclass=Singleton):
     def recuperer_fiche_adresse(self, identifiant: int) -> FicheAdresse:
         data = self.__interface.recuperer_fiche_adresse(identifiant)
         return FicheAdresse.from_dict(data)
+
+    def recuperer_pot(self, identifiant : int) -> List[FicheAdresse]:
+        data = self.__interface.recuperer_liste_fiches_adresse(identifiant, -1)
+        pot = list()
+        for row in data:
+            pot.append(FicheAdresse.from_dict(row))
+        return pot
+
+    def recuperer_lot(self, identifiant : int) -> List[FicheAdresse]:
+        data = self.__interface.recuperer_liste_fiches_adresse(-1, identifiant)
+        pot = list()
+        for row in data:
+            pot.append(FicheAdresse.from_dict(row))
+        return pot
 
     def creer_fiche_adresse(self, fa: FicheAdresse) -> bool:
         res = self.__interface.creer_fiche_adresse(fa.as_dict())
