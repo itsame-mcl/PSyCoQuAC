@@ -3,11 +3,8 @@ from random import *
 class AffectationService():
     def echantilloner_fiches(echantillon, taille_echantillon):
         n = len(echantillon)
-        liste_aleatoire = []
-        while len(liste_aleatoire) != taille_echantillon :
-            a = randint(0, n-1)
-            if a in not liste_aleatoire :
-                liste_aleatoire.append(a)
+        l = [i for i in range (n)]
+        liste_aleatoire = sample(l, taille_echantillon) #Contruction d'une liste aléatoire d'entier compris entre 0 et n-1 de taille taille_echantillon 
         liste_echantillonne = []
         for i in range (taille_echantillon) :
             liste_echantillonne.append(echantillon[liste_aleatoire[i]])
