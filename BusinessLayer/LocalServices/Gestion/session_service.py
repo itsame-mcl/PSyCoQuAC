@@ -1,4 +1,4 @@
-from BusinessLayer.BusinessObjects.session import Session
+from BusinessLayer.BusinessObjects.Session import Session
 import DataLayer.DAO as dao
 from hashlib import sha512
 
