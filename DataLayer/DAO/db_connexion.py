@@ -16,6 +16,8 @@ class DBConnexion(metaclass=Singleton):
         self.__connexion = self.__interface.ouvrir_connexion(os.environ["HOST"], os.environ["PORT"],
                                                              os.environ["DATABASE"],
                                                              os.environ["USER"], os.environ["PASSWORD"])
+        if self.__connexion is None:
+            raise ConnectionError
 
     @property
     def connexion(self):
