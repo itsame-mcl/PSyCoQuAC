@@ -1,12 +1,14 @@
 from DataLayer import DAO as dao
+from utils.singleton import Singleton
 
+@Singleton
 class StatistiqueServices:
 
     def fiches_par_agent(session_utilisateur): # On vérifie d'abord que c'est un Superviseur qui regarde les fiches des Gestionnaires de son équipe
         response = {}
-        liste_agent = dao_recuperer_liste_agents(session_utilisateur.utilisateur_connecte.agent_id)
+        liste_agent = dao.DAOAgent.recuperer_liste_agents(session_utilisateur.utilisateur_connecte.agent_id)
         for agent_id in liste_agent:
-            response[str(agent_id)] = len( dao.recuperer_liste_fiches(agent_id) )
+            response[str(agent_id)] = len( dao.DAOAgent.recuperer_fiches_agent(agent_id) )
         return response
 
     def fiches_par_lot(session_utilisateur):

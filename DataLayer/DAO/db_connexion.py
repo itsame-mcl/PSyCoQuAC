@@ -7,6 +7,7 @@ from utils.singleton import Singleton
 
 
 class DBConnexion(metaclass=Singleton):
+    
     def __init__(self):
         dotenv.load_dotenv(override=True)
         if os.environ["ENGINE"] == "SQLite":

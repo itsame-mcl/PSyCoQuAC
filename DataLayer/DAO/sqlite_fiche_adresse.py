@@ -5,8 +5,8 @@ from typing import List
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_fiche_adresse import InterfaceFicheAdresse
 
-
 class SQLiteFicheAdresse(InterfaceFicheAdresse):
+    
     def __sqlite_to_dao(self, data: dict) -> dict:
         data["date_importation"] = datetime.fromisoformat(data["date_importation"]).date()
         data["date_dernier_traitement"] = datetime.fromisoformat(data["date_dernier_traitement"]).date()

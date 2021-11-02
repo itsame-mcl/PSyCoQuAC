@@ -8,6 +8,7 @@ from utils.singleton import Singleton
 
 
 class DAOFicheAdresse(metaclass=Singleton):
+    
     def __init__(self):
         engine = dotenv.dotenv_values(".env")["ENGINE"]
         if engine == "SQLite":

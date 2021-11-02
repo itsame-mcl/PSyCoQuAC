@@ -1,7 +1,7 @@
 from BusinessLayer.LocalServices.Gestion.interface_session import InterfaceSession
-from BusinessLayer.BusinessObjects.Superviseur import Superviseur
+from BusinessLayer.BusinessObjects.superviseur import Superviseur
 from DataLayer import DAO as dao
-from BusinessLayer.BusinessObjects.Session import Session
+from BusinessLayer.BusinessObjects.session import Session
 
 class SessionSuperviseur(InterfaceSession):
     
