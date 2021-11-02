@@ -1,6 +1,8 @@
 from BusinessLayer.LocalServices.IO.csv_exportation import CSVExportation
+from utils.singleton import Singleton
 
-class DBExportation:
+@Singleton
+class ExportationServices:
 
     def __init__(self, type_fichier):
         if type_fichier == "CSV":

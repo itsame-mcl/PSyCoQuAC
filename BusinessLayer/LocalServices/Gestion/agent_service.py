@@ -1,5 +1,6 @@
 from BusinessLayer.BusinessObjects.Agent import Agent
 import DataLayer.DAO as dao
+from utils.singleton import Singleton
 
 @Singleton
 class AgentServices:

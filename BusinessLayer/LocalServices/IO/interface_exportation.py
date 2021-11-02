@@ -3,5 +3,5 @@ from abc import ABC, abstractmethod
 class InterfaceExportation(ABC):
 
     @abstractmethod
-    def exporattion(self, fichier):
+    def exportation(self, fichier):
         raise NotImplemented
