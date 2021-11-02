@@ -1,13 +1,11 @@
 import requests
 
 class BANClient :
-    def __init__(self) :
-
     
     def geocodage_par_fiche(self, fiche_a_traiter):
         adresse = fiche_a_traiter.adresse_initiale
         adresse = adresse.replace(" ", "+")
-        response = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + adresse)
+        response = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + str(adresse))
         response = response.json()
         score = response["score"]
         coordonnees_gps = response["coordinates"]
@@ -24,7 +22,7 @@ class BANClient :
         coordonnees_gps = fiche_a_traiter.coords_WGS84
         lon=coordonnees_gps[0]
         lat=coordonnees_gps[1]
-        response = requests.get("https://api-adresse.data.gouv.fr/reverse/?lon=" + lon + "&lat=" + lat)
+        response = requests.get("https://api-adresse.data.gouv.fr/reverse/?lon=" + str(lon) + "&lat=" + str(lat))
         response = response.json()
         score = response["score"]
         numero_rue = response["name"]
@@ -50,6 +48,3 @@ class BANClient :
             fiches_a_traiter[i]=fiche
             scores.append(score)
         return(scores, fiches_a_traiter)
-
-
-    
