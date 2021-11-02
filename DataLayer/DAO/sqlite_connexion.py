@@ -8,9 +8,9 @@ class SQLiteConnexion(InterfaceConnexion):
         try:
             connexion = sqlite3.connect(host)
             connexion.row_factory = sqlite3.Row
-        except:
-            connexion = None
-        return connexion
+            return connexion
+        except Exception as e:
+            raise e
 
     def fermer_connexion(self, connexion):
         connexion.close()
