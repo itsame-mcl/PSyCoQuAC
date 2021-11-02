@@ -130,3 +130,6 @@ dmypy.json
 
 # PlantUML output
 out/uml/
+
+# SQLite Databases
+sql/*.sqlite
