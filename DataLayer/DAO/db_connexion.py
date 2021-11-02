@@ -3,9 +3,10 @@ import dotenv
 
 from DataLayer.DAO.pg_connexion import PGConnexion
 from DataLayer.DAO.sqlite_connexion import SQLiteConnexion
+from utils.singleton import Singleton
 
 
-class DBConnexion:
+class DBConnexion(metaclass=Singleton):
     def __init__(self):
         dotenv.load_dotenv(override=True)
         if os.environ["ENGINE"] == "SQLite":
