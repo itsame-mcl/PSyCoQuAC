@@ -34,3 +34,5 @@ class DAOFicheAdresse(metaclass=Singleton):
         return res
 
     def supprimer_fiche_adresse(self, identifiant: int) -> bool:
+        res = self.__interface.supprimer_fiche_adresse(identifiant)
+        return res
