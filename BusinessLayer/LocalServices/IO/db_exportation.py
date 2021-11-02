@@ -2,8 +2,7 @@ from BusinessLayer.LocalServices.IO.csv_exportation import CSVExportation
 
 class DBExportation:
 
-    def __init__(self):
-        dotenv.load_dotenv(override=True)
+    def __init__(self, type_fichier):
         if type_fichier == "CSV":
             self.__type_fichier = CSVExportation()
         self.__exportation = self.__type_fichier.exportation
