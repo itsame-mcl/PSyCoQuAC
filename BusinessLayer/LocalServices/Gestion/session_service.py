@@ -13,8 +13,8 @@ class SessionServices:
         if hache == mdp: # si le mdp récupéré dans la BDD est le même que le salage_hacahage, l'agent peut ouvrir sa session
             # Pour ouvrir une session, on crée un Agent, et on lui donne un booléen (True si l'Agent est un superviseur, False sinon)
             # Pour créer un Agent, on a besoin : de son id, de son nom_utilisateur, de (nom, prénom) et de l'id de son superviseur
-            agent_id = dao.recuperer_agent_id(hache) # On fait appel à une méthode de la DAO qui récupère l'id de l'agent
-            identite = dao.recuperer_agent_identite(hache) # On fait appel à une méthode de la DAO qui récupère le prénom et le nom de l'agent
+            agent_id = dao.recuperer_agent_id(nom_utilisateur) # On fait appel à une méthode de la DAO qui récupère l'id de l'agent
+            identite = dao.recuperer_agent_identite(nom_utilisateur) # On fait appel à une méthode de la DAO qui récupère le prénom et le nom de l'agent
             # On fait appel à une méthode de la DAO qui regarde si l'Agent qui se connecte est un gestionnaire ou un superviseur
             if dao.regarder_si_superviseur(hache): # la méthode regarder_si_superviseur renvoie True si l'Agent est un superviseur
                 from Superviseur.py import Superviseur

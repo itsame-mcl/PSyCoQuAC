@@ -6,6 +6,7 @@ from DataLayer.DAO.sqlite_connexion import SQLiteConnexion
 
 
 class DBConnexion:
+    
     def __init__(self):
         dotenv.load_dotenv(override=True)
         if os.environ["ENGINE"] == "SQLite":
