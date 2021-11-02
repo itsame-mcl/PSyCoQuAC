@@ -1,14 +1,12 @@
 import dotenv
 from typing import List
 
-from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.sqlite_fiche_adresse import SQLiteFicheAdresse
 from utils.singleton import Singleton
 
 
 class DAOFicheAdresse(metaclass=Singleton):
-    
     def __init__(self):
         engine = dotenv.dotenv_values(".env")["ENGINE"]
         if engine == "SQLite":

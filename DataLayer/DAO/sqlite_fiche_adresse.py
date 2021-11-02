@@ -5,8 +5,8 @@ from typing import List
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_fiche_adresse import InterfaceFicheAdresse
 
+
 class SQLiteFicheAdresse(InterfaceFicheAdresse):
-    
     def __sqlite_to_dao(self, data: dict) -> dict:
         data["date_importation"] = datetime.fromisoformat(data["date_importation"]).date()
         data["date_dernier_traitement"] = datetime.fromisoformat(data["date_dernier_traitement"]).date()
@@ -88,8 +88,9 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
-    def modifier_agent_fiches_adresse(self, id_agent : int, id_fas : List[int]) -> bool:
-        request = "UPDATE fa SET identifiant_pot=:id_agent WHERE identifiant_fa IN ({})".format(','.join(':{}'.format(i) for i in range(len(id_fas))))
+    def modifier_agent_fiches_adresse(self, id_agent: int, id_fas: List[int]) -> bool:
+        request = "UPDATE fa SET identifiant_pot=:id_agent WHERE identifiant_fa IN ({})".format(
+            ','.join(':{}'.format(i) for i in range(len(id_fas))))
         params = {"id_agent": id_agent}
         params.update({str(i): id for i, id in enumerate(id_fas)})
         try:
