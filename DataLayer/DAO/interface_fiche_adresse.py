@@ -16,5 +16,8 @@ class InterfaceFicheAdresse(ABC):
     def modifier_fiche_adresse(self, data: dict) -> bool:
         raise NotImplementedError
 
+    def modifier_agent_fiches_adresse(self, id_agent : int, id_fas : List[int]) -> bool:
+        raise NotImplementedError
+
     def supprimer_fiche_adresse(self, identifiant: int) -> bool:
         raise NotImplementedError

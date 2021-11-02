@@ -31,6 +31,10 @@ class DAOFicheAdresse(metaclass=Singleton):
             pot.append(FicheAdresse.from_dict(row))
         return pot
 
+    def affecter_fiches_adresse(self, identifiant_agent : int, liste_fiches_id : List[int]):
+        res = self.__interface.modifier_agent_fiches_adresse(identifiant_agent, liste_fiches_id)
+        return res
+
     def creer_fiche_adresse(self, fa: FicheAdresse) -> bool:
         res = self.__interface.creer_fiche_adresse(fa.as_dict())
         return res
