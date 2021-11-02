@@ -1,5 +1,5 @@
 import dotenv
-from datetime import date
+from typing import List
 
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
@@ -15,15 +15,21 @@ class DAOFicheAdresse(metaclass=Singleton):
 
     def recuperer_fiche_adresse(self, identifiant: int) -> FicheAdresse:
         data = self.__interface.recuperer_fiche_adresse(identifiant)
-        adresse_initiale = Adresse(data["initial_numero"], data["initial_voie"], data["initial_code_postal"],
-                                   data["initial_ville"])
-        adresse_finale = Adresse(data["final_numero"], data["final_voie"], data["final_code_postal"],
-                                 data["final_ville"])
-        fa = FicheAdresse(data["identifiant_fa"], data["identifiant_pot"], data["identifiant_lot"], adresse_initiale,
-                          adresse_finale, data["date_importation"], data["date_dernier_traitement"],
-                          data["coordonnees_wgs84"], data["champs_supplementaires"],
-                          data["code_resultat"])
-        return fa
+        return FicheAdresse.from_dict(data)
+
+    def recuperer_pot(self, identifiant : int) -> List[FicheAdresse]:
+        data = self.__interface.recuperer_liste_fiches_adresse(identifiant, -1)
+        pot = list()
+        for row in data:
+            pot.append(FicheAdresse.from_dict(row))
+        return pot
+
+    def recuperer_lot(self, identifiant : int) -> List[FicheAdresse]:
+        data = self.__interface.recuperer_liste_fiches_adresse(-1, identifiant)
+        pot = list()
+        for row in data:
+            pot.append(FicheAdresse.from_dict(row))
+        return pot
 
     def creer_fiche_adresse(self, fa: FicheAdresse) -> bool:
         res = self.__interface.creer_fiche_adresse(fa.as_dict())

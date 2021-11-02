@@ -1,10 +1,13 @@
 from datetime import date
 
+from BusinessLayer.BusinessObjects.adresse import Adresse
+
 
 class FicheAdresse:
-    def __init__(self, fiche_id, agent_id, lot_id, adresse_initiale, adresse_finale=None,
-                 date_importation=date.today(), date_modification=date.today(), coords_wgs84=None,
-                 champs_supplementaires=None, code_res="TI"):
+    def __init__(self, fiche_id: int, agent_id: int, lot_id: int, adresse_initiale: Adresse,
+                 adresse_finale: Adresse = None, date_importation: date = date.today(),
+                 date_modification: date = date.today(), coords_wgs84: dict = None,
+                 champs_supplementaires: dict = None, code_res: str = "TI"):
         self._fiche_id = fiche_id
         self._agent_id = agent_id
         self._lot_id = lot_id
@@ -27,6 +30,17 @@ class FicheAdresse:
             self._champs_supplementaires = dict()
         else:
             self._champs_supplementaires = champs_supplementaires
+
+    @classmethod
+    def from_dict(cls, data):
+        adresse_initiale = Adresse(data["initial_numero"], data["initial_voie"], data["initial_code_postal"],
+                                   data["initial_ville"])
+        adresse_finale = Adresse(data["final_numero"], data["final_voie"], data["final_code_postal"],
+                                 data["final_ville"])
+        return cls(data["identifiant_fa"], data["identifiant_pot"], data["identifiant_lot"], adresse_initiale,
+                   adresse_finale, data["date_importation"], data["date_dernier_traitement"],
+                   data["coordonnees_wgs84"], data["champs_supplementaires"],
+                   data["code_resultat"])
 
     @property
     def fiche_id(self):

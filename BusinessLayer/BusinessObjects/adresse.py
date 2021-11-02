@@ -1,9 +1,9 @@
 class Adresse:
     def __init__(self, numero, voie, cp, ville):
-        self._numero = numero
-        self._voie = voie
-        self._cp = cp
-        self._ville = ville
+        self._numero = str(numero)
+        self._voie = str(voie)
+        self._cp = str(cp)
+        self._ville = str(ville)
 
     @property
     def numero(self):
@@ -11,7 +11,7 @@ class Adresse:
 
     @numero.setter
     def numero(self, value):
-        self._numero = value
+        self._numero = str(value)
 
     @property
     def voie(self):
@@ -19,7 +19,7 @@ class Adresse:
 
     @voie.setter
     def voie(self, value):
-        self._voie = value
+        self._voie = str(value)
 
     @property
     def cp(self):
@@ -27,7 +27,7 @@ class Adresse:
 
     @cp.setter
     def cp(self, value):
-        self._cp = value
+        self._cp = str(value)
 
     @property
     def ville(self):
@@ -35,4 +35,4 @@ class Adresse:
 
     @ville.setter
     def ville(self, value):
-        self._ville = value
+        self._ville = str(value)
