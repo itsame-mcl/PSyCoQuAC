@@ -6,9 +6,7 @@ class DBExportation:
         dotenv.load_dotenv(override=True)
         if type_fichier == "CSV":
             self.__type_fichier = CSVExportation()
-        self.__exportation = self.__type_fichier.exportation(os.environ["HOST"], os.environ["PORT"],
-                                                             os.environ["DATABASE"],
-                                                             os.environ["USER"], os.environ["PASSWORD"])
+        self.__exportation = self.__type_fichier.exportation
 
     @property
     def exportation(self):
