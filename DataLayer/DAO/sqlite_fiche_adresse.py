@@ -88,6 +88,20 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
+    def modifier_agent_fiches_adresse(self, id_agent : int, id_fas : List[int]) -> bool:
+        request = "UPDATE fa SET identifiant_pot=:id_agent WHERE identifiant_fa IN ({})".format(','.join(':{}'.format(i) for i in range(len(id_fas))))
+        params = {"id_agent": id_agent}
+        params.update({str(i): id for i, id in enumerate(id_fas)})
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute(request, params)
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
     def supprimer_fiche_adresse(self, identifiant: int) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
