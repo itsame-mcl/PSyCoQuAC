@@ -15,7 +15,7 @@ class SessionServices:
                 self.__interface = SessionSuperviseur()
             else: # l'Agent est un gestionnaire
                 self.__interface = SessionGestionnaire()
-            self.__connexion = self.__interface.ouvrir_session(nom_utilisateur, mot_de_passe)
+            return self.__connexion = self.__interface.ouvrir_session(nom_utilisateur, mot_de_passe)
         else:
             return "Ah ah ah ! Vous n'avez pas dis le mot magique !"
 
