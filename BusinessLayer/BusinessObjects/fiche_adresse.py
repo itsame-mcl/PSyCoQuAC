@@ -1,9 +1,15 @@
+from datetime import date
+
+
 class FicheAdresse:
-    def __init__(self, fiche_id, agent_id, lot_id, adresse_initiale, adresse_finale=None, coords_wgs84=None,
+    def __init__(self, fiche_id, agent_id, lot_id, adresse_initiale, adresse_finale=None,
+                 date_importation=date.today(), date_modification=date.today(), coords_wgs84=None,
                  champs_supplementaires=None, code_res="TI"):
         self._fiche_id = fiche_id
         self._agent_id = agent_id
         self._lot_id = lot_id
+        self._date_importation = date_importation
+        self._date_modification = date_modification
         if code_res in ["TI", "TA", "TH", "TC", "TR", "DI", "ER", "VA", "VC", "VR"]:
             self._code_res = code_res
         else:
@@ -37,6 +43,18 @@ class FicheAdresse:
     @property
     def lot_id(self):
         return self._lot_id
+
+    @property
+    def date_importation(self):
+        return self._date_importation
+
+    @property
+    def date_modification(self):
+        return self._date_modification
+
+    @date_modification.setter
+    def date_modification(self, value):
+        self.date_modification = value
 
     @property
     def code_res(self):
@@ -107,3 +125,23 @@ class FicheAdresse:
     @champs_supplementaires.setter
     def champs_supplementaires(self, value):
         self._champs_supplementaires = value
+
+    def as_dict(self):
+        data = dict()
+        data["identifiant_fa"] = self.fiche_id
+        data["identifiant_pot"] = self.agent_id
+        data["identifiant_lot"] = self.lot_id
+        data["code_resultat"] = self.code_res
+        data["date_importation"] = self.date_importation
+        data["date_dernier_traitement"] = self.date_modification
+        data["initial_numero"] = self.adresse_initiale.numero
+        data["initial_voie"] = self.adresse_initiale.voie
+        data["initial_code_postal"] = self.adresse_initiale.cp
+        data["initial_ville"] = self.adresse_initiale.ville
+        data["final_numero"] = self.adresse_finale.numero
+        data["final_voie"] = self.adresse_finale.voie
+        data["final_code_postal"] = self.adresse_finale.cp
+        data["final_ville"] = self.adresse_finale.ville
+        data["coordonnees_wgs84"] = self.coords_wgs84
+        data["champs_supplementaires"] = self.champs_supplementaires
+        return data

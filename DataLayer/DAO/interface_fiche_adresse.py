@@ -6,5 +6,11 @@ class InterfaceFicheAdresse(ABC):
     def recuperer_fiche_adresse(self, identifiant : int) -> dict:
         raise NotImplementedError
 
-    def creer_fiche_adresse(self, dictionnaire : dict) -> bool:
+    def creer_fiche_adresse(self, data : dict) -> bool:
+        raise NotImplementedError
+
+    def modifier_fiche_adresse(self, data : dict) -> bool:
+        raise NotImplementedError
+
+    def supprimer_fiche_adresse(self, identifiant : int) -> bool:
         raise NotImplementedError
