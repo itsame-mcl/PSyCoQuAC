@@ -13,7 +13,7 @@ class StatistiqueServices:
         num = dao.recuperer_num_lot() # On récupère le dernier numéro de lot utilisé
         response = {}
         for i in range(1, num+1):
-            response[str(lot_i)] = len( dao.DAOFicheAdresse.recuperer_lot(i) )
+            response["lot " + str(i)] = len( dao.DAOFicheAdresse.recuperer_lot(i) )
         return response
 
     def fiches_par_code_res(self, session_utilisateur):
