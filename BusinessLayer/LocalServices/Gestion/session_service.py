@@ -1,5 +1,5 @@
-from session.py import Session
-import DAO as dao
+from BusinessLayer.BusinessObjects.session.py import Session
+import DataLayer.DAO as dao
 from hashlib import sha512
 
 @Singleton
