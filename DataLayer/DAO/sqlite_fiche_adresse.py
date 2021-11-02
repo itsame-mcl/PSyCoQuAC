@@ -52,14 +52,17 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         data = self.__dao_to_sqlite(data)
         try:
             curseur = DBConnexion().connexion.cursor()
-            curseur.execute("UPDATE fa SET identifiant_pot=:identifiant_pot, identifiant_lot=:identifiant_lot,"
-                            "code_resultat=:code_resultat, date_dernier_traitement=:date_dernier_traitement,"
-                            "final_numero=:final_numero, final_voie=:final_voie, final_code_postal=:final_code_postal,"
-                            "final_ville=:final_ville, coordonnees_wgs84=:coordonnees_wgs84,"
-                            "champs_supplementaires=:champs_supplementaires WHERE identifiant_fa=:identifiant_fa",
-                            data)
+            curseur.execute("""
+            UPDATE fa SET identifiant_pot=:identifiant_pot, identifiant_lot=:identifiant_lot,
+            code_resultat=:code_resultat, date_dernier_traitement=:date_dernier_traitement,
+            final_numero=:final_numero, final_voie=:final_voie, final_code_postal=:final_code_postal,
+            final_ville=:final_ville, coordonnees_wgs84=:coordonnees_wgs84,
+            champs_supplementaires=:champs_supplementaires
+            WHERE identifiant_fa=:identifiant_fa
+            """, data)
             DBConnexion().connexion.commit()
             curseur.close()
+            return True
         except Exception as e:
             print(e)
             return False
@@ -70,6 +73,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             curseur.execute("DELETE FROM fa WHERE identifiant_fa=:id", {"id": identifiant})
             DBConnexion().connexion.commit()
             curseur.close()
+            return True
         except Exception as e:
             print(e)
             return False
