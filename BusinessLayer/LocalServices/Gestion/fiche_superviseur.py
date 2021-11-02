@@ -1,4 +1,5 @@
 from BusinessLayer.LocalServices.Gestion.interface_fiche_agent import InterfaceFicheAgent
+from DataLayer import DAO as dao
 
 class FicheSuperviseur(InterfaceFicheAgent):
 
@@ -9,7 +10,7 @@ class FicheSuperviseur(InterfaceFicheAgent):
         raise NotImplemented
 
     def changer_droits(self, agent_a_modifier): # On change le Superviseur en Gestionnaire
-        raise NotImplemented
+        dao.from_superviseur_to_gestionnaire(agent_a_modifier)
 
     def supprimer_agent(self, agent_a_supprimer):
         raise NotImplemented

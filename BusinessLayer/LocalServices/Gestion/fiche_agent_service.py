@@ -3,8 +3,8 @@ from BusinessLayer.LocalServices.Gestion.fiche_gestionnaire import FicheGestionn
 from utils.singleton import Singleton
 
 @Singleton
-class AgentServices:
-    
+class AgentServices: # S'applique sur un Agent
+
     def creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur):
         if self.droits_superviseurs:
             self.__interface = FicheSuperviseur()
