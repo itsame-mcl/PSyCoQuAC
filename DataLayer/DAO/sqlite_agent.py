@@ -1,6 +1,6 @@
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_agent import InterfaceAgent
-import DataLayer.DAO.sqlite_fiche_adresse
+
 
 class SQLiteAgent(InterfaceAgent):
 
@@ -17,9 +17,6 @@ class SQLiteAgent(InterfaceAgent):
         except Exception as e:
             print(e)
             return False
-
-    def recuperer_fiches_agent(self, id_agent : int) -> List[dict]:
-        return DataLayer.DAO.sqlite_fiche_adresse.SQLiteFicheAdresse.recuperer_liste_fiches_adresse(id_agent, 0)
 
     def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
         if id_superviseur > 0:

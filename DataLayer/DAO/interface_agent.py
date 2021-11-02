@@ -9,10 +9,6 @@ class InterfaceAgent(ABC):
         raise NotImplemented
 
     @abstractmethod
-    def recuperer_fiches_agent(self, id_agent : int) -> List[dict]:
-        raise NotImplemented
-
-    @abstractmethod
     def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
         raise NotImplemented
 

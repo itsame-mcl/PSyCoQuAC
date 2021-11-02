@@ -16,10 +16,6 @@ class DAOAgent(metaclass=Singleton):
         res = self.__interface.deleguer_agent_a(id_agents, id_superviseur)
         return res
 
-    def recuperer_fiches_agent(self, id_agent : int) -> List[dict]:
-        res = self.__interface.recuperer_fiches_agent(id_agent)
-        return res
-
     def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
         res = self.__interface.recuperer_liste_agents(id_superviseur)
         return res
