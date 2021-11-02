@@ -1,4 +1,4 @@
-from BusinessLayer.BusinessObjects.Agent import Agent
+from BusinessLayer.BusinessObjects.agent import Agent
 
 class Gestionnaire(Agent):
 

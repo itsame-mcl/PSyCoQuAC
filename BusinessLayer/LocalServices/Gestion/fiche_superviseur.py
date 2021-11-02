@@ -9,7 +9,7 @@ class FicheSuperviseur(InterfaceFicheAgent):
         raise NotImplemented
 
     def changer_droits(self, agent_a_modifier): # On change le Superviseur en Gestionnaire
-        agent_a_modifier.
+        raise NotImplemented
 
     def supprimer_agent(self, agent_a_supprimer):
         raise NotImplemented
