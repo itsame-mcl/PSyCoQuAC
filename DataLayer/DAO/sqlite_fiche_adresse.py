@@ -33,18 +33,19 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         data = self.__dao_to_sqlite(data)
         try:
             curseur = DBConnexion().connexion.cursor()
-            curseur.execute("INSERT INTO fa(identifiant_pot, identifiant_lot, code_resultat, date_importation,"
-                            "date_dernier_traitement, initial_numero, initial_voie, initial_code_postal, initial_ville,"
-                            "final_numero, final_voie, final_code_postal, final_ville,"
-                            "coordonnees_wgs84, champs_supplementaires)"
-                            "VALUES(:identifiant_pot, :identifiant_lot, :code_resultat, :date_importation,"
-                            " :date_dernier_traitement, :initial_numero, :initial_voie, :initial_code_postal,"
-                            " :initial_ville, :final_numero, :final_voie, :final_code_postal, :final_ville,"
-                            " :coordonnees_wgs84, :champs_supplementaires)", data)
-            curseur.commit()
+            curseur.execute("""
+            INSERT INTO fa(identifiant_pot, identifiant_lot, code_resultat, date_importation,date_dernier_traitement,
+            initial_numero, initial_voie, initial_code_postal, initial_ville,final_numero, final_voie,
+            final_code_postal, final_ville, coordonnees_wgs84, champs_supplementaires)
+            VALUES(:identifiant_pot, :identifiant_lot, :code_resultat, :date_importation, :date_dernier_traitement,
+            :initial_numero, :initial_voie, :initial_code_postal, :initial_ville, :final_numero, :final_voie,
+            :final_code_postal, :final_ville, :coordonnees_wgs84, :champs_supplementaires)
+            """, data)
+            DBConnexion().connexion.commit()
             curseur.close()
             return True
-        except:
+        except Exception as e:
+            print(e)
             return False
 
     def modifier_fiche_adresse(self, data : dict) -> bool:
@@ -57,16 +58,18 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
                             "final_ville=:final_ville, coordonnees_wgs84=:coordonnees_wgs84,"
                             "champs_supplementaires=:champs_supplementaires WHERE identifiant_fa=:identifiant_fa",
                             data)
-            curseur.commit()
+            DBConnexion().connexion.commit()
             curseur.close()
-        except:
+        except Exception as e:
+            print(e)
             return False
         
     def supprimer_fiche_adresse(self, identifiant : int) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("DELETE FROM fa WHERE identifiant_fa=:id", {"id": identifiant})
-            curseur.commit()
+            DBConnexion().connexion.commit()
             curseur.close()
-        except:
+        except Exception as e:
+            print(e)
             return False
