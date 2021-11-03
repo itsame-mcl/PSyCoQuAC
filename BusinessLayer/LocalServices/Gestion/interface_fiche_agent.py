@@ -5,7 +5,7 @@ from BusinessLayer.BusinessObjects.session import Session
 class InterfaceFicheAgent(ABC):
 
     @abstractmethod
-    def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool):
+    def creer_agent(self, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128)):
         raise NotImplemented
 
     @abstractmethod

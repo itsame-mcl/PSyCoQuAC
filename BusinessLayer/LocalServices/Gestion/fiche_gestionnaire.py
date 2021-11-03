@@ -5,7 +5,7 @@ from DataLayer import DAO as dao
 
 class FicheGestionnaire(InterfaceFicheAgent):
 
-    def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool) -> bool:
+    def creer_agent(self, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool) -> bool:
         return dao.DAOAgent.creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur)
 
     def modifier_agent(self, agent_a_modifier : Agent, prenom : varchar(50), nom : varchar(100), mot_de_passe : char(128)) -> bool:
