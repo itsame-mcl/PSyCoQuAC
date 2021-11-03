@@ -1,9 +1,10 @@
 class Agent:
 
-    def __init__(self, agent_id, nom_utilisateur, identite):
+    def __init__(self, agent_id, nom_utilisateur, identite, quotite):
         self._agent_id = agent_id
         self._nom_utilisateur = nom_utilisateur
         self._identite = identite
+        self._quotite = quotite
     
     @property
     def agent_id(self):
@@ -20,3 +21,11 @@ class Agent:
     @identite.setter
     def agent_id(self, value): # le setter prend un argument un Tuple. Possibilité qu'il prenne 2 String (nom & prénom)
         self._agent_id = value
+
+    @property
+    def quotite(self):
+        return self._quotite
+    
+    @quotite.setter
+    def quotite(self, value):
+        self._quotite = value

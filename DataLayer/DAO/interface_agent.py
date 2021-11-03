@@ -1,33 +1,35 @@
+from typing import Tuple
 from abc import ABC, abstractmethod
-from BusinessLayer.BusinessObjects.session import Session
 from BusinessLayer.BusinessObjects.agent import Agent
 
 class InterfaceAgent(ABC):
 
-    @abstractmethod
-    def deleguer_agent_a(self, id_agents : List[int], id_superviseur_actuel : int, id_superviseur_futur : int):
+    def deleguer_agent_a(self, id_agents : list[int], id_superviseur : int) -> bool:
         raise NotImplementedError
 
-    @abstractmethod
-    def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
+    def recuperer_liste_agents(self, id_superviseur : int) -> list[Agent]:
         raise NotImplementedError
 
-    @abstractmethod
-    def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool) ->:
-        raise NotImplementedError
-
-    @abstractmethod
-    def modifier_agent(self, agent_a_modifier : Agent) -> bool:
-        raise NotImplementedError
-
-    @abstractmethod
-    def changer_droits(self, agent_a_modifier : Agent) -> bool:
-        raise NotImplementedError
-
-    @abstractmethod
     def supprimer_agent(self, id_agent : int) -> bool:
         raise NotImplementedError
 
-    @abstractmethod
-    def recuperer_mdp_agent(self, nom_utilisateur : varchar(20), mot_de_passe : varchar(100)) -> char(128):
+    def creer_agent(self,  est_superviseur : bool, quotite : float, id_superviseur : int, nom_utilisateur : str, mot_de_passe : str, prenom : str, nom : str):
+        raise NotImplementedError
+
+    def modifier_agent(self, agent_a_modifier : Agent) -> bool:
+        raise NotImplementedError
+
+    def changer_droits(self, agent_a_modifier : Agent) -> bool:
+        raise NotImplementedError
+
+    def recuperer_mdp_agent(self, nom_utilisateur : str, mot_de_passe : str) -> str:
+        raise NotImplementedError
+    
+    def recuperer_agent_id(self, nom_utilisateur : str, mot_de_passe : str) -> int:
+        raise NotImplementedError
+
+    def recuperer_agent_identite(self, nom_utilisateur : str, mot_de_passe : str) -> Tuple:
+        raise NotImplementedError
+
+    def recuperer_superviseur_id(self, nom_utilisateur : str, mot_de_passe : str) -> int:
         raise NotImplementedError

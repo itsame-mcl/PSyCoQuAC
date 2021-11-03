@@ -1,15 +1,14 @@
 from abc import ABC, abstractmethod
 from BusinessLayer.BusinessObjects.agent import Agent
-from BusinessLayer.BusinessObjects.session import Session
 
 class InterfaceFicheAgent(ABC):
 
     @abstractmethod
-    def creer_agent(self, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128)):
+    def creer_agent(self, est_superviseur : bool, quotite : float, id_superviseur : int, nom_utilisateur : str, mot_de_passe : str, prenom : str, nom : str):
         raise NotImplemented
 
     @abstractmethod
-    def modifier_agent(self, agent_a_modifier : Agent, prenom : varchar(50), nom : varchar(100), mot_de_passe : char(128)):
+    def modifier_agent(self, agent_a_modifier : Agent, data : dict):
         raise NotImplemented
 
     @abstractmethod

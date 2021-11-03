@@ -1,5 +1,4 @@
 from BusinessLayer.BusinessObjects.agent import Agent
-from BusinessLayer.BusinessObjects.session import Session
 from BusinessLayer.LocalServices.Gestion.fiche_superviseur import FicheSuperviseur
 from BusinessLayer.LocalServices.Gestion.fiche_gestionnaire import FicheGestionnaire
 from utils.singleton import Singleton
@@ -7,19 +6,19 @@ from utils.singleton import Singleton
 @Singleton
 class AgentServices:
 
-    def creer_agent(session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool):
+    def creer_agent(self, est_superviseur : bool, quotite : float, id_superviseur : int, nom_utilisateur : str, mot_de_passe : str, prenom : str, nom : str):
         if self.droits_superviseurs:
             self.__interface = FicheSuperviseur()
         else:
             self.__interface = FicheGestionnaire()
-        return self.__interface.creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur)
+        return self.__interface.creer_agent(est_superviseur, quotite, id_superviseur, nom_utilisateur, mot_de_passe, prenom, nom)
 
-    def modifier_agent(self, agent_a_modifier : Agent, prenom : varchar(50), nom : varchar(100), mot_de_passe : char(128)):
+    def modifier_agent(self, agent_a_modifier : Agent, data : dict):
         if self.droits_superviseurs:
             self.__interface = FicheSuperviseur()
         else:
             self.__interface = FicheGestionnaire()
-        return self.__interface.modifier_agent(agent_a_modifier, prenom, nom, mot_de_passe)
+        return self.__interface.modifier_agent(agent_a_modifier, data)
 
     def changer_droits(self, agent_a_modifier : Agent):
         if self.droits_superviseurs:

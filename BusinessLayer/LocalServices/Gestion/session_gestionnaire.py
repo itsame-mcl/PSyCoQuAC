@@ -7,9 +7,9 @@ class SessionGestionnaire(InterfaceSession):
     
     def ouvrir_session(self, nom_utilisateur, mot_de_passe):
         print("Ouverture de la session")
-        agent_id = dao.recuperer_agent_id(nom_utilisateur)
-        identite = dao.recuperer_agent_identite(nom_utilisateur)
-        superviseur_id = dao.recuperer_superviseur_id(nom_utilisateur)
+        agent_id = dao.DAOAgent.recuperer_agent_id(nom_utilisateur)
+        identite = dao.DAOAgent.recuperer_agent_identite(nom_utilisateur)
+        superviseur_id = dao.DAOAgent.recuperer_superviseur_id(nom_utilisateur)
         return Session(Gestionnaire(agent_id, nom_utilisateur, identite, superviseur_id), False)
 
     def fermer_session(self):

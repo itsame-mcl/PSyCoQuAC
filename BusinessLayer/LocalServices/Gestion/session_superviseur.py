@@ -7,10 +7,10 @@ class SessionSuperviseur(InterfaceSession):
     
     def ouvrir_session(self, nom_utilisateur, mot_de_passe):
         print("Ouverture de la session")
-        agent_id = dao.recuperer_agent_id(nom_utilisateur)
-        identite = dao.recuperer_agent_identite(nom_utilisateur)
-        equipe_deleguee_a = dao.recuperer_equipe_deleguee_a(nom_utilisateur)
-        return Session(Superviseur(agent_id, nom_utilisateur, identite, equipe_deleguee_a), True)
+        agent_id = dao.DAOAgent.recuperer_agent_id(nom_utilisateur)
+        identite = dao.DAOAgent.recuperer_agent_identite(nom_utilisateur)
+        superviseur_id = dao.DAOAgent.recuperer_superviseur_id(nom_utilisateur)
+        return Session(Superviseur(agent_id, nom_utilisateur, identite), True)
 
     def fermer_session(self):
         del self
