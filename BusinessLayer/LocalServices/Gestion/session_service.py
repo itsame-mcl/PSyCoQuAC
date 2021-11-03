@@ -3,6 +3,8 @@ from BusinessLayer.LocalServices.Gestion.session_gestionnaire import SessionGest
 from utils.singleton import Singleton
 import DataLayer.DAO as dao
 from hashlib import sha512
+from tkinter import *
+import not_utils
 
 @Singleton
 class SessionServices:
@@ -17,7 +19,8 @@ class SessionServices:
                 self.__interface = SessionGestionnaire()
             self.__connexion = self.__interface.ouvrir_session(nom_utilisateur, mot_de_passe)
         else:
-            return "Ah ah ah... Vous n'avez pas dis le mot magique !"
+            print("Ah ah ah... Vous n'avez pas dis le mot magique !")
+            not_utils.execution(not_utils.Jurassic_Park_GIF.gif, 6)
     
     @property
     def ouverture_session(self):
