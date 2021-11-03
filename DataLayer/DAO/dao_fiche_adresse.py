@@ -46,3 +46,15 @@ class DAOFicheAdresse(metaclass=Singleton):
     def supprimer_fiche_adresse(self, identifiant: int) -> bool:
         res = self.__interface.supprimer_fiche_adresse(identifiant)
         return res
+
+    def obtenir_statistiques(self, premier_niveau, deuxieme_niveau = None, troisieme_niveau = None) -> List[tuple]:
+        if deuxieme_niveau is None and troisieme_niveau is not None:
+            raise ValueError("Le deuxième niveau doit être défini avant de définir un troisième niveau.")
+        else:
+            criteria = [premier_niveau]
+            if deuxieme_niveau is not None:
+                criteria.append(deuxieme_niveau)
+                if troisieme_niveau is not None:
+                    criteria.append(troisieme_niveau)
+            res = self.__interface.obtenir_statistiques(criteria)
+            return res
