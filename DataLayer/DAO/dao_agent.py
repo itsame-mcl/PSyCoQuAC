@@ -32,8 +32,8 @@ class DAOAgent(metaclass=Singleton):
         res = self.__interface.modifier_agent(agent_a_modifier)
         return res
 
-    def changer_droit(self, agent_a_modifier : Agent) -> bool:
-        res = self.__interface.changer_droit(agent_a_modifier)
+    def changer_droits(self, agent_a_modifier : Agent) -> bool:
+        res = self.__interface.changer_droits(agent_a_modifier)
         return res
 
     def est_superviseur(self, nom_utilisateur : varchar(20)) -> bool:
