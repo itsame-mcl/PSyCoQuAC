@@ -54,7 +54,22 @@ class SQLiteAgent(InterfaceAgent):
             return False
 
     def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool) -> bool:
-        
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("""
+            INSERT INTO agents (identifiant_pot, identifiant_lot, code_resultat, date_importation,date_dernier_traitement,
+            initial_numero, initial_voie, initial_code_postal, initial_ville,final_numero, final_voie,
+            final_code_postal, final_ville, coordonnees_wgs84, champs_supplementaires)
+            VALUES(:identifiant_pot, :identifiant_lot, :code_resultat, :date_importation, :date_dernier_traitement,
+            :initial_numero, :initial_voie, :initial_code_postal, :initial_ville, :final_numero, :final_voie,
+            :final_code_postal, :final_ville, :coordonnees_wgs84, :champs_supplementaires)
+            """, {id_agent})
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
     def modifier_agent(self, agent_a_modifier : Agent) -> bool:
         data = self.__dao_to_sqlite(data)

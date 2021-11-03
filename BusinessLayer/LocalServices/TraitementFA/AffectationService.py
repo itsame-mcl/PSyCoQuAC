@@ -19,8 +19,8 @@ class AffectationService():
 
     def appliquer_repartition(session_utilisateur : Session, repartition : Dict) -> bool :
         if session_utilisateur.droits_superviseurs == False :
-            print("Ah ah ah... Vous n'avez pas dis le mot magique !")
-            not_utils.probleme_droits_agent(not_utils.Jurassic_Park_GIF.gif, 6)
+            #print("Ah ah ah... Vous n'avez pas dis le mot magique !")
+            #not_utils.probleme_droits_agent(not_utils.Jurassic_Park_GIF.gif, 6)
             raise ValueError("Le gestionnaire ne peut pas appliquer la répartition des fiches")
         else:
             for agent in repartition.keys() :
