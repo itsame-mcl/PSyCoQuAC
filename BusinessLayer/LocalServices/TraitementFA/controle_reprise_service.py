@@ -3,17 +3,18 @@ from BusinessLayer.BusinessObjects.session import Session
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 
-class ControleRepriseService() :
+class ControleRepriseService():
+
     def consulter_fiche(self, session_utilisateur : Session, id_fiche : int, etat_final : bool ) -> FicheAdresse :
-        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte) # récupère le pot de l'agent 
-        if session_utilisateur.droits_superviseurs == False and id_fiche in not pot : # Un agent ne peut pas consulter une fiche s'il est gestionnaire et que la fiche ne lui est pas attribué
+        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte) # Récupère le pot de l'agent 
+        if session_utilisateur.droits_superviseurs == False and id_fiche not in pot : # Un agent ne peut pas consulter une fiche s'il est gestionnaire et que la fiche ne lui est pas attribué
             raise ValueError("L'agent n'a pas le droit de consulter la fiche")
         fa = DAOFicheAdresse.recuperer_fiche_adresse(id_fiche)
         return fa
     
     def modifier_fiche(self, session_utilisateur : Session, id_fiche : int, nouvelles_informations : dict) -> FicheAdresse:
-        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte) # récupère le pot de l'agent
-        if session_utilisateur.droits_superviseurs == False and id_fiche in not pot :
+        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte) # Récupère le pot de l'agent
+        if session_utilisateur.droits_superviseurs == False and id_fiche not in pot :
             raise ValueError("Le gestionnaire n'a pas le droit de modifier la fiche si celle_ci ne lui appartient pas.")
         fa = DAOFicheAdresse.recuperer_fiche_adresse(id_fiche)
         fa = FicheAdresse(id_fiche,  nouvelles_informations["identifiant_pot"] if "identifiant_pot" in nouvelles_informations.keys else fa.identifiant_pot, 

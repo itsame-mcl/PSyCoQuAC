@@ -1,6 +1,7 @@
+from BusinessLayer.BusinessObjects.agent import Agent
+from BusinessLayer.BusinessObjects.session import Session
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_agent import InterfaceAgent
-
 
 class SQLiteAgent(InterfaceAgent):
 
@@ -52,10 +53,25 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def creer_agent(self, session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur):
-        raise NotImplemented
+    def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool) -> bool:
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("""
+            INSERT INTO agents (identifiant_pot, identifiant_lot, code_resultat, date_importation,date_dernier_traitement,
+            initial_numero, initial_voie, initial_code_postal, initial_ville,final_numero, final_voie,
+            final_code_postal, final_ville, coordonnees_wgs84, champs_supplementaires)
+            VALUES(:identifiant_pot, :identifiant_lot, :code_resultat, :date_importation, :date_dernier_traitement,
+            :initial_numero, :initial_voie, :initial_code_postal, :initial_ville, :final_numero, :final_voie,
+            :final_code_postal, :final_ville, :coordonnees_wgs84, :champs_supplementaires)
+            """, {id_agent})
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
 
-    def modifier_agent(self, agent_a_modifier):
+    def modifier_agent(self, agent_a_modifier : Agent) -> bool:
         data = self.__dao_to_sqlite(data)
         try:
             curseur = DBConnexion().connexion.cursor()
@@ -74,7 +90,7 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def changer_droit(self, agent_a_modifier):
+    def changer_droits(self, agent_a_modifier: Agent) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("UPDATE agents SET est_superviseur=:not(est_superviseur) WHERE identifiant_agent=: id_agent", {"id_agent": agent_a_modifier.agent_id})
@@ -85,34 +101,26 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def est_superviseur(self, nom_utilisateur):
-        try:
-            curseur = DBConnexion().connexion.cursor()
-            curseur.execute("SELECT est_superviseur FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
-            rows = curseur.fetchall()
-            curseur.close()
-            answer = list()
-            for row in rows:
-                data: dict = dict(zip(row.keys(), row))
-                data = self.__sqlite_to_dao(data)
-                answer.append(data)
-            return answer
-        except Exception as e:
-            print(e)
-            return False
+    def est_superviseur(self, nom_utilisateur : varchar(20)) -> bool:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT est_superviseur FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
+        rows = curseur.fetchall()
+        curseur.close()
+        answer = list()
+        for row in rows:
+            data: dict = dict(zip(row.keys(), row))
+            data = self.__sqlite_to_dao(data)
+            answer.append(data)
+        return answer
 
-    def recuperer_mdp_agent(self, nom_utilisateur):
-        try:
-            curseur = DBConnexion().connexion.cursor()
-            curseur.execute("SELECT mot_de_passe FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
-            rows = curseur.fetchall()
-            curseur.close()
-            answer = list()
-            for row in rows:
-                data: dict = dict(zip(row.keys(), row))
-                data = self.__sqlite_to_dao(data)
-                answer.append(data)
-            return answer
-        except Exception as e:
-            print(e)
-            return False
+    def recuperer_mdp_agent(self, nom_utilisateur : varchar(20)) -> char(128):
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT mot_de_passe FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
+        rows = curseur.fetchall()
+        curseur.close()
+        answer = list()
+        for row in rows:
+            data: dict = dict(zip(row.keys(), row))
+            data = self.__sqlite_to_dao(data)
+            answer.append(data)
+        return answer

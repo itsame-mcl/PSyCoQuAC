@@ -28,3 +28,9 @@ class Modele:
     @correspondances.setter
     def correspondances(self, value):
         self._correspondances = value
+
+    def as_dict(self) -> bool:
+        data = dict()
+        data["nom_modele"] = self._nom_modele
+        data["regex_nom_fichier"] = self._regex
+

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from BusinessLayer.BusinessObjects.session import Session
 from BusinessLayer.BusinessObjects.agent import Agent
 
 class InterfaceAgent(ABC):
@@ -13,7 +13,7 @@ class InterfaceAgent(ABC):
         raise NotImplemented
 
     @abstractmethod
-    def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool):
+    def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool) ->:
         raise NotImplemented
 
     @abstractmethod
@@ -21,7 +21,7 @@ class InterfaceAgent(ABC):
         raise NotImplemented
 
     @abstractmethod
-    def changer_droit(self, agent_a_modifier : Agent) -> bool:
+    def changer_droits(self, agent_a_modifier : Agent) -> bool:
         raise NotImplemented
 
     @abstractmethod

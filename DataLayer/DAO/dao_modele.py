@@ -11,3 +11,5 @@ class DAOModele(metaclass=Singleton):
         if engine == "SQLite":
             self.__interface = SQLiteModele()
 
+    def creer_modele(self, modele : Modele) -> bool:
+        pass
