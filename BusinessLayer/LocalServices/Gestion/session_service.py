@@ -20,7 +20,7 @@ class SessionServices:
             self.__session = self.__interface.ouvrir_session(nom_utilisateur, mot_de_passe)
         else:
             print("Ah ah ah... Vous n'avez pas dis le mot magique !")
-            not_utils.execution(not_utils.Jurassic_Park_GIF.gif, 6)
+            not_utils.probleme_droits_agent(not_utils.Jurassic_Park_GIF.gif, 6)
  
     def fermer_session(self):
         print("Alors étranger ? On s'en va sans dire au revoir ?")
