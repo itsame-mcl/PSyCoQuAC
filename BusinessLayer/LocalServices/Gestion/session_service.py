@@ -17,14 +17,11 @@ class SessionServices:
                 self.__interface = SessionSuperviseur()
             else: # l'Agent est un gestionnaire
                 self.__interface = SessionGestionnaire()
-            self.__connexion = self.__interface.ouvrir_session(nom_utilisateur, mot_de_passe)
+            self.__session = self.__interface.ouvrir_session(nom_utilisateur, mot_de_passe)
         else:
             print("Ah ah ah... Vous n'avez pas dis le mot magique !")
             not_utils.execution(not_utils.Jurassic_Park_GIF.gif, 6)
-    
-    @property
-    def ouverture_session(self):
-        
-
+ 
     def fermer_session(self):
+        print("Alors étranger ? On s'en va sans dire au revoir ?")
         self.__interface.fermer_session
