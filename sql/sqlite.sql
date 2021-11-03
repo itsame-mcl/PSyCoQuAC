@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS agents (
     est_superviseur NUMERIC,
     quotite NUMERIC,
     identifiant_superviseur INTEGER,
-    identifiant_delegue INTEGER,
     nom_utilisateur TEXT,
     mot_de_passe TEXT,
     prenom TEXT,

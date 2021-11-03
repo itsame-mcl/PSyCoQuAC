@@ -11,5 +11,22 @@ class DAOModele(metaclass=Singleton):
         if engine == "SQLite":
             self.__interface = SQLiteModele()
 
+    def recuperer_modele(self, identifiant: int) -> Modele:
+        data = self.__interface.recuperer_modele(identifiant)
+        return Modele.from_dict(data)
+
+    def recuperer_regex(self) -> dict:
+        data = self.__interface.recuperer_regex()
+        return data
+
     def creer_modele(self, modele : Modele) -> bool:
-        pass
+        res = self.__interface.creer_modele(modele.as_dict())
+        return res
+
+    def modifier_modele(self, modele: Modele) -> bool:
+        res = self.__interface.modifier_modele(modele.as_dict())
+        return res
+
+    def supprimer_modele(self, identifiant: int) -> bool:
+        res = self.__interface.supprimer_modele(identifiant)
+        return res

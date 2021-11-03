@@ -113,3 +113,17 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         except Exception as e:
             print(e)
             return False
+
+    def obtenir_statistiques(self, champs: list) -> List[tuple]:
+        request = "SELECT COUNT(identifiant_fa) FROM fa GROUP BY {}".format(
+            ','.join(':{}'.format(i) for i in range(len(champs))))
+        params = {}
+        params.update({str(i): champ for i, champ in enumerate(champs)})
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute(request, params)
+        rows = curseur.fetchall()
+        curseur.close()
+        answer = list()
+        for row in rows:
+            answer.append(tuple(row))
+        return answer
