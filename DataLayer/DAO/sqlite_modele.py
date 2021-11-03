@@ -18,7 +18,7 @@ class SQLiteModele(InterfaceModele):
         curseur.execute("SELECT * FROM modeles WHERE identifiant_modele=:id", {"id": identifiant})
         row = curseur.fetchone()
         curseur.close()
-        data: dict = dict(zip(row.keys(), row))
+        data = dict(zip(row.keys(), row))
         data = self.__sqlite_to_dao(data)
         return data
 

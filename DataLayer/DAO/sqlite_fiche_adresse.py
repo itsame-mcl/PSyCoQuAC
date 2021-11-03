@@ -26,7 +26,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         curseur.execute("SELECT * FROM fa WHERE identifiant_fa=:id", {"id": identifiant})
         row = curseur.fetchone()
         curseur.close()
-        data: dict = dict(zip(row.keys(), row))
+        data = dict(zip(row.keys(), row))
         data = self.__sqlite_to_dao(data)
         return data
 
@@ -45,7 +45,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer

@@ -40,7 +40,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer
@@ -105,7 +105,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer
@@ -117,7 +117,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer
@@ -129,7 +129,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer
@@ -141,7 +141,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer
@@ -153,7 +153,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         answer = list()
         for row in rows:
-            data: dict = dict(zip(row.keys(), row))
+            data  = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
             answer.append(data)
         return answer
