@@ -35,7 +35,7 @@ class BANClient :
         n = len(fiches_a_traiter)
         scores = []
         for i in range (n):
-            score, fiche = geocodage_par_fiche(self, fiches_a_traiter[i])
+            score, fiche = BANClient.geocodage_par_fiche(self, fiches_a_traiter[i])
             fiches_a_traiter[i]=fiche
             scores.append(score)
         return(scores, fiches_a_traiter)
@@ -44,7 +44,7 @@ class BANClient :
         n = len(fiches_a_traiter)
         scores = []
         for i in range (n):
-            score, fiche = reverse_par_fiche(self, fiches_a_traiter[i])
+            score, fiche = BANClient.reverse_par_fiche(self, fiches_a_traiter[i])
             fiches_a_traiter[i]=fiche
             scores.append(score)
         return(scores, fiches_a_traiter)
