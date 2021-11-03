@@ -57,13 +57,9 @@ class SQLiteAgent(InterfaceAgent):
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("""
-            INSERT INTO agents (identifiant_pot, identifiant_lot, code_resultat, date_importation,date_dernier_traitement,
-            initial_numero, initial_voie, initial_code_postal, initial_ville,final_numero, final_voie,
-            final_code_postal, final_ville, coordonnees_wgs84, champs_supplementaires)
-            VALUES(:identifiant_pot, :identifiant_lot, :code_resultat, :date_importation, :date_dernier_traitement,
-            :initial_numero, :initial_voie, :initial_code_postal, :initial_ville, :final_numero, :final_voie,
-            :final_code_postal, :final_ville, :coordonnees_wgs84, :champs_supplementaires)
-            """, {id_agent})
+            INSERT INTO agents (identifiant_agent, est_superviseur, quotite, identifiant_superviseur, identifiant_delegue, nom_utilisateur, mot_de_passe, prenom, nom)
+            VALUES(:identifiant_agent, :est_superviseur, :quotite, :identifiant_superviseur, :identifiant_delegue, :nom_utilisateur, :mot_de_passe, :prenom, :nom)
+            """, {identifiant_agent : session_utilisateur.utilisateur_connecte.agent_id, est_superviseur = est_superviseur, })
             DBConnexion().connexion.commit()
             curseur.close()
             return True
