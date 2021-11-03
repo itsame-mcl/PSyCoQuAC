@@ -1,8 +1,11 @@
+from typing import List
 import requests
+
+from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 
 class BANClient :
     
-    def geocodage_par_fiche(self, fiche_a_traiter):
+    def geocodage_par_fiche(self, fiche_a_traiter : FicheAdresse) -> (float, FicheAdresse):
         adresse = fiche_a_traiter.adresse_initiale
         adresse = adresse.replace(" ", "+")
         response = requests.get("https://api-adresse.data.gouv.fr/search/?q=" + str(adresse))
@@ -16,7 +19,7 @@ class BANClient :
         fiche_a_traiter.adresse_finale = adresse_API
         return(score, fiche_a_traiter)
     
-    def reverse_par_fiche(self, fiche_a_traiter):
+    def reverse_par_fiche(self, fiche_a_traiter : FicheAdresse) -> (float, FicheAdresse) :
         if len(fiche_a_traiter.coords_WGS84) == 0 :
             raise ValueError('La FicheAdresse ne possède pas de coordonnées GPS')
         coordonnees_gps = fiche_a_traiter.coords_WGS84
@@ -31,7 +34,7 @@ class BANClient :
         fiche_a_traiter.adresse_finale = adresse_API
         return(score, fiche_a_traiter)
 
-    def geocodage_par_lot(self, fiches_a_traiter):
+    def geocodage_par_lot(self, fiches_a_traiter : List[FicheAdresse]) -> (List[float], List[FicheAdresse]):
         n = len(fiches_a_traiter)
         scores = []
         for i in range (n):
@@ -40,7 +43,7 @@ class BANClient :
             scores.append(score)
         return(scores, fiches_a_traiter)
 
-    def reverse_par_lot(self, fiches_a_traiter):
+    def reverse_par_lot(self, fiches_a_traiter : List[FicheAdresse]) -> (List[float], List[FicheAdresse]):
         n = len(fiches_a_traiter)
         scores = []
         for i in range (n):
