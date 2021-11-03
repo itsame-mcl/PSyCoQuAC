@@ -4,9 +4,10 @@ from typing import Dict, List
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.session import Session
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
+from DataLayer.DAO.interface_agent import InterfaceAgent
 import not_utils
 
-class AffectationService():
+class AffectationService:
 
     def echantilloner_fiches(fiches_a_controler : List[FicheAdresse], taille_max_travail : int) -> List[FicheAdresse]:
         n = len(fiches_a_controler)
@@ -20,7 +21,7 @@ class AffectationService():
     def repartition(session_utilisateur : Session, fiches_a_controler : List[FicheAdresse], taille_max_travail : int, fiches_a_reprendre : List[FicheAdresse]) -> Dict :
         if session_utilisateur.droits_superviseurs == False :
             raise ValueError("Le gestionnaire ne peut pas appliquer la répartition des fiches")
-        liste_echantillonne = echantilloner_fiches(fiches_a_controler, taille_max_travail)
+        liste_echantillonne = AffectationService.echantilloner_fiches(fiches_a_controler, taille_max_travail)
         fiches_a_repartir = fiches_a_reprendre + liste_echantillonne
         repartition = {}
         superviseur = session_utilisateur.utilisateur_connecte
@@ -42,7 +43,6 @@ class AffectationService():
             res = DAOFicheAdresse.affecter_fiches_adresse(agent_choisi, [id_fiche_a_repartir]) #On affecte la fiche à l'agent choisi
             repartition[agent_choisi] = id_fiche_a_repartir
         return repartition
-
 
     def appliquer_repartition(session_utilisateur : Session, repartition : Dict) -> bool :
         if session_utilisateur.droits_superviseurs == False :
