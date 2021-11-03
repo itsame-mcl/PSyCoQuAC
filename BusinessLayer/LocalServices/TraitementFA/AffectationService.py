@@ -49,13 +49,7 @@ class AffectationService():
             #print("Ah ah ah... Vous n'avez pas dis le mot magique !")
             #not_utils.probleme_droits_agent(not_utils.Jurassic_Park_GIF.gif, 6)
             raise ValueError("Le gestionnaire ne peut pas appliquer la répartition des fiches")
-<<<<<<< HEAD
-        for agent in repartition.items() :
-            res = DAOFicheAdresse.affecter_fiches_adresse(agent, [repartition[agent]]) #On affecte les fiches
-        return True
-=======
         else:
             for agent in repartition.keys() :
                 res = DAOFicheAdresse.affecter_fiches_adresse(agent, repartition[agent]) # On affecte les fiches
             return True       
->>>>>>> ed5dd14cc7211476f4aaf7b40ede2282ec34842b
