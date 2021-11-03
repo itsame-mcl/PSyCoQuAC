@@ -1,13 +1,13 @@
 from BusinessLayer.BusinessObjects.correspondance import Correspondance
 
-
 class Modele:
+    
     def __init__(self, nom_modele: str, regex_nom_fichier: str,
                  correspondances: Correspondance, identifiant: int = None):
-        self._identifiant: int = identifiant
-        self._nom_modele: str = nom_modele
-        self._regex: str = regex_nom_fichier
-        self._correspondances: Correspondance = correspondances
+        self._identifiant = identifiant
+        self._nom_modele = nom_modele
+        self._regex = regex_nom_fichier
+        self._correspondances = correspondances
 
     @classmethod
     def from_dict(cls, data):

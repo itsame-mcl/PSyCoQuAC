@@ -1,4 +1,5 @@
 from typing import Tuple
+from typing import List
 from BusinessLayer.BusinessObjects.agent import Agent
 from BusinessLayer.BusinessObjects.session import Session
 from DataLayer.DAO.db_connexion import DBConnexion
@@ -7,7 +8,7 @@ from hashlib import sha512
 
 class SQLiteAgent(InterfaceAgent):
 
-    def deleguer_agent_a(self, id_agents : list[int], id_superviseur : int) -> bool:
+    def deleguer_agent_a(self, id_agents : List[int], id_superviseur : int) -> bool:
         request = "UPDATE agents SET identifiant_superviseur=:id_superviseur WHERE identifiant_agent IN ({})".format(','.join(':{}'.format(i) for i in range(len(id_agents))))
         params = {"id_superviseur": id_superviseur}
         params.update({str(i): id for i, id in enumerate(id_agents)})
@@ -28,7 +29,7 @@ class SQLiteAgent(InterfaceAgent):
             id_agents.append(agent.agent_id)
         return SQLiteAgent.deleguer_agent_a(id_agents, id_superviseur)
 
-    def recuperer_liste_agents(self, id_superviseur : int) -> list[Agent]:
+    def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
         if id_superviseur > 0:
             request = "SELECT * FROM agents WHERE identifiant_superviseur =: id_superviseur"
         else:

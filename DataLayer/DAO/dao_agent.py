@@ -1,4 +1,5 @@
 from typing import Tuple
+from typing import List
 import dotenv
 from BusinessLayer.BusinessObjects.agent import Agent
 from DataLayer.DAO.sqlite_agent import SQLiteAgent
@@ -11,11 +12,11 @@ class DAOAgent(metaclass=Singleton):
         if engine == "SQLite":
             self.__interface = SQLiteAgent()
 
-    def deleguer_agent_a(self, id_agents : list[int], id_superviseur : int) -> bool:
+    def deleguer_agent_a(self, id_agents : List[int], id_superviseur : int) -> bool:
         res = self.__interface.deleguer_agent_a(id_agents, id_superviseur)
         return res
 
-    def recuperer_liste_agents(self, id_superviseur : int) -> list[Agent]:
+    def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
         res = self.__interface.recuperer_liste_agents(id_superviseur)
         return res
 
@@ -23,7 +24,7 @@ class DAOAgent(metaclass=Singleton):
         res = self.__interface.supprimer_agent(id_agent)
         return res
 
-    def creer_agent(self, est_superviseur : bool, quotite : float, id_superviseur : int, nom_utilisateur : str, mot_de_passe : str, prenom : str, nom : str):
+    def creer_agent(self, est_superviseur : bool, quotite : float, id_superviseur : int, nom_utilisateur : str, mot_de_passe : str, prenom : str, nom : str) -> bool:
         res = self.__interface.creer_agent( est_superviseur, quotite, id_superviseur, nom_utilisateur, mot_de_passe, prenom, nom)
         return res
 

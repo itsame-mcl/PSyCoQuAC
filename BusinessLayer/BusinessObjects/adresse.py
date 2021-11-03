@@ -1,4 +1,5 @@
 class Adresse:
+    
     def __init__(self, numero, voie, cp, ville):
         self._numero = str(numero)
         self._voie = str(voie)
