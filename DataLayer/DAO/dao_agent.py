@@ -25,7 +25,7 @@ class DAOAgent(metaclass=Singleton):
         return res
 
     def creer_agent(self, session_utilisateur : Session, prenom : varchar(50), nom : varchar(100), nom_utilisateur : varchar(20), mot_de_passe : char(128), est_superviseur : bool):
-        res = self.__interface.creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseurr)
+        res = self.__interface.creer_agent(session_utilisateur, prenom, nom, nom_utilisateur, mot_de_passe, est_superviseur)
         return res
 
     def modifier_agent(self, agent_a_modifier : Agent) -> bool:
