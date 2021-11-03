@@ -17,6 +17,13 @@ class SQLiteAgent(InterfaceAgent):
         except Exception as e:
             print(e)
             return False
+        
+    def deleguer_equipe_a(self, session_utilisateur : Session, id_superviseur : int) ->bool:
+        agents = SQLiteAgent.recuperer_liste_agents(session_utilisateur.utilisateur_connecte.agent_id)
+        id_agents = []
+        for agent in agents:
+            id_agents.append(agent.agent_id)
+        return SQLiteAgent.deleguer_agent_a(id_agents, id_superviseur)
 
     def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
         if id_superviseur > 0:
@@ -79,15 +86,33 @@ class SQLiteAgent(InterfaceAgent):
             return False
 
     def est_superviseur(self, nom_utilisateur):
-        curseur = DBConnexion().connexion.cursor()
-        curseur.execute("SELECT est_superviseur FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
-        DBConnexion().connexion.commit()
-        curseur.close()
-        return answer
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("SELECT est_superviseur FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
+            rows = curseur.fetchall()
+            curseur.close()
+            answer = list()
+            for row in rows:
+                data: dict = dict(zip(row.keys(), row))
+                data = self.__sqlite_to_dao(data)
+                answer.append(data)
+            return answer
+        except Exception as e:
+            print(e)
+            return False
 
     def recuperer_mdp_agent(self, nom_utilisateur):
-        curseur = DBConnexion().connexion.cursor()
-        curseur.execute("SELECT mot_de_passe FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
-        DBConnexion().connexion.commit()
-        curseur.close()
-        return answer
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("SELECT mot_de_passe FROM agents WHERE nom_utilisateur=: utilisateur", {"utilisateur": nom_utilisateur})
+            rows = curseur.fetchall()
+            curseur.close()
+            answer = list()
+            for row in rows:
+                data: dict = dict(zip(row.keys(), row))
+                data = self.__sqlite_to_dao(data)
+                answer.append(data)
+            return answer
+        except Exception as e:
+            print(e)
+            return False
