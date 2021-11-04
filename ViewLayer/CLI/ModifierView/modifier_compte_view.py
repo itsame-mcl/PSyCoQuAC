@@ -11,12 +11,12 @@ class ModifierCompteView:
     def modifier(self, session: Session):
         answers = prompt(self.__questions)
         if '1' in answers['choix']:
-            return modif.ModifierPrenomView.modifier_prenom(session)
+            return modif.ModifierPrenomView(session)
         elif '2' in answers['choix']:
-            return modif.ModifierNomView.modifier_nom(session)
+            return modif.ModifierNomView(session)
         elif '3' in answers['choix']:
-            return modif.ModifierQuotiteoView.modifier_quotite(session)
+            return modif.ModifierQuotiteoView(session)
         elif '4' in answers['choix']:
-            return modif.ModifierUtilView.modifier_util(session)
+            return modif.ModifierUtilView(session)
         elif '5' in answers['choix'] :
-            return modif.ModifierMDPView.modifier_mdp(session)
+            return modif.ModifierMDPView(session)

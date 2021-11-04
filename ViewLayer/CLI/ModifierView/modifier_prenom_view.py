@@ -1,6 +1,6 @@
 from PyInquirer import prompt
 from ViewLayer.CLI.session import Session
-from DataLayer import DAO as dao
+from BusinessLayer.LocalServices.Gestion.fiche_agent_service import AgentServices
 from ViewLayer.CLI.ModifierView.continuer_modif_view import ContinuerModifView
 
 class ModifierPrenomView:
@@ -11,5 +11,7 @@ class ModifierPrenomView:
     def modifier_prenom(self, session: Session):
         answers = prompt(self.__questions)
         nouvel_agent = session.agent.prenom = answers['prenom']
-        dao.DAOAgent.modifier_agent(nouvel_agent)
-        return ContinuerModifView.continuer(session)
+        probleme = AgentServices.modifier_agent(nouvel_agent)
+        if not(probleme):
+            print('La modification a échoué. Veuillez réessayer ultérieurement.')
+        return ContinuerModifView(session)
