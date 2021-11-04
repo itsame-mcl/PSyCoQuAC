@@ -39,8 +39,8 @@ connexion_agent(self, nom_utilisateur: str, mot_de_passe: str) -> Agent:
             print("L'enregistrement a échoué. Veuillez réessayer.")
             return ConnexionView.connexion
         else:
-            from ViewLayer.CLI.menu import Menu
-            return Menu()
+            from ViewLayer.CLI.menu import MenuPrincipalView
+            return MenuPrincipalView()
 
     def display_info(self):
         print(f"Bonjour {Session().prenom}, please choose some pokemon")

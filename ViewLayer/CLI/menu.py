@@ -1,36 +1,22 @@
 from PyInquirer import prompt
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
+import ViewLayer
 
-class MenuView(AbstractView):
+class MenuPrincipalView(AbstractView):
 
     def __init__(self):
-        self.__questions = [
-            {
-                'type': 'list',
-                'name': 'choix',
-                'message': 'Bonjour '+str(Session().user_name),
-                'choices': [
-                    'Next'
-                    , 'Checkbox example'
-                    , 'Sign In example'
+        self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+str(Session().prenom),
+                            'choices': ['Consulter son pot','Se déconnecter']}]
 
-                ]
-            }
-        ]
-
-    def display_info(self):
-        with open('utils/banner.png', 'r') as asset:
+    def affichage(self):
+        with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
             print(asset.read())
 
-#    def make_choice(self):
-#        reponse = prompt(self.__questions)
-#        if reponse['choix'] == 'Next':
-#            pass
-#        elif reponse['choix'] == 'Checkbox example':
-#            from view.checkbox_example_view import CheckBoxExampleView
-#            return CheckBoxExampleView()
-#        elif reponse['choix'] == 'Sign In example':
-#            from view.sign_in_example import SignInExample
-#            return SignInExample()
-
+    def make_choice(self):
+        answers = prompt(self.__questions)
+        if 'pot' in str.lower(answers['choix']) :
+            from ViewLayer.ConsulterPotView import CheckBoxExampleView
+            return CheckBoxExampleView()
+        elif str.lower(answers['choix']) == 'se déconnecter' or str.lower(answers['choix']) == 'se deconnecter' :
+            return ViewLayer.DeconnexionView.deconnexion()
