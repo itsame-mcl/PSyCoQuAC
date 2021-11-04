@@ -2,16 +2,14 @@ import dotenv
 from typing import List
 
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
-from DataLayer.DAO.sqlite_fiche_adresse import SQLiteFicheAdresse
+from DataLayer.DAO.interface_factory import InterfaceFactory
 from utils.singleton import Singleton
 
 
 class DAOFicheAdresse(metaclass=Singleton):
     
     def __init__(self):
-        engine = dotenv.dotenv_values(".env")["ENGINE"]
-        if engine == "SQLite":
-            self.__interface = SQLiteFicheAdresse()
+        self.__interface = InterfaceFactory.get_interface("FicheAdresse")
 
     def recuperer_fiche_adresse(self, identifiant: int) -> FicheAdresse:
         data = self.__interface.recuperer_fiche_adresse(identifiant)
