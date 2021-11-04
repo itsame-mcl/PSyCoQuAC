@@ -4,11 +4,13 @@ from DataLayer.DAO.interface_agent import InterfaceAgent
 
 
 class SQLiteAgent(InterfaceAgent):
-    def __sqlite_to_dao(self, data: dict) -> dict:
+    @staticmethod
+    def __sqlite_to_dao(data: dict) -> dict:
         data["est_superviseur"] = bool(data["est_superviseur"])
         return data
 
-    def __dao_to_sqlite(self, data: dict):
+    @staticmethod
+    def __dao_to_sqlite(data: dict):
         data["est_superviseur"] = int(data["est_superviseur"])
         return data
 
@@ -21,7 +23,7 @@ class SQLiteAgent(InterfaceAgent):
         data = self.__sqlite_to_dao(data)
         return data
 
-    def recuperer_liste_agents(self, id_superviseur : int) -> List[dict]:
+    def recuperer_liste_agents(self, id_superviseur: int) -> List[dict]:
         if id_superviseur > 0:
             request = "SELECT * FROM agents WHERE identifiant_superviseur =:id_superviseur"
         else:
@@ -82,11 +84,11 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def modifier_superviseur(self, id_agents : List[int], id_superviseur : int) -> bool:
+    def modifier_superviseur(self, id_agents: List[int], id_superviseur: int) -> bool:
         request = "UPDATE agents SET identifiant_superviseur=:id_superviseur WHERE identifiant_agent IN ({})".format(
             ','.join(':{}'.format(i) for i in range(len(id_agents))))
         params = {"id_superviseur": id_superviseur}
-        params.update({str(i): id for i, id in enumerate(id_agents)})
+        params.update({str(i): id_agent for i, id_agent in enumerate(id_agents)})
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute(request, params)
@@ -99,7 +101,7 @@ class SQLiteAgent(InterfaceAgent):
 
     def changer_droits(self, data: dict) -> bool:
         data = self.__dao_to_sqlite(data)
-        data["est_superviseur"] = 1 - data["est_superviseur"] # transforme 0 et 1 ou 1 en 0
+        data["est_superviseur"] = 1 - data["est_superviseur"]  # transforme 0 et 1 ou 1 en 0
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("""

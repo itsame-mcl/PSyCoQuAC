@@ -5,11 +5,13 @@ from DataLayer.DAO.interface_modele import InterfaceModele
 
 
 class SQLiteModele(InterfaceModele):
-    def __sqlite_to_dao(self, data: dict) -> dict:
+    @staticmethod
+    def __sqlite_to_dao(data: dict) -> dict:
         data["position_champs_supplementaires"] = literal_eval(data["position_champs_supplementaires"])
         return data
 
-    def __dao_to_sqlite(self, data: dict) -> dict:
+    @staticmethod
+    def __dao_to_sqlite(data: dict) -> dict:
         data["position_champs_supplementaires"] = repr(data["position_champs_supplementaires"])
         return data
 

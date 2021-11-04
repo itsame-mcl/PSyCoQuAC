@@ -1,14 +1,13 @@
 from typing import List
 
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
-import DataLayer.DAO.interface_factory as Factory
+import DataLayer.DAO.interface_factory as factory
 from utils.singleton import Singleton
 
 
 class DAOFicheAdresse(metaclass=Singleton):
-
     def __init__(self):
-        self.__interface = Factory.InterfaceFactory.get_interface("FicheAdresse")
+        self.__interface = factory.InterfaceFactory.get_interface("FicheAdresse")
 
     def recuperer_fiche_adresse(self, identifiant: int) -> FicheAdresse:
         data = self.__interface.recuperer_fiche_adresse(identifiant)

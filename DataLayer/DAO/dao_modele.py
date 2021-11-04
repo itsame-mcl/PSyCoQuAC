@@ -1,12 +1,11 @@
 from BusinessLayer.BusinessObjects.modele import Modele
-import DataLayer.DAO.interface_factory as Factory
+import DataLayer.DAO.interface_factory as factory
 from utils.singleton import Singleton
 
 
 class DAOModele(metaclass=Singleton):
-
     def __init__(self):
-        self.__interface = Factory.InterfaceFactory.get_interface("Agent")
+        self.__interface = factory.InterfaceFactory.get_interface("Agent")
 
     def recuperer_modele(self, identifiant: int) -> Modele:
         data = self.__interface.recuperer_modele(identifiant)
@@ -16,7 +15,7 @@ class DAOModele(metaclass=Singleton):
         data = self.__interface.recuperer_regex()
         return data
 
-    def creer_modele(self, modele : Modele) -> bool:
+    def creer_modele(self, modele: Modele) -> bool:
         res = self.__interface.creer_modele(modele.as_dict())
         return res
 
