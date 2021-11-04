@@ -1,52 +1,21 @@
-from pprint import pprint
 from PyInquirer import  prompt
-from ViewLayer.CLI.abstract_view import AbstractView
+from DataLayer import DAO as dao
 from ViewLayer.CLI.session import Session
+from BusinessLayer.BusinessObjects.agent import Agent
 
-class ConnexionView(AbstractView):
+class ConnexionView:
     
     def __init__(self) -> None:
-        self.__questions = [
-            {
-                'type': 'input',
-                'name': 'first_name',
-                'message': 'What\'s your first name',
-            },
-            {
-                'type': 'input',
-                'name': 'last_name',
-                'message': 'What\'s your last name',
-            },
-            {
-                'type': 'input',
-                'name': 'pseudo',
-                'message': 'What\'s your pseudo',
-            },
-            {
-                'type': 'password',
-                'name': 'password',
-                'message': 'What\'s your password. Your password should be '\
-                    'at least 10 characters, with at least one capital letter ' \
-                    'one number and one special character',
-                'validate': PasswordValidator
-            }
-        ]
+        self.__questions = [{'type': 'input','name': 'nom_utilisateur','message': "Nom d'utilisateur"}, 
+                            {'type': 'input','name': 'mot_de_passe','message': 'Mot de passe :'}]
 
-connexion_agent(self, nom_utilisateur: str, mot_de_passe: str) -> Agent:
     def connexion(self):
         answers = prompt(self.__questions)
-        if not(probleme):
-            print("L'enregistrement a échoué. Veuillez réessayer.")
-            return ConnexionView.connexion
+        agent = dao.DAOAgent.connexion_agent(answers['nom_utilisateur'], answers['mot_de_passe'])
+        if not(isinstance(agent, Agent)):
+            print("Ah ah ah... Vous n'avez pas dis le mot magique !. Veuillez réessayer.")
+            return ConnexionView.connexion()
         else:
+            session = Session(agent)
             from ViewLayer.CLI.menu import MenuPrincipalView
-            return MenuPrincipalView()
-
-    def display_info(self):
-        print(f"Bonjour {Session().prenom}, please choose some pokemon")
-
-    def make_choice(self):
-        answers = prompt(self.__questions)
-        pprint(answers)
-        from view.start_view import StartView
-        return StartView()
+            return MenuPrincipalView(session)
