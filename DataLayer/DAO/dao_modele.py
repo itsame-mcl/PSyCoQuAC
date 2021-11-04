@@ -26,3 +26,7 @@ class DAOModele(metaclass=Singleton):
     def supprimer_modele(self, identifiant: int) -> bool:
         res = self.__interface.supprimer_modele(identifiant)
         return res
+
+    def recuperer_dernier_id_modele(self) -> int:
+        value = self.__interface.recuperer_dernier_id_modele()
+        return value

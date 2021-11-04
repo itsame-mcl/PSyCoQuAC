@@ -43,17 +43,23 @@ class DAOFicheAdresse(metaclass=Singleton):
         res = self.__interface.supprimer_fiche_adresse(identifiant)
         return res
 
-    def obtenir_statistiques(self, premier_niveau, deuxieme_niveau=None, troisieme_niveau=None) -> List[tuple]:
-        if deuxieme_niveau is None and troisieme_niveau is not None:
-            raise ValueError("Le deuxième niveau doit être défini avant de définir un troisième niveau.")
-        else:
-            criteria = [premier_niveau]
-            if deuxieme_niveau is not None:
-                criteria.append(deuxieme_niveau)
-                if troisieme_niveau is not None:
-                    criteria.append(troisieme_niveau)
-            res = self.__interface.obtenir_statistiques(criteria)
+    def obtenir_statistiques(self, par_pot: bool = False, par_lot: bool = False, par_code_resultat: bool = False,
+                             filtre_pot: int = None, filtre_lot: int = None,
+                             filtre_code_resultat: str = None) -> List[tuple]:
+            if filtre_code_resultat is not None and filtre_code_resultat not in ["TI", "TA", "TH", "TC", "TR", "DI",
+                                                                                    "ER", "VA", "VC", "VR"]:
+                raise ValueError("Impossible de filtrer sur un code résultat illégal.")
+            res = self.__interface.obtenir_statistiques([par_pot, par_lot, par_code_resultat,
+                                                         filtre_pot, filtre_lot, filtre_code_resultat])
             return res
 
-    def recuperer_prochain_id_lot(self):
-        raise NotImplemented
+    def recuperer_dernier_id_fa(self) -> int:
+        value = self.__interface.recuperer_dernier_id_fa()
+        return value
+
+    def recuperer_dernier_id_lot(self) -> int:
+        value = self.__interface.recuperer_dernier_id_lot()
+        return value
+
+    def incrementer_id_lot(self) -> bool:
+        raise NotImplementedError

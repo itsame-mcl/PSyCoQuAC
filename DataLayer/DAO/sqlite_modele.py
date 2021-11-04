@@ -79,3 +79,11 @@ class SQLiteModele(InterfaceModele):
         except Exception as e:
             print(e)
             return False
+
+    def recuperer_dernier_id_modele(self) -> int:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT seq FROM sqlite_sequence WHERE name='modeles'")
+        row = curseur.fetchone()
+        curseur.close()
+        value = row["seq"]
+        return value
