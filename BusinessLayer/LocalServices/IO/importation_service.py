@@ -15,9 +15,4 @@ class ImportationServices:
 
     @property
     def importation(self):
-        """
-        return the opened connection.
-
-        :return: the opened connection.
-        """
         return self.__importation

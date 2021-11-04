@@ -2,6 +2,7 @@ from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.session import Session
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
+from typing import List
 
 class ControleRepriseService():
 
@@ -12,19 +13,17 @@ class ControleRepriseService():
         fa = DAOFicheAdresse.recuperer_fiche_adresse(id_fiche)
         return fa
     
-    def modifier_fiche(self, session_utilisateur : Session, id_fiche : int, nouvelles_informations : dict) -> FicheAdresse:
-        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte) # Récupère le pot de l'agent
-        if session_utilisateur.droits_superviseurs == False and id_fiche not in pot :
-            raise ValueError("Le gestionnaire n'a pas le droit de modifier la fiche si celle_ci ne lui appartient pas.")
+    def modifier_fiche(self, id_fiche : int, nouvelles_informations : dict) -> bool:
         fa = DAOFicheAdresse.recuperer_fiche_adresse(id_fiche)
-        fa = FicheAdresse(id_fiche,  nouvelles_informations["identifiant_pot"] if "identifiant_pot" in nouvelles_informations.keys else fa.identifiant_pot, 
+        nouvelle_fa = FicheAdresse(id_fiche,  nouvelles_informations["identifiant_pot"] if "identifiant_pot" in nouvelles_informations.keys else fa.identifiant_pot, 
                           nouvelles_informations["identifiant_lot"] if "identifiant_lot" in nouvelles_informations.keys else fa.identifiant_lot, 
                           nouvelles_informations["adresse_initiale"] if "adresse_initiale" in nouvelles_informations.keys else fa.adresse_initiale,
                           nouvelles_informations["adresse_finale"] if "adresse_finale" in nouvelles_informations.keys else fa.adresse_finale, 
                           nouvelles_informations["coordonnees_wgs84"] if "coordonnees_wgs84" in nouvelles_informations.keys else fa.coordonnees_wgs84, 
                           nouvelles_informations["champs_supplementaires"] if "champs_supplementaires" in nouvelles_informations.keys else fa.champs_supplementaires,
                           nouvelles_informations["code_resultat"] if "code_resultat" in nouvelles_informations.keys else fa.code_resultat)
-        return fa
+        probleme = DAOFicheAdresse.modifier_fiche_adresse(nouvelle_fa)
+        return probleme
     
     def consulter_pot(self, session_utilisateur : Session) -> List[FicheAdresse] :
         pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte)

@@ -1,45 +1,55 @@
 from PyInquirer import prompt
+from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 
-class MenuPrincipalView:
+class MenuPrincipalView(AbstractView):
 
     def __init__(self, session : Session) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+session.agent.prenom+', que voulez-vous faire ?',
-                            'choices': ['1) Consulter son pot', '2) Modifier son compte','3) Se déconnecter']}]
+                            'choices': ['A) Consulter son pot', 'B) Modifier son compte','C) Se déconnecter']}]
         self.__questions2 = [{'type': 'list','name': 'choix 2','message': 'Bonjour '+session.agent.prenom+', que voulez-vous faire ?',
-                            'choices': ['1) Consulter son pot', '2) Modifier son compte','3) Se déconnecter'
-                            '4) Déleguer son équipe', '5) Déléguer un agent','6) Modifier un agent',
-                            "7) Changer les droits d'un agent", '8) Créer un nouvel utilisateur']}]
+                            'choices': ['A) Consulter son pot', 'B) Modifier son compte','C) Se déconnecter'
+                            'D) Déleguer son équipe', 'E) Déléguer un agent','F) Modifier un agent',
+                            "G) Changer les droits d'un agent", 'H) Créer un nouvel utilisateur', "I) Gestion de l'équipe"
+                            "J) Importer/Exporter des fichiers d'adresse"]}]
 
-    def naviguer(self, session : Session):
+    def display_info(self):
+        with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
+            print(asset.read())
+
+    def make_choice(self, session : Session):
         if session.agent.agent_id == 0:
             from ViewLayer.CLI.connexion_view import ConnexionView
             return ConnexionView.connexion()
         else:
-            with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
-                print(asset.read())
             if session.droits:
                 answers = prompt(self.__questions2)
             else:
                 answers = prompt(self.__questions)
-            if '1' in answers['choix']:
+            if 'A' in answers['choix']:
                 from ViewLayer.CLI.consulter_pot import ConsulterPotView
                 return ConsulterPotView(session)
-            elif '2' in answers['choix']:
+            elif 'B' in answers['choix']:
                 from ViewLayer.CLI.ModifierView.modifier_compte_view import ModifierCompteView
-                return ModifierCompteView.modifier(session)
-            elif '3' in answers['choix']:
+                return ModifierCompteView(session)
+            elif 'C' in answers['choix']:
                 from ViewLayer.CLI.deconnexion_view import DeconnexionView
-                return DeconnexionView.deconnexion(session)
-            elif '4' in answers['choix'] or '5' in answers['choix']:
+                return DeconnexionView(session)
+            elif 'D' in answers['choix'] or 'E' in answers['choix']:
                 from ViewLayer.CLI.deleguer_view import DeleguerView
-                return DeleguerView.deleguer(session)
-            elif '6' in answers['choix'] :
+                return DeleguerView(session)
+            elif 'F' in answers['choix'] :
                 from ViewLayer.CLI.ModifierView.modifier_agent_view import ModifierAgentView
-                return ModifierAgentView.modifier(session)
-            elif '7' in answers['choix']:
+                return ModifierAgentView(session)
+            elif 'G' in answers['choix']:
                 from ViewLayer.CLI.changer_droits_view import ChangerDroitsView
-                return ChangerDroitsView.modifier(session)
-            elif '8' in answers['choix']:
+                return ChangerDroitsView(session)
+            elif 'H' in answers['choix']:
                 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
-                return NouvelUtilisateurView.enregistrement(session)
+                return NouvelUtilisateurView(session)
+            elif 'I' in answers['choix']:
+                from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
+                return GestionEquipeView(session)
+            elif 'J' in answers['choix']:
+                from ViewLayer.CLI.import_export_view import ImportExportView
+                return ImportExportView(session)

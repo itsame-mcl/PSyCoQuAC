@@ -1,45 +1,55 @@
 from DataLayer import DAO
 from DataLayer.DAO import dao_fiche_adresse
+from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
-
+from  BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
 
-from ViewLayer.CLI.session import Session
+class ControlerFiche(AbstractView):
 
-class ControlerFiche:
-
-    def __init__(self) -> None:
-
+    def __init__(self, session : Session, curseur : int = 0) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Que voulez-vous faire ?',
-                            'choices': ['c) Valider les données, elles sont correctes','i) Invalider les données, elles sont incorrectes ', 'p) Passer à la fiche précédente', 's) Passer à la fiche suivante', 'm) Retourner au menu principal']}]
-        self.__questions2 = [{'type':'list', 'name':'choix', 'message': 'Confirmez-vous ?', 'choices':['Oui', 'Non']}]
+                            'choices': ['c) Les données sont correctes','i) Les données sont incorrectes ', 
+                            'p) Retourner à la fiche précédente', 's) Passer à la fiche suivante', 'm) Retourner au menu principal']}]
+        self.__questions2 = [{'type':'list', 'name':'choix', 'message': 'Confirmez-vous votre décision ?', 'choices': ['Oui', 'Non']}]
     
-    def controle_fiche(self, curseur = 0): # curseur = l'emplacement de la fiche en contrôle dans la liste
-        pot = dao_fiche_adresse.recupere_pot(Session.agent_id) 
-        fiche = pot[curseur] # On récupère la fiche dans le pot de l'agent
-        print('Fiche adresse n°:' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + str(fiche.adresse_initiale) + 'Données API : Adresse finale : '  + str(fiche.adresse_finale) + 'Coordonnées GPS :' + str(fiche.coords_wgs84))
+    def display_info(self, session : Session, curseur : int):
+        pot = dao_fiche_adresse.recupere_pot(session.agent_id) 
+        fiche = pot[curseur]
+        print('Fiche adresse n°:' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : '  + str(fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
+
+    def make_choice(self, session : Session, curseur : int): # curseur = l'emplacement de la fiche en contrôle dans la liste
+        pot = dao_fiche_adresse.recupere_pot(session.agent_id) 
+        fiche = pot[curseur]
         answers = prompt(self.__questions)
-        if 'c)' in str.lower(answers['choix']) :
+        if 'c' in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
-            if str.lower(answers2['choix']) == 'Oui' :
-                res = dao_fiche_adresse.modifier_fiche_adresse(fiche, {'code_res' : 'VC'})
-                return ControlerFiche.controle_fiche()
-            elif str.lower(answer2['choix']) == 'Non':
-                return ControlerFiche.controle_fiche()
-        elif 'i)'in str.lower(answers['choix']) :
+            if str.lower(answers2['choix']) == 'oui' :
+                probleme = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'VC'})
+                if not(probleme):
+                    print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
+                    return ControlerFiche(session, curseur+1)
+                else:
+                    return ControlerFiche(session, curseur+1)
+            elif str.lower(answers2['choix']) == 'non':
+                return ControlerFiche(session, curseur)
+        elif 'i'in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
-            if str.lower(answers2['choix']) == 'Oui' :
-                res = dao_fiche_adresse.modifier_fiche_adresse(fiche, {'code_res' : 'TR'})
-                return ControlerFiche.controle_fiche()
-            elif str.lower(answer2['choix']) == 'Non':
-                return ControlerFiche.controle_fiche()
-        elif 'p)' in str.lower(answers['choix']) :
+            if str.lower(answers2['choix']) == 'oui' :
+                probleme = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'TR'})
+                if not(probleme):
+                    print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
+                    return ControlerFiche(session, curseur+1)
+                else:
+                    return ControlerFiche(session, curseur+1)
+            elif str.lower(answers2['choix']) == 'non':
+                return ControlerFiche(session, curseur)
+        elif 'p' in str.lower(answers['choix']) :
             curseur = (curseur-1) % len(pot)
-            return ControlerFiche.controle_fiche()
-        elif 's)'in str.lower(answers['choix']) :
+            return ControlerFiche(session, curseur)
+        elif 's'in str.lower(answers['choix']) :
             curseur = (curseur+1) % len(pot)
-            return ControlerFiche.controle_fiche()
-        elif 'm)' in str.lower(answers['choix']) :
-            from ViewLayer.CLI.menu import MenuPrincipalView
-            return MenuPrincipalView()
+            return ControlerFiche(session, curseur)
+        elif 'm' in str.lower(answers['choix']) :
+            return MenuPrincipalView(session)
