@@ -2,13 +2,13 @@ from typing import Tuple
 from typing import List
 
 from BusinessLayer.BusinessObjects.agent import Agent
-from DataLayer.DAO.interface_factory import InterfaceFactory
+import DataLayer.DAO.interface_factory as Factory
 from utils.singleton import Singleton
 
 class DAOAgent(metaclass=Singleton):
 
     def __init__(self):
-        self.__interface = InterfaceFactory.get_interface("Agent")
+        self.__interface = Factory.InterfaceFactory.get_interface("Agent")
 
     def deleguer_agent_a(self, id_agents : List[int], id_superviseur : int) -> bool:
         res = self.__interface.deleguer_agent_a(id_agents, id_superviseur)
