@@ -11,5 +11,5 @@ class Session(metaclass=Singleton):
         ref:type = valeur
         permet de donner le type des variables. Utile pour l'autocompletion.
         """
-        self.agent_id = agent.agent_id
+        self.prenom = agent.prenom
         self.droits = isinstance(agent, Superviseur)
