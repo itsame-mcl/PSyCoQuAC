@@ -12,13 +12,20 @@ class FrameConnexion(Frame):
         # Creation des deux TextBox pour rensiegner son nom d'utilisateur et son mot de passe.
         layout = Layout([100], fill_frame = True)
         self.add_layout(layout)
-        layout.add_widget(TextBox(1, label = "Nom d'utilisateur :", as_string = True))
-        layout.add_widget(TextBox(1, label = "Mot de passe :", as_string=True, on_change = ))
+        nom_utilisateur, mot_de_passe = x, y
+        layout.add_widget(TextBox(1, label = "Nom d'utilisateur :", as_string = True, on_change = FrameConnexion.stocker_nom))
+        layout.add_widget(TextBox(1, label = "Mot de passe :", as_string=True, on_change = FrameConnexion.stocker_mdp))
         layout2 = Layout([1, 1, 1, 1])
         self.add_layout(layout2)
-        layout2.add_widget(Button("OK", self._ok), 0)
-        layout2.add_widget(Button("Cancel", self._cancel), 3)
+        layout2.add_widget(Button("Se connecter", self._ok), 0)
+        layout2.add_widget(Button("Effacer", self._cancel), 3)
         self.fix()
+
+    def stocker_nom(self, value):
+        nom_utilisateur = value
+
+    def stocker_mdp(self, value):
+        mot_de_passe = value
 
     def reset(self):
         # Do standard reset to clear out form, then populate with new data.
