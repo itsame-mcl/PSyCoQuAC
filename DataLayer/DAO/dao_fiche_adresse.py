@@ -46,9 +46,20 @@ class DAOFicheAdresse(metaclass=Singleton):
     def obtenir_statistiques(self, par_pot: bool = False, par_lot: bool = False, par_code_resultat: bool = False,
                              filtre_pot: int = None, filtre_lot: int = None,
                              filtre_code_resultat: str = None) -> List[tuple]:
+            if filtre_code_resultat is not None and filtre_code_resultat not in ["TI", "TA", "TH", "TC", "TR", "DI",
+                                                                                    "ER", "VA", "VC", "VR"]:
+                raise ValueError("Impossible de filtrer sur un code résultat illégal.")
             res = self.__interface.obtenir_statistiques([par_pot, par_lot, par_code_resultat,
                                                          filtre_pot, filtre_lot, filtre_code_resultat])
             return res
 
-    def recuperer_prochain_id_lot(self):
+    def recuperer_dernier_id_fa(self) -> int:
+        value = self.__interface.recuperer_dernier_id_fa()
+        return value
+
+    def recuperer_dernier_id_lot(self) -> int:
+        value = self.__interface.recuperer_dernier_id_lot()
+        return value
+
+    def incrementer_id_lot(self) -> bool:
         raise NotImplementedError

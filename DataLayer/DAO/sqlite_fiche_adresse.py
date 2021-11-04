@@ -127,16 +127,17 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             fields.append('code_resultat')
         fields.append("COUNT(identifiant_fa)")
         if criteria[3] is not None:
-            filters.append('identifiant_pot='+str(criteria[3]))
+            filters.append('identifiant_pot=' + str(criteria[3]))
         if criteria[4] is not None:
-            filters.append('identifiant_lot='+str(criteria[4]))
+            filters.append('identifiant_lot=' + str(criteria[4]))
         if criteria[5] is not None:
-            filters.append('code_resultat='+criteria[5])
-        request = "SELECT " + str(fields).strip('[]').replace("'","") + " FROM fa"
-        if len(filters)>0:
-            request = request + " WHERE " + str(filters).strip('[]').replace("'","").replace(","," AND")
+            if criteria[5] in ["TI", "TA", "TH", "TC", "TR", "DI", "ER", "VA", "VC", "VR"]:  # sécurité anti_injection
+                filters.append('code_resultat=' + criteria[5])
+        request = "SELECT " + str(fields).strip('[]').replace("'", "") + " FROM fa"
+        if len(filters) > 0:
+            request = request + " WHERE " + str(filters).strip('[]').replace("'", "").replace(",", " AND")
         fields.remove("COUNT(identifiant_fa)")
-        if len(fields)>0:
+        if len(fields) > 0:
             request = request + " GROUP BY " + str(fields).strip('[]').replace("'", "")
         curseur = DBConnexion().connexion.cursor()
         curseur.execute(request)
@@ -146,3 +147,31 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         for row in rows:
             answer.append(tuple(row))
         return answer
+
+    def recuperer_dernier_id_fa(self) -> int:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT seq FROM sqlite_sequence WHERE name='fa'")
+        row = curseur.fetchone()
+        curseur.close()
+        value = row["seq"]
+        return value
+
+    def recuperer_dernier_id_lot(self) -> int:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT seq FROM sqlite_sequence WHERE name='lots'")
+        row = curseur.fetchone()
+        curseur.close()
+        value = row["seq"]
+        return value
+
+    def incrementer_id_lot(self) -> bool:
+        value = self.recuperer_dernier_id_lot() + 1
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("UPDATE sqlite_sequence SET seq=:value WHERE name='lots'", {"value": value})
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False

@@ -28,5 +28,18 @@ class InterfaceFicheAdresse(ABC):
     def supprimer_fiche_adresse(self, identifiant: int) -> bool:
         raise NotImplementedError
 
+    @abstractmethod
     def obtenir_statistiques(self, champs: list) -> List[tuple]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def recuperer_dernier_id_fa(self) -> int:
+        raise NotImplementedError
+
+    @abstractmethod
+    def recuperer_dernier_id_lot(self) -> int:
+        raise NotImplementedError
+
+    @abstractmethod
+    def incrementer_id_lot(self) -> bool:
         raise NotImplementedError
