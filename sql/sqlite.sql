@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS agents (
 
 DROP TABLE IF EXISTS modeles;
 CREATE TABLE IF NOT EXISTS modeles (
-    identifiant_modele INTEGER PRIMARY KEY,
+    identifiant_modele INTEGER PRIMARY KEY AUTOINCREMENT,
     nom_modele TEXT,
     regex_nom_fichier TEXT,
     position_champ_numero INTEGER,
@@ -41,3 +41,10 @@ CREATE TABLE IF NOT EXISTS modeles (
     position_champ_ville INTEGER,
     position_champs_supplementaires TEXT
 );
+
+INSERT INTO sqlite_sequence(name, seq)
+VALUES
+    ("fa",0),
+    ("agents",0),
+    ("modeles",0),
+    ("lots",0);
