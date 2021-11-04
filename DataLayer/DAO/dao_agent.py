@@ -8,11 +8,11 @@ from hashlib import sha512
 
 
 class DAOAgent(metaclass=Singleton):
-
     def __init__(self):
         self.__interface = interface_factory.InterfaceFactory.get_interface("Agent")
 
-    def __saler_hasher_mdp(self, nom_utilisateur: str, mot_de_passe_en_clair: str) -> str:
+    @staticmethod
+    def __saler_hasher_mdp(nom_utilisateur: str, mot_de_passe_en_clair: str) -> str:
         pwd = sha512()
         pwd.update(nom_utilisateur.encode("utf-8"))
         pwd.update(mot_de_passe_en_clair.encode("utf-8"))

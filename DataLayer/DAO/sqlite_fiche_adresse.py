@@ -5,16 +5,18 @@ from typing import List
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_fiche_adresse import InterfaceFicheAdresse
 
-class SQLiteFicheAdresse(InterfaceFicheAdresse):
 
-    def __sqlite_to_dao(self, data: dict) -> dict:
+class SQLiteFicheAdresse(InterfaceFicheAdresse):
+    @staticmethod
+    def __sqlite_to_dao(data: dict) -> dict:
         data["date_importation"] = datetime.fromisoformat(data["date_importation"]).date()
         data["date_dernier_traitement"] = datetime.fromisoformat(data["date_dernier_traitement"]).date()
         data["coordonnees_wgs84"] = literal_eval(data["coordonnees_wgs84"])
         data["champs_supplementaires"] = literal_eval(data["champs_supplementaires"])
         return data
 
-    def __dao_to_sqlite(self, data: dict) -> dict:
+    @staticmethod
+    def __dao_to_sqlite(data: dict) -> dict:
         data["date_importation"] = str(data["date_importation"])
         data["date_dernier_traitement"] = str(data["date_dernier_traitement"])
         data["coordonnees_wgs84"] = repr(data["coordonnees_wgs84"])
@@ -92,7 +94,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         request = "UPDATE fa SET identifiant_pot=:id_agent WHERE identifiant_fa IN ({})".format(
             ','.join(':{}'.format(i) for i in range(len(id_fas))))
         params = {"id_agent": id_agent}
-        params.update({str(i): id for i, id in enumerate(id_fas)})
+        params.update({str(i): id_agent for i, id_agent in enumerate(id_fas)})
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute(request, params)

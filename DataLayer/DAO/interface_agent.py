@@ -1,6 +1,5 @@
 from typing import List
 from abc import ABC, abstractmethod
-from BusinessLayer.BusinessObjects.agent import Agent
 
 
 class InterfaceAgent(ABC):
@@ -9,11 +8,11 @@ class InterfaceAgent(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def recuperer_liste_agents(self, id_superviseur : int) -> List[dict]:
+    def recuperer_liste_agents(self, id_superviseur: int) -> List[dict]:
         raise NotImplementedError
 
     @abstractmethod
-    def supprimer_agent(self, id_agent : int) -> bool:
+    def supprimer_agent(self, id_agent: int) -> bool:
         raise NotImplementedError
 
     @abstractmethod
