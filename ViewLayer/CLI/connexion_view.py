@@ -14,7 +14,7 @@ class ConnexionView:
         agent = dao.DAOAgent.connexion_agent(answers['nom_utilisateur'], answers['mot_de_passe'])
         if not(isinstance(agent, Agent)):
             print("Ah ah ah... Vous n'avez pas dis le mot magique !. Veuillez réessayer.")
-            return ConnexionView.connexion
+            return ConnexionView.connexion()
         else:
             session = Session(agent)
             from ViewLayer.CLI.menu import MenuPrincipalView
