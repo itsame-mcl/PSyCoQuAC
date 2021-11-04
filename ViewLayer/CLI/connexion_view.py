@@ -11,9 +11,9 @@ class ConnexionView:
 
     def connexion(self):
         answers = prompt(self.__questions)
-        agent = dao.DAOAgent.connexion_agent(answers['nom_utilisateur'], answers['mot_de_passe'])
-        if not(isinstance(agent, Agent)):
-            print("Ah ah ah... Vous n'avez pas dis le mot magique !. Veuillez réessayer.")
+        agent = dao.DAOAgent.connexion_agent(answers['nom_utilisateur'], answers['mot_de_passe']) # récupérer un booléen d'un service connexion
+        if not(isinstance(agent, Agent)): # tester le booléen : le test est fait par le service connexion
+            print("Ah ah ah... Vous n'avez pas dis le mot magique ! Veuillez réessayer.")
             return ConnexionView.connexion()
         else:
             session = Session(agent)

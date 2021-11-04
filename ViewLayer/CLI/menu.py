@@ -4,10 +4,11 @@ from ViewLayer.CLI.session import Session
 class MenuPrincipalView:
 
     def __init__(self, session : Session) -> None:
-        self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+str(Session().prenom),
+        self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+session.agent.prenom+', que voulez-vous faire ?',
                             'choices': ['1) Consulter son pot', '2) Modifier son compte','3) Se déconnecter']}]
-        self.__questions2 = [{'type': 'list','name': 'choix 2','message': 'Que voulez-vous faire ?',
-                            'choices': ['4) Déleguer son équipe', '5) Déléguer un agent','6) Modifier un agent',
+        self.__questions2 = [{'type': 'list','name': 'choix 2','message': 'Bonjour '+session.agent.prenom+', que voulez-vous faire ?',
+                            'choices': ['1) Consulter son pot', '2) Modifier son compte','3) Se déconnecter'
+                            '4) Déleguer son équipe', '5) Déléguer un agent','6) Modifier un agent',
                             "7) Changer les droits d'un agent", '8) Créer un nouvel utilisateur']}]
 
     def naviguer(self, session : Session):
@@ -17,15 +18,15 @@ class MenuPrincipalView:
         else:
             with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
                 print(asset.read())
-            answers = prompt(self.__questions)
             if session.droits:
-                answers2 = prompt(self.__questions2)
-                answers.update(answers2)
+                answers = prompt(self.__questions2)
+            else:
+                answers = prompt(self.__questions)
             if '1' in answers['choix']:
                 from ViewLayer.CLI.consulter_pot import ConsulterPotView
                 return ConsulterPotView(session)
             elif '2' in answers['choix']:
-                from ViewLayer.CLI.modifier_compte_view import ModifierCompteView
+                from ViewLayer.CLI.ModifierView.modifier_compte_view import ModifierCompteView
                 return ModifierCompteView.modifier(session)
             elif '3' in answers['choix']:
                 from ViewLayer.CLI.deconnexion_view import DeconnexionView
@@ -34,7 +35,7 @@ class MenuPrincipalView:
                 from ViewLayer.CLI.deleguer_view import DeleguerView
                 return DeleguerView.deleguer(session)
             elif '6' in answers['choix'] :
-                from ViewLayer.CLI.modifier_agent_view import ModifierAgentView
+                from ViewLayer.CLI.ModifierView.modifier_agent_view import ModifierAgentView
                 return ModifierAgentView.modifier(session)
             elif '7' in answers['choix']:
                 from ViewLayer.CLI.changer_droits_view import ChangerDroitsView
