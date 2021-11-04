@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS fa (
 DROP TABLE IF EXISTS agents;
 CREATE TABLE IF NOT EXISTS agents (
     identifiant_agent INTEGER PRIMARY KEY AUTOINCREMENT,
-    est_superviseur NUMERIC,
+    est_superviseur INTEGER,
     quotite NUMERIC,
     identifiant_superviseur INTEGER,
     nom_utilisateur TEXT,
