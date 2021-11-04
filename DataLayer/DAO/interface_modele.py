@@ -6,6 +6,7 @@ class InterfaceModele(ABC):
     def recuperer_modele(self, identifiant: int) -> dict:
         raise NotImplementedError
 
+    @abstractmethod
     def recuperer_regex(self) -> dict:
         raise NotImplementedError
 
@@ -19,4 +20,8 @@ class InterfaceModele(ABC):
 
     @abstractmethod
     def supprimer_modele(self, identifiant: int) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def recuperer_dernier_id_modele(self) -> int:
         raise NotImplementedError
