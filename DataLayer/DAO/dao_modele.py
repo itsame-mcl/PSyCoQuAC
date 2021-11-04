@@ -1,15 +1,12 @@
-import dotenv
-
 from BusinessLayer.BusinessObjects.modele import Modele
-from DataLayer.DAO.sqlite_modele import SQLiteModele
+import DataLayer.DAO.interface_factory as Factory
 from utils.singleton import Singleton
+
 
 class DAOModele(metaclass=Singleton):
 
     def __init__(self):
-        engine = dotenv.dotenv_values(".env")["ENGINE"]
-        if engine == "SQLite":
-            self.__interface = SQLiteModele()
+        self.__interface = Factory.InterfaceFactory.get_interface("Agent")
 
     def recuperer_modele(self, identifiant: int) -> Modele:
         data = self.__interface.recuperer_modele(identifiant)

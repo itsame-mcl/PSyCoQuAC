@@ -21,8 +21,8 @@ class Agent:
         return self._identite
     
     @identite.setter
-    def agent_id(self, value : Tuple): # le setter prend un argument un Tuple. Possibilité qu'il prenne 2 String (nom & prénom)
-        self._agent_id = value
+    def identite(self, value : Tuple): # le setter prend un argument un Tuple. Possibilité qu'il prenne 2 String (nom & prénom)
+        self._identite = value
 
     @property
     def quotite(self) -> float:
@@ -31,3 +31,4 @@ class Agent:
     @quotite.setter
     def quotite(self, value):
         self._quotite = value
+
