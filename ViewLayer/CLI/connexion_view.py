@@ -41,7 +41,7 @@ connexion_agent(self, nom_utilisateur: str, mot_de_passe: str) -> Agent:
         else:
             from ViewLayer.CLI.menu import Menu
             return Menu()
-            
+
     def display_info(self):
         print(f"Bonjour {Session().prenom}, please choose some pokemon")
 

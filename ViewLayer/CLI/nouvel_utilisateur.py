@@ -26,5 +26,5 @@ class NouvelUtilisateur(AbstractView):
             print("L'enregistrement a échoué. Veuillez réessayer.")
             return NouvelUtilisateur.enregistrement
         else:
-            from ViewLayer.CLI.menu import Menu
-            return Menu()
+            from ViewLayer.CLI.menu import MenuView
+            return MenuView()
