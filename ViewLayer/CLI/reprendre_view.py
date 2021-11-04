@@ -31,6 +31,8 @@ class ReprendreFiche:
             answers4 = prompt(self.__questions4)
             if str.lower(answer4['choix']) == 'Oui' :
                 # Resoumettre à l'API
+                score, fiche = BANClient.geocodage_par_fiche(fiche)
+                print("Le score de l'API est" + str(score))
             elif str.lower(answer4['choix']) == 'Non' :
                 return ReprendreFiche.reprendre_fiche()
         elif 'c)' in str.lower(answers['choix']) :
@@ -40,6 +42,8 @@ class ReprendreFiche:
             answers4 = prompt(self.__questions4)
                         if str.lower(answer4['choix']) == 'Oui' :
                 # Resoumettre à l'API
+                score, fiche = BANClient.geocodage_par_fiche(fiche)
+                print("Le score de l'API est" + str(score))
             elif str.lower(answer4['choix']) == 'Non' :
                 return ReprendreFiche.reprendre_fiche()
         elif 'v)' in str.lower(answers['choix']) :
