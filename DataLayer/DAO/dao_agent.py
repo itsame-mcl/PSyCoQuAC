@@ -72,3 +72,7 @@ class DAOAgent(metaclass=Singleton):
             return agent
         else:
             raise ConnectionRefusedError
+
+    def recuperer_dernier_id_agent(self) -> int:
+        value = self.__interface.recuperer_dernier_id_agent()
+        return value

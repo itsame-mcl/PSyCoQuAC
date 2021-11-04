@@ -126,3 +126,11 @@ class SQLiteAgent(InterfaceAgent):
         else:
             data = None
         return data
+
+    def recuperer_dernier_id_agent(self) -> int:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT seq FROM sqlite_sequence WHERE name='agents'")
+        row = curseur.fetchone()
+        curseur.close()
+        value = row["seq"]
+        return value

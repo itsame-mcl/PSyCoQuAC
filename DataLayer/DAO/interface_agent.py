@@ -34,3 +34,7 @@ class InterfaceAgent(ABC):
     @abstractmethod
     def connexion_agent(self, nom_utilisateur: str, mdp_sale_hashe: str) -> dict:
         raise NotImplementedError
+
+    @abstractmethod
+    def recuperer_dernier_id_agent(self) -> int:
+        raise NotImplementedError
