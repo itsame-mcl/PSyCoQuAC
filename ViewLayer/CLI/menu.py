@@ -1,22 +1,37 @@
 from PyInquirer import prompt
-from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
-import ViewLayer
 
-class MenuPrincipalView(AbstractView):
+class MenuPrincipalView:
 
-    def __init__(self):
+    def __init__(self, session : Session) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+str(Session().prenom),
-                            'choices': ['Consulter son pot','Se déconnecter']}]
+                            'choices': ['1) Consulter son pot','2) Se déconnecter']}]
+        self.__questions2 = [{'type': 'list','name': 'choix 2','message': 'Que voulez-vous faire ?',
+                            'choices': ['3) Déleguer son équipe', '4) Déléguer un agent','5) Modifier un agent',
+                            "6) Changer les droits d'un agent", '7) Créer un nouvel utilisateur']}]
 
-    def affichage(self):
+    def naviguer(self, session : Session):
         with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
             print(asset.read())
-
-    def make_choice(self):
         answers = prompt(self.__questions)
-        if 'pot' in str.lower(answers['choix']) :
-            from ViewLayer.ConsulterPotView import CheckBoxExampleView
-            return CheckBoxExampleView()
-        elif str.lower(answers['choix']) == 'se déconnecter' or str.lower(answers['choix']) == 'se deconnecter' :
-            return ViewLayer.DeconnexionView.deconnexion()
+        if session.droits:
+            answers2 = prompt(self.__questions2)
+            answers.update(answers2)
+        if '1' in answers['choix']:
+            from ViewLayer.CLI.consulter_pot import ConsulterPotView
+            return ConsulterPotView(session)
+        elif '2' in answers['choix']:
+            from ViewLayer.CLI.deconnexion_view import DeconnexionView
+            return DeconnexionView.deconnexion(session)
+        elif '3' in answers['choix'] or '4' in answers['choix']:
+            from ViewLayer.CLI.deleguer_view import DeleguerView
+            return DeleguerView.deleguer(session)
+        elif '5' in answers['choix'] :
+            from ViewLayer.CLI.deconnexion_view import ModifierView
+            return ModifierView.modifier(session)
+        elif '6' in answers['choix']:
+            from ViewLayer.CLI.changer_droits_view import ChangerDroitsView
+            return ModifierView.modifier(session)
+        elif '7' in answers['choix']:
+            from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
+            return NouvelUtilisateurView.enregistrement(session)
