@@ -62,7 +62,7 @@ class SQLiteAgent(InterfaceAgent):
             curseur.execute("""
             INSERT INTO agents (est_superviseur, quotite, identifiant_superviseur, nom_utilisateur, mot_de_passe, prenom, nom)
             VALUES(:est_sup, :quot, :id_sup, :nom_ut, :mdp, :prenom, :nom)
-            """, {"est_sup" : est_superviseur, "quot" : quotite, "id_sup" : id_superviseur, "nom_ut" : nom_utilisateur, "mdp" : sha512(nom_utilisateur + mot_de_passe), "prenom" : prenom, "nom" : nom})
+            """, {"est_sup" : est_superviseur, "quot" : quotite, "id_sup" : id_superviseur, "nom_ut" : nom_utilisateur, "mdp" : sha512( (nom_utilisateur + mot_de_passe).encode('utf-8')).hexdigest(), "prenom" : prenom, "nom" : nom})
             DBConnexion().connexion.commit()
             curseur.close()
             return True

@@ -10,7 +10,7 @@ import not_utils
 class SessionServices:
 
     def ouvrir_session(self, nom_utilisateur, mot_de_passe):
-        hache = sha512(nom_utilisateur + mot_de_passe)
+        hache = sha512( (nom_utilisateur + mot_de_passe).encode('utf-8')).hexdigest()
         mdp = dao.DAOAgent.recuperer_mdp_agent(nom_utilisateur)
         if hache == mdp:
             if dao.DAOAgent.est_superviseur(nom_utilisateur): # la méthode regarder_si_superviseur renvoie True si l'Agent est un superviseur
