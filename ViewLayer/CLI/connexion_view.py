@@ -3,7 +3,7 @@ from PyInquirer import  prompt
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 
-class Connexion(AbstractView):
+class ConnexionView(AbstractView):
     
     def __init__(self) -> None:
         self.__questions = [
@@ -32,6 +32,16 @@ class Connexion(AbstractView):
             }
         ]
 
+connexion_agent(self, nom_utilisateur: str, mot_de_passe: str) -> Agent:
+    def connexion(self):
+        answers = prompt(self.__questions)
+        if not(probleme):
+            print("L'enregistrement a échoué. Veuillez réessayer.")
+            return ConnexionView.connexion
+        else:
+            from ViewLayer.CLI.menu import Menu
+            return Menu()
+            
     def display_info(self):
         print(f"Bonjour {Session().prenom}, please choose some pokemon")
 
