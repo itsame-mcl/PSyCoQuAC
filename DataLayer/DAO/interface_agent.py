@@ -28,9 +28,10 @@ class InterfaceAgent(ABC):
     def modifier_superviseur(self, id_agents: List[int], id_superviseur: int) -> bool:
         raise NotImplementedError
 
-    def connexion_agent(self, nom_utilisateur: str, mdp_sale_hashe: str) -> dict:
+    @abstractmethod
+    def changer_droits(self, data: dict) -> bool:
         raise NotImplementedError
 
     @abstractmethod
-    def changer_droits(self, agent_a_modifier : Agent) -> bool:
+    def connexion_agent(self, nom_utilisateur: str, mdp_sale_hashe: str) -> dict:
         raise NotImplementedError

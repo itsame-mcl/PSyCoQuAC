@@ -1,5 +1,4 @@
 from typing import List
-from BusinessLayer.BusinessObjects.agent import Agent
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_agent import InterfaceAgent
 
@@ -98,10 +97,14 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def changer_droits(self, agent_a_modifier: Agent) -> bool:
+    def changer_droits(self, data: dict) -> bool:
+        data = self.__dao_to_sqlite(data)
+        data["est_superviseur"] = 1 - data["est_superviseur"] # transforme 0 et 1 ou 1 en 0
         try:
             curseur = DBConnexion().connexion.cursor()
-            curseur.execute("UPDATE agents SET est_superviseur=:not(est_superviseur) WHERE identifiant_agent=: id_agent", {"id_agent": agent_a_modifier.agent_id})
+            curseur.execute("""
+            UPDATE agents SET est_superviseur=:est_superviseur WHERE identifiant_agent=:id_agent
+            """, data)
             DBConnexion().connexion.commit()
             curseur.close()
             return True
