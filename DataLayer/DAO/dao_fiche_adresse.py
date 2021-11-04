@@ -56,3 +56,6 @@ class DAOFicheAdresse(metaclass=Singleton):
                     criteria.append(troisieme_niveau)
             res = self.__interface.obtenir_statistiques(criteria)
             return res
+
+    def recuperer_prochain_id_lot(self):
+        raise NotImplemented
