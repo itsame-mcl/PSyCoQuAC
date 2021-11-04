@@ -2,10 +2,10 @@ from typing import Tuple
 
 class Agent:
 
-    def __init__(self, agent_id : int, nom_utilisateur : str, identite : Tuple, quotite: float):
+    def __init__(self, agent_id : int, prenom : str, nom : str, quotite: float):
         self._agent_id = agent_id
-        self._nom_utilisateur = nom_utilisateur
-        self._identite = identite
+        self._prenom = prenom
+        self._nom = nom
         self._quotite = quotite
     
     @property
@@ -13,16 +13,20 @@ class Agent:
         return self._agent_id
     
     @property
-    def nom_utilisateur(self) -> str:
+    def prenom(self) -> str:
         return self._nom_utilisateur
+    
+    @prenom.setter
+    def prenom(self, value : str):
+        self._prenom = value
 
     @property
-    def identite(self) -> Tuple:
+    def nom(self) -> str:
         return self._identite
     
-    @identite.setter
-    def identite(self, value : Tuple): # le setter prend un argument un Tuple. Possibilité qu'il prenne 2 String (nom & prénom)
-        self._identite = value
+    @nom.setter
+    def nom(self, value : str):
+        self._nom = value
 
     @property
     def quotite(self) -> float:
@@ -31,4 +35,3 @@ class Agent:
     @quotite.setter
     def quotite(self, value):
         self._quotite = value
-
