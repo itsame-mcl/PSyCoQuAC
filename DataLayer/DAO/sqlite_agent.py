@@ -13,27 +13,6 @@ class SQLiteAgent(InterfaceAgent):
         data["est_superviseur"] = int(data["est_superviseur"])
         return data
 
-    def deleguer_agent_a(self, id_agents : List[int], id_superviseur : int) -> bool:
-        request = "UPDATE agents SET identifiant_superviseur=:id_superviseur WHERE identifiant_agent IN ({})".format(','.join(':{}'.format(i) for i in range(len(id_agents))))
-        params = {"id_superviseur": id_superviseur}
-        params.update({str(i): id for i, id in enumerate(id_agents)})
-        try:
-            curseur = DBConnexion().connexion.cursor()
-            curseur.execute(request, params)
-            DBConnexion().connexion.commit()
-            curseur.close()
-            return True
-        except Exception as e:
-            print(e)
-            return False
-        
-    def deleguer_equipe_a(self, id_superviseur : int) -> bool:
-        agents = SQLiteAgent.recuperer_liste_agents(id_superviseur)
-        id_agents = []
-        for agent in agents:
-            id_agents.append(agent.agent_id)
-        return SQLiteAgent.deleguer_agent_a(id_agents, id_superviseur)
-
     def recuperer_agent(self, id_agent: int) -> dict:
         curseur = DBConnexion().connexion.cursor()
         curseur.execute("SELECT * FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
@@ -43,9 +22,9 @@ class SQLiteAgent(InterfaceAgent):
         data = self.__sqlite_to_dao(data)
         return data
 
-    def recuperer_liste_agents(self, id_superviseur : int) -> List[Agent]:
+    def recuperer_liste_agents(self, id_superviseur : int) -> List[dict]:
         if id_superviseur > 0:
-            request = "SELECT * FROM agents WHERE identifiant_superviseur =: id_superviseur"
+            request = "SELECT * FROM agents WHERE identifiant_superviseur =:id_superviseur"
         else:
             request = "SELECT * FROM agents"
         curseur = DBConnexion().connexion.cursor()
@@ -104,6 +83,21 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
+    def modifier_superviseur(self, id_agents : List[int], id_superviseur : int) -> bool:
+        request = "UPDATE agents SET identifiant_superviseur=:id_superviseur WHERE identifiant_agent IN ({})".format(
+            ','.join(':{}'.format(i) for i in range(len(id_agents))))
+        params = {"id_superviseur": id_superviseur}
+        params.update({str(i): id for i, id in enumerate(id_agents)})
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute(request, params)
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
     def changer_droits(self, agent_a_modifier: Agent) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
@@ -114,3 +108,16 @@ class SQLiteAgent(InterfaceAgent):
         except Exception as e:
             print(e)
             return False
+
+    def connexion_agent(self, nom_utilisateur: str, mdp_sale_hashe: str) -> dict:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT * FROM agents WHERE nom_utilisateur=:login AND mot_de_passe=:pwd",
+                        {"login": nom_utilisateur, "pwd": mdp_sale_hashe})
+        row = curseur.fetchone()
+        curseur.close()
+        if row is not None:
+            data = dict(zip(row.keys(), row))
+            data = self.__sqlite_to_dao(data)
+        else:
+            data = None
+        return data
