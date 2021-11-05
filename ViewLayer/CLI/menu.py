@@ -13,14 +13,10 @@ class MenuPrincipalView(AbstractView):
                             "G) Changer les droits d'un agent", 'H) Créer un nouvel utilisateur', "I) Gestion de l'équipe"
                             "J) Importer/Exporter des fichiers d'adresse"]}]
 
-    def display_info(self):
-        with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
-            print(asset.read())
-
     def make_choice(self, session : Session):
         if session.agent.agent_id == 0:
-            from ViewLayer.CLI.connexion_view import ConnexionView
-            return ConnexionView.connexion()
+            from ViewLayer.CLI.start_view import StartView
+            return StartView()
         else:
             if session.droits:
                 answers = prompt(self.__questions2)

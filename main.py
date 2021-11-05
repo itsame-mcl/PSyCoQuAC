@@ -1,7 +1,7 @@
-from ViewLayer.CLI.connexion_view import ConnexionView
+from ViewLayer.CLI.start_view import StartView
 
 if __name__ == '__main__':
-    vue_actuelle = ConnexionView()
+    vue_actuelle = StartView()
     while vue_actuelle:
         with open('outils graphiques/bordure.txt', 'r') as border:
             print(border.read())
