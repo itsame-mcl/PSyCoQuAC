@@ -73,8 +73,8 @@ class SQLiteAgent(InterfaceAgent):
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("""
             UPDATE agents SET est_superviseur=:est_superviseur, quotite=:quotite,
-            identifiant_superviseur=:identifiant_superviseur, 
-            prenom=:prenom, nom=:nom
+            identifiant_superviseur=:identifiant_superviseur, nom_utilisateur=:nom_utilisateur, 
+            mot_de_passe=:mot_de_passe, prenom=:prenom, nom=:nom
             WHERE identifiant_agent=:id_agent
             """, data)
             DBConnexion().connexion.commit()
@@ -134,3 +134,12 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         value = row["seq"]
         return value
+
+    def recuperer_id_superviseur(self, id_agent: int) -> dict:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT * FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
+        row = curseur.fetchone()
+        curseur.close()
+        data = dict(zip(row.keys(), row))
+        data = self.__sqlite_to_dao(data)
+        return data

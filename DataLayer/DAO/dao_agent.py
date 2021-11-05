@@ -52,8 +52,8 @@ class DAOAgent(metaclass=Singleton):
         res = self.__interface.creer_agent(data)
         return res
 
-    def modifier_agent(self, agent_a_modifier: Agent) -> bool:
-        res = self.__interface.modifier_agent(agent_a_modifier.as_dict())
+    def modifier_agent(self, agent_a_modifier: dict) -> bool:
+        res = self.__interface.modifier_agent(agent_a_modifier)
         return res
 
     def supprimer_agent(self, id_agent: int) -> bool:
@@ -75,4 +75,8 @@ class DAOAgent(metaclass=Singleton):
 
     def recuperer_dernier_id_agent(self) -> int:
         value = self.__interface.recuperer_dernier_id_agent()
+        return value
+
+    def recuperer_id_superviseur(self, id_agent: int) -> dict:
+        value = self.__interface.recuperer_id_superviseur(id_agent)
         return value

@@ -2,7 +2,7 @@ from DataLayer import DAO as dao
 from utils.singleton import Singleton
 
 @Singleton
-class StatistiqueServices:
+class StatistiqueService:
 
     def fiches_par_agent(session_utilisateur): # On vérifie d'abord que c'est un Superviseur qui regarde les fiches des Gestionnaires de son équipe
         response = {}

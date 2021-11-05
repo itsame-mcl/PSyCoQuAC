@@ -38,3 +38,7 @@ class InterfaceAgent(ABC):
     @abstractmethod
     def recuperer_dernier_id_agent(self) -> int:
         raise NotImplementedError
+
+    @abstractmethod
+    def recuperer_id_superviseur(self, id_agent: int) -> dict:
+        raise NotImplementedError
