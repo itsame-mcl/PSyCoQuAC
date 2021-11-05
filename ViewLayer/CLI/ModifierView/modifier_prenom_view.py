@@ -1,6 +1,6 @@
 from PyInquirer import prompt
 from ViewLayer.CLI.session import Session
-from BusinessLayer.LocalServices.Gestion.fiche_agent_service import AgentServices
+from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.ModifierView.continuer_modif_view import ContinuerModifView
 
 class ModifierPrenomView:
@@ -10,8 +10,8 @@ class ModifierPrenomView:
 
     def modifier_prenom(self, session: Session):
         answers = prompt(self.__questions)
-        nouvel_agent = session.agent.prenom = answers['prenom']
-        probleme = AgentServices.modifier_agent(nouvel_agent)
+        session.agent.prenom = answers['prenom']
+        probleme = AgentService.modifier_agent(session.agent.as_dict())
         if not(probleme):
             print('La modification a échoué. Veuillez réessayer ultérieurement.')
         return ContinuerModifView(session)
