@@ -9,6 +9,8 @@ class ContinuerModifView:
         self.__questions2 = [{'type': 'list','name': 'choix','message': 'Souhaitez-vous modifier autre chose ?',
                             'choices': ['1) Oui', '2) Non']}]
     
+#    def display_info(self): Afficher la fiche de l'agent, comme pour toutes les vues Modifier
+    
     def continuer(self, session : Session):
         answers2 = prompt(self.__questions2)
         if '1' in answers2['choix']:
