@@ -1,6 +1,10 @@
 from BusinessLayer.BusinessObjects.agent import Agent
+from BusinessLayer.BusinessObjects.session import Session
+from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_agent import DAOAgent
+from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from utils.singleton import Singleton
+from typing import List
 
 @Singleton
 class AgentService:
@@ -26,3 +30,6 @@ class AgentService:
         
     def recuperer_equipe(self, session_supervsieur : Session) -> List[Agent]:
         return DAOAgent.recuperer_equipe(session_supervsieur.utilisateur_connecte.agent_id)
+
+    def recuperer_pot(self, id_agent : int) -> List[FicheAdresse]:
+        return DAOFicheAdresse.recuperer_pot(id_agent)

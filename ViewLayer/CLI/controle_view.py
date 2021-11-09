@@ -5,7 +5,7 @@ from ViewLayer.CLI.session import Session
 from  BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
 
-class ControlerFiche(AbstractView):
+class ControlerView(AbstractView):
 
     def __init__(self, session : Session, curseur : int = 0) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Que voulez-vous faire ?',
@@ -28,27 +28,27 @@ class ControlerFiche(AbstractView):
                 probleme = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'VC'})
                 if not(probleme):
                     print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
-                    return ControlerFiche(session, curseur+1)
+                    return ControlerView(session, curseur+1)
                 else:
-                    return ControlerFiche(session, curseur+1)
+                    return ControlerView(session, curseur+1)
             elif str.lower(answers2['choix']) == 'non':
-                return ControlerFiche(session, curseur)
+                return ControlerView(session, curseur)
         elif 'i'in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
             if str.lower(answers2['choix']) == 'oui' :
                 probleme = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'TR'})
                 if not(probleme):
                     print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
-                    return ControlerFiche(session, curseur+1)
+                    return ControlerView(session, curseur+1)
                 else:
-                    return ControlerFiche(session, curseur+1)
+                    return ControlerView(session, curseur+1)
             elif str.lower(answers2['choix']) == 'non':
-                return ControlerFiche(session, curseur)
+                return ControlerView(session, curseur)
         elif 'p' in str.lower(answers['choix']) :
             curseur = (curseur-1) % len(pot)
-            return ControlerFiche(session, curseur)
+            return ControlerView(session, curseur)
         elif 's'in str.lower(answers['choix']) :
             curseur = (curseur+1) % len(pot)
-            return ControlerFiche(session, curseur)
+            return ControlerView(session, curseur)
         elif 'm' in str.lower(answers['choix']) :
             return MenuPrincipalView(session)

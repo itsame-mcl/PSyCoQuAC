@@ -1,9 +1,8 @@
 from typing import List
 import requests
-
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 
-class BANClient :
+class BANClient:
     
     def geocodage_par_fiche(self, fiche_a_traiter : FicheAdresse) -> (float, FicheAdresse):
         adresse = fiche_a_traiter.adresse_initiale
