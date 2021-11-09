@@ -1,1 +1,4 @@
-# Cette vue permet au superviseur de choisir l'agent dont il modifie la fiche
+from ViewLayer.CLI.abstract_view import AbstractView
+
+class ModifierAgentView(AbstractView):
+    

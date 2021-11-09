@@ -23,7 +23,7 @@ class MenuPrincipalView(AbstractView):
             else:
                 answers = prompt(self.__questions)
             if 'A' in answers['choix']:
-                from ViewLayer.CLI.consulter_pot import ConsulterPotView
+                from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
                 return ConsulterPotView(session)
             elif 'B' in answers['choix']:
                 from ViewLayer.CLI.ModifierView.modifier_compte_view import ModifierCompteView

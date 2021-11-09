@@ -13,8 +13,8 @@ class ImportExportView(AbstractView):
         answers = prompt(self.__questions)
         if '1' in answers['choix']:
             from BusinessLayer.LocalServices.IO.importation_service import ImportationServices
-            ImportationServices.importation
+            ImportationServices.importation()
         else:
             from BusinessLayer.LocalServices.IO.exportation_service import ExportationServices
-            ExportationServices.exportation
+            ExportationServices.exportation()
         return MenuPrincipalView(session)

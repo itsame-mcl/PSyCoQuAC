@@ -19,8 +19,8 @@ class AgentService:
         agent_a_modifier = DAOAgent.recuperer_agent(id_agent)
         return DAOAgent.changer_droits(agent_a_modifier)
 
-    def supprimer_agent(self, agent_a_supprimer : Agent) -> bool:
-        return DAOAgent.supprimer_agent(agent_a_supprimer.agent_id)
+    def supprimer_agent(self, agent_a_supprimer : int) -> bool:
+        return DAOAgent.supprimer_agent(agent_a_supprimer)
 
     def saler_hasher_mdp(self, nom_utilisateur : str, mot_de_passe : str) -> str:
         return DAOAgent.__saler_hasher_mdp(nom_utilisateur, mot_de_passe)
@@ -31,5 +31,9 @@ class AgentService:
     def recuperer_equipe(self, session_supervsieur : Session) -> List[Agent]:
         return DAOAgent.recuperer_equipe(session_supervsieur.utilisateur_connecte.agent_id)
 
-    def recuperer_pot(self, id_agent : int) -> List[FicheAdresse]:
-        return DAOFicheAdresse.recuperer_pot(id_agent)
+    def ajout_agent_equipe(self, id_superviseur : int, id_agent : int) -> bool:
+        return DAOAgent.ajout_agent_equipe(id_superviseur, id_agent)
+    
+    def promouvoir_agent(self, id_agent : int) -> bool:
+        agent = DAOAgent.recuperer_agent(id_agent)
+        return DAOAgent.changer_droits(agent)
