@@ -1,4 +1,3 @@
-from DataLayer import DAO
 from DataLayer.DAO import dao_fiche_adresse
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.menu import MenuPrincipalView

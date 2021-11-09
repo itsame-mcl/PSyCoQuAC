@@ -23,3 +23,6 @@ class AgentService:
     
     def recuperer_id_superviseur(self, id_agent : int) -> int:
         return DAOAgent.recuperer_id_superviseur(id_agent)['id_superviseur']
+        
+    def recuperer_equipe(self, session_supervsieur : Session) -> List[Agent]:
+        return DAOAgent.recuperer_equipe(session_supervsieur.utilisateur_connecte.agent_id)

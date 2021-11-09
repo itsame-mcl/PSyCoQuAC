@@ -1,5 +1,4 @@
 from DataLayer.DAO.db_connexion import DBConnexion
-from BusinessLayer.BusinessObjects.agent import Agent
 
 class SessionService:
 

@@ -2,12 +2,11 @@ from DataLayer import DAO
 from DataLayer.DAO import dao_fiche_adresse
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
-
 from PyInquirer import prompt
 
 from ViewLayer.CLI.session import Session
 
-class ReprendreFiche:
+class ReprendreView:
 
     def __init__(self) -> None:
 

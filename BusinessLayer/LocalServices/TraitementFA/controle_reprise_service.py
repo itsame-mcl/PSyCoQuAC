@@ -1,7 +1,9 @@
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.session import Session
+from BusinessLayer.BusinessObjects.agent import Agent
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
+from DataLayer.DAO.dao_agent import DAOAgent
 from typing import List
 
 class ControleRepriseService():
@@ -28,3 +30,7 @@ class ControleRepriseService():
     def consulter_pot(self, session_utilisateur : Session) -> List[FicheAdresse] :
         pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte)
         return pot
+
+    def consulter_pot_agent(self, id_agent) -> dict:
+        agent = DAOAgent.recuperer_agent(id_agent)
+        return DAOFicheAdresse.recuperer_pot(agent)
