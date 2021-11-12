@@ -16,7 +16,7 @@ class ControlerView(AbstractView):
     def display_info(self, session : Session, curseur : int):
         pot = dao_fiche_adresse.recupere_pot(session.agent_id) 
         fiche = pot[curseur]
-        print('Fiche adresse n°:' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : '  + str(fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
+        print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : '  + str(fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
 
     def make_choice(self, session : Session, curseur : int): # curseur = l'emplacement de la fiche en contrôle dans la liste
         pot = dao_fiche_adresse.recupere_pot(session.agent_id) 

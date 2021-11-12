@@ -22,30 +22,27 @@ class MenuPrincipalView(AbstractView):
                 answers = prompt(self.__questions2)
             else:
                 answers = prompt(self.__questions)
-            if 'A' in answers['choix']:
+            if 'A' in str.upper(answers['choix']):
                 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
                 return ConsulterPotView(session)
-            elif 'B' in answers['choix']:
-                from ViewLayer.CLI.ModifierView.modifier_compte_view import ModifierCompteView
-                return ModifierCompteView(session)
-            elif 'C' in answers['choix']:
+            elif 'B' in str.upper(answers['choix']) or 'F' in str.upper(answers['choix']):
+                from ViewLayer.CLI.modifier_view import ModifierView
+                return ModifierView(session)
+            elif 'C' in str.upper(answers['choix']):
                 from ViewLayer.CLI.deconnexion_view import DeconnexionView
                 return DeconnexionView(session)
-            elif 'D' in answers['choix'] or 'E' in answers['choix']:
+            elif 'D' in str.upper(answers['choix']) or 'E' in str.upper(answers['choix']):
                 from ViewLayer.CLI.deleguer_view import DeleguerView
                 return DeleguerView(session)
-            elif 'F' in answers['choix'] :
-                from ViewLayer.CLI.ModifierView.modifier_agent_view import ModifierAgentView
-                return ModifierAgentView(session)
-            elif 'G' in answers['choix']:
+            elif 'G' in str.upper(answers['choix']):
                 from ViewLayer.CLI.changer_droits_view import ChangerDroitsView
                 return ChangerDroitsView(session)
-            elif 'H' in answers['choix']:
+            elif 'H' in str.upper(answers['choix']):
                 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
                 return NouvelUtilisateurView(session)
-            elif 'I' in answers['choix']:
+            elif 'I' in str.upper(answers['choix']):
                 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
                 return GestionEquipeView(session)
-            elif 'J' in answers['choix']:
+            elif 'J' in str.upper(answers['choix']):
                 from ViewLayer.CLI.import_export_view import ImportExportView
                 return ImportExportView(session)

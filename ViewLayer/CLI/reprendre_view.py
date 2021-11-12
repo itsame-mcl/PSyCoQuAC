@@ -21,7 +21,7 @@ class ReprendreView(AbstractView):
     def make_choice(self, session : Session, curseur : int = 0): # curseur = l'emplacement de la fiche en contrôle dans la liste
         pot = AgentService.recupere_pot(session.agent_id) 
         fiche = pot[curseur] # On récupère la fiche dans le pot de l'agent
-        print('Fiche adresse n°:' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + str(fiche.adresse_initiale) + 'Données API : Adresse finale : '  + str(fiche.adresse_finale) + 'Coordonnées GPS :' + str(fiche.coords_wgs84))
+        print('Fiche adresse n°' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + str(fiche.adresse_initiale) + 'Données API : Adresse finale : '  + str(fiche.adresse_finale) + 'Coordonnées GPS :' + str(fiche.coords_wgs84))
         answers = prompt(self.__questions)
         if 'a)' in str.lower(answers['choix']) :
             answers3 = prompt(self.__questions3)
