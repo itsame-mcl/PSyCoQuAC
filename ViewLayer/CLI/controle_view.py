@@ -5,8 +5,8 @@ from ViewLayer.CLI.session import Session
 from  BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
 
-class ControlerView(AbstractView):
 
+class ControlerView(AbstractView):
     def __init__(self, session : Session, curseur : int = 0) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Que voulez-vous faire ?',
                             'choices': ['c) Les données sont correctes','i) Les données sont incorrectes ', 

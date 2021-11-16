@@ -4,8 +4,8 @@ from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
 
-class ModifierView(AbstractView):
 
+class ModifierView(AbstractView):
     def __init__(self) -> None:
         self.__session = Session()
         self.__questions0 = [{'type': 'list','name': 'choix','message': 'Quelle(s) information(s) souhaitez-vous modifier ?',

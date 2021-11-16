@@ -1,10 +1,9 @@
 from PyInquirer import prompt
 from ViewLayer.CLI.abstract_view import AbstractView
-from ViewLayer.CLI.session import Session
 from ViewLayer.CLI.menu import MenuPrincipalView
 
-class ImportExportView(AbstractView):
 
+class ImportExportView(AbstractView):
     def __init__(self) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Quelle opération souhaitez-vous effectuer ?',
                             'choices': ['1) Importation', '2) Exportation']}]

@@ -4,8 +4,8 @@ from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.menu import Session
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 
-class ChangerDroitsView(AbstractView):
 
+class ChangerDroitsView(AbstractView):
     def __init__(self, session : Session) -> None:
         self.__questions = [{'type': 'input','name': 'id_agent','message': "De quel agent voulez-vous changer les droits ?"}]
         self.__questions2 = [{'type': 'list','name': 'choix','message': "Souhaitez-vous changer les droits d'un autre agent ?",

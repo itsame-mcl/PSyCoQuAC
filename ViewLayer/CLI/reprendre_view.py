@@ -6,8 +6,8 @@ from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
 
-class ReprendreView(AbstractView):
 
+class ReprendreView(AbstractView):
     def __init__(self, session : Session, curseur : int = 0) -> None:
 
         self.__questions = [{'type': 'list','name': 'choix','message': 'Que voulez-vous faire ?',

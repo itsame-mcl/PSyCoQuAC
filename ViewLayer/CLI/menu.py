@@ -47,7 +47,7 @@ class MenuPrincipalView(AbstractView):
                 return NouvelUtilisateurView(Session())
             elif 'I' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
-                return GestionEquipeView()
+                return GestionEquipeView(Session())
             elif 'J' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.import_export_view import ImportExportView
                 return ImportExportView()

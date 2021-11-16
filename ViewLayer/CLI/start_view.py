@@ -2,8 +2,8 @@ from ViewLayer.CLI.abstract_view import AbstractView
 from PyInquirer import prompt
 from ViewLayer.CLI.connexion_view import ConnexionView
 
-class StartView(AbstractView):
 
+class StartView(AbstractView):
     def __init__(self):
         self.__questions = [{'type': 'list','name': 'choix','message': 'Que voulez-vous faire ?',
                             'choices': ['C) Se connecter', "Q) Quitter l'application"]}]

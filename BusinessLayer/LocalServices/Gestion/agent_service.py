@@ -4,6 +4,7 @@ from DataLayer.DAO.dao_agent import DAOAgent
 from utils.singleton import Singleton
 from typing import List
 
+
 @Singleton
 class AgentService:
 
