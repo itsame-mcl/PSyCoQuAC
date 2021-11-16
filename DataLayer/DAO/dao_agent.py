@@ -1,5 +1,4 @@
 from typing import List
-
 import BusinessLayer.BusinessObjects.agent_factory as agent_factory
 import DataLayer.DAO.interface_factory as interface_factory
 from BusinessLayer.BusinessObjects.agent import Agent

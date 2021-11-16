@@ -1,8 +1,6 @@
 from typing import List
 from abc import ABC, abstractmethod
 
-from ViewLayer.CLI import abstract_view
-
 
 class InterfaceAgent(ABC):
     @abstractmethod

@@ -1,6 +1,7 @@
 from BusinessLayer.BusinessObjects.gestionnaire import Gestionnaire
 from BusinessLayer.BusinessObjects.superviseur import Superviseur
 
+
 class AgentFactory:
     @staticmethod
     def from_dict(data: dict):

@@ -1,7 +1,7 @@
 from BusinessLayer.BusinessObjects.correspondance import Correspondance
 
+
 class Modele:
-    
     def __init__(self, nom_modele: str, regex_nom_fichier: str,
                  correspondances: Correspondance, identifiant: int = None):
         self._identifiant = identifiant

@@ -4,6 +4,7 @@ from DataLayer.DAO.interface_agent import InterfaceAgent
 
 
 class SQLiteAgent(InterfaceAgent):
+
     @staticmethod
     def __sqlite_to_dao(data: dict) -> dict:
         data["est_superviseur"] = bool(data["est_superviseur"])

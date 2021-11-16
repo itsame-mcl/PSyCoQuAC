@@ -1,5 +1,4 @@
 from datetime import date
-
 from BusinessLayer.BusinessObjects.adresse import Adresse
 
 

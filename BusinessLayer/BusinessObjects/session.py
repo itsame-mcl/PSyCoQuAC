@@ -1,7 +1,7 @@
 from BusinessLayer.BusinessObjects.agent import Agent
 
-class Session:
 
+class Session:
     def __init__(self, utilisateur_connecte : Agent, droits_superviseurs):
         self._utilisateur_connecte = utilisateur_connecte
         self._droits_superviseurs = droits_superviseurs

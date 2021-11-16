@@ -2,7 +2,6 @@ from BusinessLayer.BusinessObjects.agent import Agent
 
 
 class Superviseur(Agent):
-
     def __init__(self, prenom: str, nom: str, quotite: float, agent_id: int = None):
         super().__init__(prenom, nom, quotite, agent_id)
 

@@ -6,6 +6,7 @@ from BusinessLayer.BusinessObjects.agent import Agent
 import csv
 from DataLayer import DAO as dao
 
+
 class CSVImportation(InterfaceImportation): # Il manque le rôle des modèles, qui interviennent lors de l'importation
 
     def importer_lot(self, agent : Agent, id_lot : int, chemin_fichier):

@@ -2,6 +2,7 @@ from BusinessLayer.LocalServices.IO.interface_exportation import InterfaceExport
 import pandas as pd
 from DataLayer import DAO as dao
 
+
 class CSVExportation(InterfaceExportation):
 
     def exporter_lot(self, id_lot : int, destination):

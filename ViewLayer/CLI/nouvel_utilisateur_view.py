@@ -14,10 +14,10 @@ class NouvelUtilisateurView(AbstractView):
 
     def make_choice(self):
         answers = prompt(self.__questions)
-        id_agent = DAOAgent.recuperer_prochain_id()
+        answers['identifiant_agent'] = DAOAgent.recuperer_prochain_id()
+        if not(answers['est_superviseur']):
+            answers['identifiant_superviseur'] = self.__session.agent.agent_id
         nouvel_agent = factory.from_dict(answers)
-        answers['identifiant']
-        answers['identifiant_superviseur'] = self.__session.agent.agent_id
         probleme = DAOAgent.creer_agent(nouvel_agent, answers['nom_utilisateur'], answers['mot_de_passe'])
         if not(probleme):
             print("L'enregistrement du nouvel utilisateur a échoué. Veuillez réessayer ultérieurement.")

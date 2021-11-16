@@ -1,10 +1,10 @@
 from ast import literal_eval
-
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_modele import InterfaceModele
 
 
 class SQLiteModele(InterfaceModele):
+    
     @staticmethod
     def __sqlite_to_dao(data: dict) -> dict:
         data["position_champs_supplementaires"] = literal_eval(data["position_champs_supplementaires"])

@@ -1,5 +1,4 @@
 from typing import List
-
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 import DataLayer.DAO.interface_factory as factory
 from utils.singleton import Singleton

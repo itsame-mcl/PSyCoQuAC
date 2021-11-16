@@ -1,7 +1,5 @@
 import os
 import dotenv
-
-
 import DataLayer.DAO.sqlite_connexion as slcx
 import DataLayer.DAO.sqlite_fiche_adresse as slfa
 import DataLayer.DAO.sqlite_modele as slmo
@@ -10,6 +8,7 @@ import DataLayer.DAO.pg_connexion as pgcx
 
 
 class InterfaceFactory:
+
     @staticmethod
     def get_interface(type_dao: str):
         dotenv.load_dotenv(override=True)

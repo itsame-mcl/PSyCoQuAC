@@ -6,6 +6,7 @@ from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from DataLayer.DAO.dao_agent import DAOAgent
 from typing import List
 
+
 class ControleRepriseService():
 
     def consulter_fiche(self, session_utilisateur : Session, id_fiche : int, etat_final : bool ) -> FicheAdresse :

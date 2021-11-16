@@ -1,6 +1,7 @@
 from DataLayer import DAO as dao
 from utils.singleton import Singleton
 
+
 @Singleton
 class StatistiqueService:
 
