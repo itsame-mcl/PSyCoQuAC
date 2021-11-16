@@ -21,6 +21,6 @@ class NouvelUtilisateurView(AbstractView):
         probleme = dao.DAOAgent.creer_agent(nouvel_agent, answers['nom_utilisateur'], answers['mot_de_passe'])
         if not(probleme):
             print("L'enregistrement du nouvel utilisateur a échoué. Veuillez réessayer ultérieurement.")
-            return MenuPrincipalView.naviguer(session)
+            return MenuPrincipalView()
         else:
-            return MenuPrincipalView.naviguer(session)
+            return MenuPrincipalView()
