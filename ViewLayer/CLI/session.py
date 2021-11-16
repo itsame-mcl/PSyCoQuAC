@@ -22,7 +22,10 @@ class Session(metaclass=Singleton):
     @agent.setter
     def agent(self, value: Agent):
         self.__agent = value
-        self.__droits = isinstance(self.__agent, Superviseur)
+        if value is not None:
+            self.__droits = isinstance(self.__agent, Superviseur)
+        else:
+            self.__droits = None
 
     @property
     def droits(self):

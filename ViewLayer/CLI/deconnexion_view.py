@@ -10,6 +10,6 @@ class DeconnexionView(AbstractView):
     def display_info(self):
         print("Alors infidèle, on s'en va sans dire au revoir ?")
 
-    def make_choice(self, session : Session):
-        session.agent.agent_id = 0
-        return MenuPrincipalView(session)
+    def make_choice(self):
+        Session().agent = None
+        return MenuPrincipalView()
