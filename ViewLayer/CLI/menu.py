@@ -2,8 +2,8 @@ from PyInquirer import prompt
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 
-class MenuPrincipalView(AbstractView):
 
+class MenuPrincipalView(AbstractView):
     def __init__(self) -> None:
         if Session().agent is None:
             prenom = ""
