@@ -29,8 +29,8 @@ class DAOAgent(metaclass=Singleton):
             equipe.append(agent_factory.AgentFactory.from_dict(row))
         return equipe
 
-    def deleguer_agents(self, id_agents: List[int], id_delegue: int) -> bool:
-        return self.__interface.modifier_superviseur(id_agents, id_delegue)
+    def deleguer_agent(self, id_agent: int, id_delegue: int) -> bool:
+        return self.__interface.modifier_superviseur(list(id_agent), id_delegue)
 
     def deleguer_equipe(self, id_superviseur: int, id_delegue: int) -> bool:
         data = self.__interface.recuperer_liste_agents(id_superviseur)

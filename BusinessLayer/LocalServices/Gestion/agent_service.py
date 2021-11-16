@@ -1,8 +1,6 @@
 from BusinessLayer.BusinessObjects.agent import Agent
 from BusinessLayer.BusinessObjects.session import Session
-from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_agent import DAOAgent
-from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from utils.singleton import Singleton
 from typing import List
 
@@ -37,3 +35,9 @@ class AgentService:
     def promouvoir_agent(self, id_agent : int) -> bool:
         agent = DAOAgent.recuperer_agent(id_agent)
         return DAOAgent.changer_droits(agent)
+
+    def deleguer_agent(self, id_agent: int, id_delegue: int) -> bool:
+        return DAOAgent.deleguer_agent(id_agent, id_delegue)
+
+    def deleguer_equipe(self, id_superviseur: int, id_delegue: int) -> bool:
+        return DAOAgent.deleguer_equipe(id_superviseur, id_delegue)
