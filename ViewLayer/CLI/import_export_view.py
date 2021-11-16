@@ -5,11 +5,11 @@ from ViewLayer.CLI.menu import MenuPrincipalView
 
 class ImportExportView(AbstractView):
 
-    def __init__(self, session : Session) -> None:
+    def __init__(self) -> None:
         self.__questions = [{'type': 'list','name': 'choix','message': 'Quelle opération souhaitez-vous effectuer ?',
                             'choices': ['1) Importation', '2) Exportation']}]
 
-    def make_choice(self, session : Session):
+    def make_choice(self):
         answers = prompt(self.__questions)
         if '1' in answers['choix']:
             from BusinessLayer.LocalServices.IO.importation_service import ImportationServices
@@ -17,4 +17,4 @@ class ImportExportView(AbstractView):
         else:
             from BusinessLayer.LocalServices.IO.exportation_service import ExportationServices
             ExportationServices.exportation()
-        return MenuPrincipalView(session)
+        return MenuPrincipalView()
