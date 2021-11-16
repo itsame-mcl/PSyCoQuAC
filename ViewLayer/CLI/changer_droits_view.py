@@ -18,7 +18,7 @@ class ChangerDroitsView(AbstractView):
             print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
         answers2 = prompt(self.__questions2)
         if 'o' in str.lower(answers2['choix']):
-            return ChangerDroitsView(Session())
+            return ChangerDroitsView(self.__session)
         else :
             return MenuPrincipalView()
         

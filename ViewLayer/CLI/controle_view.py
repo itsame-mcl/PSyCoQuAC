@@ -13,14 +13,14 @@ class ControlerView(AbstractView):
                             'p) Retourner à la fiche précédente', 's) Passer à la fiche suivante', 'm) Retourner au menu principal']}]
         self.__questions2 = [{'type':'list', 'name':'choix', 'message': 'Confirmez-vous votre décision ?', 'choices': ['Oui', 'Non']}]
     
-    def display_info(self, curseur : int):
-        pot = dao_fiche_adresse.recupere_pot(ControlerView().session.agent.agent_id) 
-        fiche = pot[ControlerView().curseur]
+    def display_info(self):
+        pot = dao_fiche_adresse.recupere_pot(self.__session.agent.agent_id) 
+        fiche = pot[self.__curseur]
         print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : '  + str(fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
 
     def make_choice(self):
-        pot = dao_fiche_adresse.recupere_pot(ControlerView().session.agent.agent_id) 
-        fiche = pot[ControlerView().curseur]
+        pot = dao_fiche_adresse.recupere_pot(self.__session.agent.agent_id) 
+        fiche = pot[self.__curseur]
         answers = prompt(self.__questions)
         if 'c' in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
@@ -28,27 +28,27 @@ class ControlerView(AbstractView):
                 probleme = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'VC'})
                 if not(probleme):
                     print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
-                    return ControlerView(ControlerView().session, (ControlerView().curseur)+1)
+                    return ControlerView(self.__session, (self.__curseur)+1)
                 else:
-                    return ControlerView(ControlerView().session, (ControlerView().curseur)+1)
+                    return ControlerView(self.__session, self.__curseur+1)
             elif str.lower(answers2['choix']) == 'non':
-                return ControlerView(ControlerView().session, ControlerView().curseur)
+                return ControlerView(self.__session, self.__curseur)
         elif 'i'in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
             if str.lower(answers2['choix']) == 'oui' :
                 probleme = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'TR'})
                 if not(probleme):
                     print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
-                    return ControlerView(ControlerView().session, (ControlerView().curseur)+1)
+                    return ControlerView(self.__session, self.__curseur+1)
                 else:
-                    return ControlerView(ControlerView().session, (ControlerView().curseur)+1)
+                    return ControlerView(self.__session, self.__curseur+1)
             elif str.lower(answers2['choix']) == 'non':
-                return ControlerView(ControlerView().session, ControlerView().curseur)
+                return ControlerView(self.__session, self.__curseur)
         elif 'p' in str.lower(answers['choix']) :
-            curseur = ((ControlerView().curseur)-1) % len(pot)
-            return ControlerView(ControlerView().session, curseur)
+            curseur = (self.__curseur-1) % len(pot)
+            return ControlerView(self.__session, curseur)
         elif 's'in str.lower(answers['choix']) :
-            curseur = ((ControlerView().curseur)+1) % len(pot)
-            return ControlerView(ControlerView().session, curseur)
+            curseur = (self.__curseur+1) % len(pot)
+            return ControlerView(self.__session, curseur)
         elif 'm' in str.lower(answers['choix']) :
             return MenuPrincipalView()

@@ -11,16 +11,16 @@ class ConsulterPotView(AbstractView):
                             'choices': ['p) Retourner à la fiche précédente', 's) Passer à la fiche suivante', 'm) Retourner au menu principal']}]
 
     def make_choice(self):
-        pot = DAOFicheAdresse().recuperer_pot(Session().agent.id_agent)
+        pot = DAOFicheAdresse().recuperer_pot(self.__session.agent.id_agent)
         fiche = pot[self.__curseur]
         print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : '  + str(fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
         answers = prompt(self.__questions)
         if 'p' in str.lower(answers['choix']) :
-            curseur = (ConsulterPotView.curseur-1) % len(pot)
-            return ConsulterPotView(Session(), ConsulterPotView.id_agent, curseur)
+            curseur = (self.__curseur-1) % len(pot)
+            return ConsulterPotView(Session(), self.__id_agent, curseur)
         elif 's' in str.lower(answers['choix']) :
-            curseur = (ConsulterPotView.curseur+1) % len(pot)
-            return ConsulterPotView(Session(), ConsulterPotView.id_agent, curseur)
+            curseur = (self.__curseur+1) % len(pot)
+            return ConsulterPotView(self.__session, self.__id_agent, curseur)
         else:
             from ViewLayer.CLI.menu import MenuPrincipalView
             return MenuPrincipalView()
