@@ -32,7 +32,7 @@ class MenuPrincipalView(AbstractView):
                 return ConsulterPotView()
             elif 'B' in str.upper(answers['choix'][0]) or 'F' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.modifier_view import ModifierView
-                return ModifierView(Session())
+                return ModifierView()
             elif 'C' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.deconnexion_view import DeconnexionView
                 return DeconnexionView(Session())
@@ -47,7 +47,7 @@ class MenuPrincipalView(AbstractView):
                 return NouvelUtilisateurView(Session())
             elif 'I' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
-                return GestionEquipeView(Session())
+                return GestionEquipeView()
             elif 'J' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.import_export_view import ImportExportView
                 return ImportExportView()
