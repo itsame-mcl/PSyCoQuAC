@@ -17,6 +17,6 @@ class ConnexionView(AbstractView):
             print("Ah ah ah... Vous n'avez pas dis le mot magique !")
             return ConnexionView()
         else:
-            session = Session(agent)
+            Session().agent = agent
             from ViewLayer.CLI.menu import MenuPrincipalView
-            return MenuPrincipalView(session)
+            return MenuPrincipalView()

@@ -1,5 +1,6 @@
 from ViewLayer.CLI.start_view import StartView
 
+
 if __name__ == '__main__':
     vue_actuelle = StartView()
     while vue_actuelle:
