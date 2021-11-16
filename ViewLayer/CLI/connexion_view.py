@@ -12,11 +12,11 @@ class ConnexionView(AbstractView):
 
     def make_choice(self):
         answers = prompt(self.__questions)
-        agent = SessionService.ouvrir_session(answers['nom_utilisateur'], answers['mot_de_passe']) # récupérer un booléen d'un service connexion
+        agent = SessionService().ouvrir_session(answers['nom_utilisateur'], answers['mot_de_passe']) # récupérer un booléen d'un service connexion
         if not(isinstance(agent, Agent)): # tester le booléen : le test est fait par le service connexion
             print("Ah ah ah... Vous n'avez pas dis le mot magique !")
             return ConnexionView()
         else:
-            session = Session(agent)
+            Session().agent = agent
             from ViewLayer.CLI.menu import MenuPrincipalView
-            return MenuPrincipalView(session)
+            return MenuPrincipalView()
