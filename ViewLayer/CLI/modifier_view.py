@@ -6,7 +6,8 @@ from ViewLayer.CLI.session import Session
 
 class ModifierView(AbstractView):
 
-    def __init__(self, session : Session) -> None:
+    def __init__(self) -> None:
+        self.__session = Session()
         self.__questions0 = [{'type': 'list','name': 'choix','message': 'Quelle(s) information(s) souhaitez-vous modifier ?',
                             'choices': ['1) Prénom', '2) Nom','3) Quotité de travail',"4) Nom d'utilisateur",'5) Mot de passe', '6) Retourner au menu principal']}]
         self.__questions1 = [{'type': 'input','name': 'prenom','message': "Quel est votre nouveau prénom ?"}]
@@ -27,29 +28,29 @@ class ModifierView(AbstractView):
         if '1' in answers0['choix']:
             answers1 = prompt(self.__questions1)
             self.__session.agent.prenom = answers1['prenom']
-            probleme = AgentService.modifier_agent(self.__session.agent.as_dict())
+            probleme = AgentService().modifier_agent(self.__session.agent.as_dict())
             if not(probleme):
                 print('La modification a échoué. Veuillez réessayer ultérieurement.')
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
-                return ModifierView(self.__session)
+                return ModifierView()
             else:
                 return MenuPrincipalView()
         elif '2' in answers0['choix']:
             answers2 = prompt(self.__questions2)
             self.__session.agent.nom = answers2['nom']
-            probleme = AgentService.modifier_agent(self.__session.agent.as_dict())
+            probleme = AgentService().modifier_agent(self.__session.agent.as_dict())
             if not(probleme):
                 print('La modification a échoué. Veuillez réessayer ultérieurement.')
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
-                return ModifierView(self.__session)
+                return ModifierView()
             else:
                 return MenuPrincipalView()
         elif '3' in answers0['choix']:
             answers3 = prompt(self.__questions3)
             self.__session.agent.quotite = answers3['quotite']
-            probleme = AgentService.modifier_agent(self.__session.agent.as_dict())
+            probleme = AgentService().modifier_agent(self.__session.agent.as_dict())
             if not(probleme):
                 print('La modification a échoué. Veuillez réessayer ultérieurement.')
             answers = prompt(self.__questions)
@@ -59,26 +60,26 @@ class ModifierView(AbstractView):
                 return MenuPrincipalView()
         elif '4' in answers0['choix']:
             answers4 = prompt(self.__questions4)
-            nouveau_mdp_hache = AgentService.saler_hasher_mdp(answers4['util'], answers4['mdp'])
+            nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers4['util'], answers4['mdp'])
             nouvel_agent = {'nom_utilisateur' : answers4['util'], 'mot_de_passe' : nouveau_mdp_hache}
-            probleme = AgentService.modifier_agent(nouvel_agent)
+            probleme = AgentService().modifier_agent(nouvel_agent)
             if not(probleme):
                 print("La modification a échoué. Veuillez réessayer ultérieurement.")
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
-                return ModifierView(self.__session)
+                return ModifierView()
             else:
                 return MenuPrincipalView()
         elif '5' in answers0['choix']:
             answers5 = prompt(self.__questions5)
-            nouveau_mdp_hache = AgentService.saler_hasher_mdp(answers5['util'], answers5['mdp'])
+            nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers5['util'], answers5['mdp'])
             nouvel_agent = {'mot_de_passe' : nouveau_mdp_hache}
-            probleme = AgentService.modifier_agent(nouvel_agent)
+            probleme = AgentService().modifier_agent(nouvel_agent)
             if not(probleme):
                 print("La modification a échoué. Veuillez réessayer ultérieurement.")
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
-                return ModifierView(self.__session)
+                return ModifierView()
             else:
                 return MenuPrincipalView()
         else:
