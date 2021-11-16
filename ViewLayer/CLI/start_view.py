@@ -9,7 +9,7 @@ class StartView(AbstractView):
                             'choices': ['C) Se connecter', "Q) Quitter l'application"]}]
 
     def display_info(self):
-        with open('outils graphiques/bannière.txt', 'r', encoding = "utf-8") as asset:
+        with open('assets/banniere.txt', 'r', encoding = "utf-8") as asset:
             print(asset.read())
 
     def make_choice(self):
