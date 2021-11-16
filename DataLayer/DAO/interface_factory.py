@@ -1,11 +1,12 @@
 import os
 import dotenv
 
-from DataLayer.DAO.sqlite_connexion import SQLiteConnexion
-from DataLayer.DAO.sqlite_fiche_adresse import SQLiteFicheAdresse
-from DataLayer.DAO.sqlite_modele import SQLiteModele
-from DataLayer.DAO.sqlite_agent import SQLiteAgent
-from DataLayer.DAO.pg_connexion import PGConnexion
+
+import DataLayer.DAO.sqlite_connexion as slcx
+import DataLayer.DAO.sqlite_fiche_adresse as slfa
+import DataLayer.DAO.sqlite_modele as slmo
+import DataLayer.DAO.sqlite_agent as slag
+import DataLayer.DAO.pg_connexion as pgcx
 
 
 class InterfaceFactory:
@@ -14,18 +15,18 @@ class InterfaceFactory:
         dotenv.load_dotenv(override=True)
         if os.environ["ENGINE"] == "SQLite":
             if type_dao == "Connexion":
-                return SQLiteConnexion()
+                return slcx.SQLiteConnexion()
             elif type_dao == "FicheAdresse":
-                return SQLiteFicheAdresse()
+                return slfa.SQLiteFicheAdresse()
             elif type_dao == "Modele":
-                return SQLiteModele()
+                return slmo.SQLiteModele()
             elif type_dao == "Agent":
-                return SQLiteAgent()
+                return slag.SQLiteAgent()
             else:
                 raise NotImplementedError
         elif os.environ["ENGINE"] == "PostgreSQL":
             if type_dao == "Connexion":
-                return PGConnexion()
+                return pgcx.PGConnexion()
             else:
                 raise NotImplementedError
         else:

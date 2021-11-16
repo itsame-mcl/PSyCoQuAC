@@ -1,13 +1,13 @@
 import os
-from DataLayer.DAO.interface_factory import InterfaceFactory as factory
+import DataLayer.DAO.interface_factory as factory
 from utils.singleton import Singleton
 
 # DBConnexion.connexion doit renvoyer un agent, pour que la connexion puisse se faire
 
+
 class DBConnexion(metaclass=Singleton):
-    
     def __init__(self):
-        self.__interface = factory.get_interface("Connexion")
+        self.__interface = factory.InterfaceFactory().get_interface("Connexion")
         self.__connexion = self.__interface.ouvrir_connexion(os.environ["HOST"], os.environ["PORT"],
                                                              os.environ["DATABASE"],
                                                              os.environ["USER"], os.environ["PASSWORD"])
