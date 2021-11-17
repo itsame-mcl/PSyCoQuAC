@@ -10,7 +10,7 @@ class MenuPrincipalView(AbstractView):
         else:
             prenom = Session().agent.prenom
         self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+prenom+', que voulez-vous faire ?',
-                            'choices': ['A) Consulter son pot', 'B) Modifier son compte','C) Se déconnecter']}]
+                            'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter', 'K) Contrôler une fiche', 'L) Reprendre  une fiche']}]
         self.__questions2 = [{'type': 'list','name': 'choix','message': 'Bonjour '+prenom+', que voulez-vous faire ?',
                             'choices': ['A) Consulter son pot', 'B) Modifier son compte','C) Se déconnecter',
                             'D) Déleguer son équipe', 'E) Déléguer un agent','F) Modifier un agent',
@@ -41,7 +41,7 @@ class MenuPrincipalView(AbstractView):
                 return DeleguerView(Session())
             elif 'G' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.changer_droits_view import ChangerDroitsView
-                return ChangerDroitsView()
+                return ChangerDroitsView(Session())
             elif 'H' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
                 return NouvelUtilisateurView(Session())
@@ -51,3 +51,9 @@ class MenuPrincipalView(AbstractView):
             elif 'J' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.import_export_view import ImportExportView
                 return ImportExportView()
+            elif 'K' in str.upper(answers['choix'][0]):
+                from ViewLayer.CLI.controle_view import ControlerView
+                return ControlerView(Session())
+            elif 'L' in str.upper(answers['choix'][0]):
+                from ViewLayer.CLI.reprendre_view import ReprendreView
+                return ReprendreView(Session())
