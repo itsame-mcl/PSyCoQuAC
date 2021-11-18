@@ -3,8 +3,8 @@ from utils.singleton import Singleton
 
 
 class SessionService(metaclass=Singleton):
-    
-    def ouvrir_session(self, nom_utilisateur, mot_de_passe):
+    @staticmethod
+    def ouvrir_session(nom_utilisateur, mot_de_passe):
         try:
             agent = DAOAgent().connexion_agent(nom_utilisateur, mot_de_passe)
         except ConnectionRefusedError:
