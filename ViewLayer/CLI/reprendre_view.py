@@ -30,7 +30,7 @@ class ReprendreView(AbstractView):
         if 'a)' in str.lower(answers['choix']) :
             answers3 = prompt(self.__questions3)
             nouvelle_adresse = Adresse('numero', 'voie', 'cd', 'ville')
-            res = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'adresse_finale': nouvelle_adresse})
+            res = ControleRepriseService.modifier_fiche({'adresse_finale': nouvelle_adresse})
             answers4 = prompt(self.__questions4)
             if str.lower(answers4['choix']) == 'Oui' :
                 # Resoumettre à l'API
@@ -41,7 +41,7 @@ class ReprendreView(AbstractView):
         elif 'c)' in str.lower(answers['choix']) :
             answers5 = prompt(self.__questions5)
             nouvelles_coords = ('lat', 'lon')
-            res = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'coords_wgs84': nouvelles_coords})
+            res = ControleRepriseService.modifier_fiche({'coords_wgs84': nouvelles_coords})
             answers4 = prompt(self.__questions4)
             if str.lower(answers4['choix']) == 'Oui' :
                 # Resoumettre à l'API
@@ -52,14 +52,14 @@ class ReprendreView(AbstractView):
         elif 'v)' in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
             if str.lower(answers2['choix']) == 'Oui' :
-                res = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'VR'})
+                res = ControleRepriseService.modifier_fiche({'code_res' : 'VR'})
                 return ReprendreView(self.__curseur)
             elif str.lower(answers2['choix']) == 'Non':
                 return ReprendreView(self.__curseur)
         elif 'd)'in str.lower(answers['choix']) :
             answers2 = prompt(self.__questions2)
             if str.lower(answers2['choix']) == 'Oui' :
-                res = ControleRepriseService.modifier_fiche(fiche.fiche_id, {'code_res' : 'DR'})
+                res = ControleRepriseService.modifier_fiche({'code_res' : 'DR'})
                 return ReprendreView(self.__curseur)
             elif str.lower(answers2['choix']) == 'Non':
                 return ReprendreView(self.__curseur)

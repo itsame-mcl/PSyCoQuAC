@@ -1,37 +1,37 @@
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
-from BusinessLayer.BusinessObjects.session import Session
-from BusinessLayer.BusinessObjects.agent import Agent
-from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
-from DataLayer.DAO.dao_agent import DAOAgent
+from utils.singleton import Singleton
 from typing import List
 
 
-class ControleRepriseService():
+class ControleRepriseService(metaclass=Singleton):
+    @staticmethod
+    def consulter_fiche(id_fiche: int) -> FicheAdresse:
+        return DAOFicheAdresse().recuperer_fiche_adresse(id_fiche)
 
-    def consulter_fiche(self, session_utilisateur : Session, id_fiche : int, etat_final : bool ) -> FicheAdresse :
-        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte) # Récupère le pot de l'agent 
-        if session_utilisateur.droits_superviseurs == False and id_fiche not in pot : # Un agent ne peut pas consulter une fiche s'il est gestionnaire et que la fiche ne lui est pas attribué
-            raise ValueError("L'agent n'a pas le droit de consulter la fiche")
-        fa = DAOFicheAdresse.recuperer_fiche_adresse(id_fiche)
-        return fa
-    
-    def modifier_fiche(self, id_fiche : int, nouvelles_informations : dict) -> bool:
-        fa = DAOFicheAdresse.recuperer_fiche_adresse(id_fiche)
-        nouvelle_fa = FicheAdresse(id_fiche,  nouvelles_informations["identifiant_pot"] if "identifiant_pot" in nouvelles_informations.keys else fa.identifiant_pot, 
-                          nouvelles_informations["identifiant_lot"] if "identifiant_lot" in nouvelles_informations.keys else fa.identifiant_lot, 
-                          nouvelles_informations["adresse_initiale"] if "adresse_initiale" in nouvelles_informations.keys else fa.adresse_initiale,
-                          nouvelles_informations["adresse_finale"] if "adresse_finale" in nouvelles_informations.keys else fa.adresse_finale, 
-                          nouvelles_informations["coordonnees_wgs84"] if "coordonnees_wgs84" in nouvelles_informations.keys else fa.coordonnees_wgs84, 
-                          nouvelles_informations["champs_supplementaires"] if "champs_supplementaires" in nouvelles_informations.keys else fa.champs_supplementaires,
-                          nouvelles_informations["code_resultat"] if "code_resultat" in nouvelles_informations.keys else fa.code_resultat)
-        probleme = DAOFicheAdresse.modifier_fiche_adresse(nouvelle_fa)
-        return probleme
-    
-    def consulter_pot(self, session_utilisateur : Session) -> List[FicheAdresse] :
-        pot = DAOFicheAdresse.recuperer_pot(session_utilisateur.utilisateur_connecte)
-        return pot
+    @staticmethod
+    def modifier_fiche(id_fiche: int, nouvelles_informations: dict) -> bool:
+        data = DAOFicheAdresse().recuperer_fiche_adresse(id_fiche).as_dict()
+        if "identifiant_pot" in nouvelles_informations.keys:
+            data["identifiant_pot"] = nouvelles_informations["identifiant_pot"]
+        if "identifiant_lot" in nouvelles_informations.keys:
+            data["identifiant_lot"] = nouvelles_informations["identifiant_lot"]
+        if "code_resultat" in nouvelles_informations.keys:
+            data["code_resultat"] = nouvelles_informations["code_resultat"]
+        if "final_numero" in nouvelles_informations.keys:
+            data["final_numero"] = nouvelles_informations["final_numero"]
+        if "final_voie" in nouvelles_informations.keys:
+            data["final_voie"] = nouvelles_informations["final_voie"]
+        if "final_code_postal" in nouvelles_informations.keys:
+            data["final_code_postal"] = nouvelles_informations["final_code_postal"]
+        if "final_ville" in nouvelles_informations["final_ville"]:
+            data["final_ville"] = nouvelles_informations["final_ville"]
+        if "coordonnees_wgs84" in nouvelles_informations["coordonnees_wgs84"]:
+            data["coordonnees_wgs84"] = nouvelles_informations["coordonnees_wgs84"]
+        fa = FicheAdresse.from_dict(data)
+        res = DAOFicheAdresse().modifier_fiche_adresse(fa)
+        return res
 
-    def consulter_pot_agent(self, id_agent) -> dict:
-        agent = DAOAgent.recuperer_agent(id_agent)
-        return DAOFicheAdresse.recuperer_pot(agent)
+    @staticmethod
+    def consulter_pot(id_agent: int) -> List[FicheAdresse]:
+        return DAOFicheAdresse().recuperer_pot(id_agent)
