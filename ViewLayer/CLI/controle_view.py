@@ -1,3 +1,4 @@
+from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
@@ -17,44 +18,50 @@ class ControlerView(AbstractView):
 
     def display_info(self):
         pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
-        fiche = pot[self.__curseur]
-        print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(
-            fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : ' + str(
-            fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
+        if len(pot) > 0:
+            fiche = pot[self.__curseur]
+            print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(
+                    fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : ' + str(
+                    fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
+        else:
+            print("Le pot est vide.")
+
+    def __choix_resultat(self, fiche: FicheAdresse, validation: bool):
+        answers2 = prompt(self.__questions2)
+        if str.lower(answers2['choix']) == 'oui':
+            if validation:
+                fiche.code_res = "VC"
+            else:
+                fiche.code_res = "TR"
+            res = ControleRepriseService().modifier_fiche(fiche)
+            if not res:
+                print("La sauvegarde du contrôle a échoué. Veuillez réessayer ultérieurement.")
+        elif str.lower(answers2['choix']) == 'non':
+            res = False
+        else:
+            raise ValueError
+        return res
 
     def make_choice(self):
         pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
-        fiche = pot[self.__curseur]
-        answers = prompt(self.__questions)
-        if 'c' in str.lower(answers['choix']):
-            answers2 = prompt(self.__questions2)
-            if str.lower(answers2['choix']) == 'oui':
-                fiche.code_res = "VC"
-                succes = ControleRepriseService().modifier_fiche(fiche)
-                if not succes:
-                    print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
-                    return ControlerView(self.__curseur + 1)
+        if len(pot) > 0:
+            fiche = pot[self.__curseur]
+            answers = prompt(self.__questions)
+            if str.lower(answers['choix'][0]) in ['c', 'i']:
+                if str.lower(answers['choix'][0]) == 'c':
+                    self.__choix_resultat(fiche, True)
                 else:
-                    return ControlerView(self.__curseur + 1)
-            elif str.lower(answers2['choix']) == 'non':
+                    self.__choix_resultat(fiche, False)
                 return ControlerView(self.__curseur)
-        elif 'i' in str.lower(answers['choix']):
-            answers2 = prompt(self.__questions2)
-            if str.lower(answers2['choix']) == 'oui':
-                fiche.code_res = "TR"
-                succes = ControleRepriseService().modifier_fiche(fiche)
-                if not succes:
-                    print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
-                    return ControlerView(self.__curseur + 1)
-                else:
-                    return ControlerView(self.__curseur + 1)
-            elif str.lower(answers2['choix']) == 'non':
+            elif str.lower(answers['choix'][0]) == 'p':
+                curseur = (self.__curseur - 1) % len(pot)
+                return ControlerView(curseur)
+            elif str.lower(answers['choix'][0]) == 's':
+                curseur = (self.__curseur + 1) % len(pot)
+                return ControlerView(curseur)
+            elif str.lower(answers['choix'][0]) == 'm':
+                return MenuPrincipalView()
+            else:
                 return ControlerView(self.__curseur)
-        elif 'p' in str.lower(answers['choix']):
-            curseur = (self.__curseur - 1) % len(pot)
-            return ControlerView(curseur)
-        elif 's' in str.lower(answers['choix']):
-            curseur = (self.__curseur + 1) % len(pot)
-            return ControlerView(curseur)
-        elif 'm' in str.lower(answers['choix']):
+        else:
             return MenuPrincipalView()
