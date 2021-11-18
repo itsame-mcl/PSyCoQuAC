@@ -10,6 +10,10 @@ class Gestionnaire(Agent):
     def superviseur_id(self) -> int:
         return self._superviseur_id
 
+    @superviseur_id.setter
+    def superviseur_id(self, value: int):
+        self._superviseur_id = value
+
     def as_dict(self) -> dict:
         data = super().as_dict()
         data["identifiant_superviseur"] = self._superviseur_id

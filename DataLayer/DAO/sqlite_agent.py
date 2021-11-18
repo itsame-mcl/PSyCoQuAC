@@ -74,9 +74,8 @@ class SQLiteAgent(InterfaceAgent):
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("""
             UPDATE agents SET est_superviseur=:est_superviseur, quotite=:quotite,
-            identifiant_superviseur=:identifiant_superviseur, nom_utilisateur=:nom_utilisateur, 
-            mot_de_passe=:mot_de_passe, prenom=:prenom, nom=:nom
-            WHERE identifiant_agent=:id_agent
+            identifiant_superviseur=:identifiant_superviseur, prenom=:prenom, nom=:nom
+            WHERE identifiant_agent=:identifiant_agent
             """, data)
             DBConnexion().connexion.commit()
             curseur.close()

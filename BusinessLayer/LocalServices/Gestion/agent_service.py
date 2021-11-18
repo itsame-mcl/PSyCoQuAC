@@ -1,44 +1,56 @@
 from BusinessLayer.BusinessObjects.agent import Agent
+import BusinessLayer.BusinessObjects.agent_factory as agent_factory
 from BusinessLayer.BusinessObjects.session import Session
 from DataLayer.DAO.dao_agent import DAOAgent
 from utils.singleton import Singleton
 from typing import List
 
 
-@Singleton
-class AgentService:
+class AgentService(metaclass=Singleton):
+    @staticmethod
+    def creer_agent(est_superviseur: bool, quotite: float, id_superviseur: int, nom_utilisateur: str,
+                    mot_de_passe: str, prenom: str, nom: str) -> bool:
+        data_agent = {'est_superviseur': est_superviseur, 'prenom': prenom, 'nom': nom, 'quotite': quotite,
+                      'id_superviseur': id_superviseur, 'identifiant_agent': None}
+        nouvel_agent = agent_factory.AgentFactory.from_dict(data_agent)
+        return DAOAgent().creer_agent(nouvel_agent, nom_utilisateur, mot_de_passe)
 
-    def creer_agent(self, est_superviseur : bool, quotite : float, id_superviseur : int, nom_utilisateur : str, mot_de_passe : str, prenom : str, nom : str) -> bool:
-        return DAOAgent.creer_agent(est_superviseur, quotite, id_superviseur, nom_utilisateur, mot_de_passe, prenom, nom)
+    @staticmethod
+    def modifier_agent(agent_a_modifier: dict) -> bool:
+        return DAOAgent().modifier_agent(agent_a_modifier)
 
-    def modifier_agent(self, agent_a_modifier : dict) -> bool: 
-        return DAOAgent.modifier_agent(agent_a_modifier)
+    @staticmethod
+    def changer_droits(id_agent: int) -> bool:
+        agent_a_modifier = DAOAgent().recuperer_agent(id_agent)
+        return DAOAgent().changer_droits(agent_a_modifier)
 
-    def changer_droits(self, id_agent : int) -> bool:
-        agent_a_modifier = DAOAgent.recuperer_agent(id_agent)
-        return DAOAgent.changer_droits(agent_a_modifier)
+    @staticmethod
+    def supprimer_agent(agent_a_supprimer: int) -> bool:
+        return DAOAgent().supprimer_agent(agent_a_supprimer)
 
-    def supprimer_agent(self, agent_a_supprimer : int) -> bool:
-        return DAOAgent.supprimer_agent(agent_a_supprimer)
+    @staticmethod
+    def recuperer_id_superviseur(id_agent: int) -> int:
+        return DAOAgent().recuperer_id_superviseur(id_agent)['id_superviseur']
 
-    def saler_hasher_mdp(self, nom_utilisateur : str, mot_de_passe : str) -> str:
-        return DAOAgent.__saler_hasher_mdp(nom_utilisateur, mot_de_passe)
-    
-    def recuperer_id_superviseur(self, id_agent : int) -> int:
-        return DAOAgent.recuperer_id_superviseur(id_agent)['id_superviseur']
-        
-    def recuperer_equipe(self, session_supervsieur : Session) -> List[Agent]:
-        return DAOAgent.recuperer_equipe(session_supervsieur.utilisateur_connecte.agent_id)
+    @staticmethod
+    def recuperer_equipe(session_supervsieur: Session) -> List[Agent]:
+        return DAOAgent().recuperer_equipe(session_supervsieur.utilisateur_connecte.agent_id)
 
-    def ajout_agent_equipe(self, id_superviseur : int, id_agent : int) -> bool:
-        return DAOAgent.ajout_agent_equipe(id_superviseur, id_agent)
-    
-    def promouvoir_agent(self, id_agent : int) -> bool:
-        agent = DAOAgent.recuperer_agent(id_agent)
-        return DAOAgent.changer_droits(agent)
+    @staticmethod
+    def ajout_agent_equipe(id_superviseur: int, id_agent: int) -> bool:
+        agent_a_modifier = DAOAgent().recuperer_agent(id_agent)
+        agent_a_modifier.superviseur_id = id_superviseur
+        return DAOAgent().modifier_agent(agent_a_modifier.as_dict())
 
-    def deleguer_agent(self, id_agent: int, id_delegue: int) -> bool:
-        return DAOAgent.deleguer_agent(id_agent, id_delegue)
+    @staticmethod
+    def promouvoir_agent(id_agent: int) -> bool:
+        agent = DAOAgent().recuperer_agent(id_agent)
+        return DAOAgent().changer_droits(agent)
 
-    def deleguer_equipe(self, id_superviseur: int, id_delegue: int) -> bool:
-        return DAOAgent.deleguer_equipe(id_superviseur, id_delegue)
+    @staticmethod
+    def deleguer_agent(id_agent: int, id_delegue: int) -> bool:
+        return DAOAgent().deleguer_agent(id_agent, id_delegue)
+
+    @staticmethod
+    def deleguer_equipe(id_superviseur: int, id_delegue: int) -> bool:
+        return DAOAgent().deleguer_equipe(id_superviseur, id_delegue)

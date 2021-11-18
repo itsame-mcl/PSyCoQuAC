@@ -9,13 +9,16 @@ class MenuPrincipalView(AbstractView):
             prenom = ""
         else:
             prenom = Session().agent.prenom
-        self.__questions = [{'type': 'list','name': 'choix','message': 'Bonjour '+prenom+', que voulez-vous faire ?',
-                            'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter', 'K) Contrôler une fiche', 'L) Reprendre  une fiche']}]
-        self.__questions2 = [{'type': 'list','name': 'choix','message': 'Bonjour '+prenom+', que voulez-vous faire ?',
-                            'choices': ['A) Consulter son pot', 'B) Modifier son compte','C) Se déconnecter',
-                            'D) Déleguer son équipe', 'E) Déléguer un agent','F) Modifier un agent',
-                            "G) Changer les droits d'un agent", 'H) Créer un nouvel utilisateur', "I) Gestion de l'équipe",
-                            "J) Importer/Exporter des fichiers d'adresse"]}]
+        self.__questions = [
+            {'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous faire ?',
+             'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter',
+                         'K) Contrôler une fiche', 'L) Reprendre  une fiche']}]
+        self.__questions2 = [
+            {'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous faire ?',
+             'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter',
+                         'D) Déleguer son équipe', 'E) Déléguer un agent', 'F) Modifier un agent',
+                         "G) Changer les droits d'un agent", 'H) Créer un nouvel utilisateur', "I) Gestion de l'équipe",
+                         "J) Importer/Exporter des fichiers d'adresse"]}]
 
     def make_choice(self):
         if Session().agent is None:
