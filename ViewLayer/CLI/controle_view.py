@@ -49,10 +49,16 @@ class ControlerView(AbstractView):
             answers = prompt(self.__questions)
             if str.lower(answers['choix'][0]) in ['c', 'i']:
                 if str.lower(answers['choix'][0]) == 'c':
-                    self.__choix_resultat(fiche, True)
+                    res = self.__choix_resultat(fiche, True)
                 else:
-                    self.__choix_resultat(fiche, False)
-                return ControlerView(self.__curseur)
+                    res = self.__choix_resultat(fiche, False)
+                if res:
+                    if len(pot) > 1:
+                        return ControlerView(self.__curseur % (len(pot) - 1))
+                    else:
+                        return ControlerView(0)
+                else:
+                    return ControlerView(self.__curseur)
             elif str.lower(answers['choix'][0]) == 'p':
                 curseur = (self.__curseur - 1) % len(pot)
                 return ControlerView(curseur)
