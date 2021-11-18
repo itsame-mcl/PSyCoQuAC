@@ -45,7 +45,7 @@ class ReprendreView(AbstractView):
             answers4 = prompt(self.__questions4)
             if str.lower(answers4['choix']) == 'Oui' :
                 # Resoumettre à l'API
-                score, fiche = BANClient.geocodage_par_fiche(fiche)
+                score, fiche = BANClient.geocodage_par_fiche()
                 print("Le score de l'API est" + str(score))
             elif str.lower(answers4['choix']) == 'Non' :
                 return ReprendreView(self.__curseur)
