@@ -6,26 +6,28 @@ from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 
 
 class DeleguerView(AbstractView):
-    def __init__(self, session : Session) -> None:
-        self.__questions = [{'type': 'list','name': 'choix','message': "Que voulez-vous faire ?",
-                            'choices': ['A) Déléguer un agent de votre équipe', 'B) Déléguer toute votre équipe','C) Retourner au menu principal']}]
-        self.__questions1 = [{'type': 'input','name': 'id_agent','message': 'Quel agent voulez-vous déléguer ?'}]
-        self.__questions2 = [{'type': 'input','name': 'id_superviseur','message': 'À quel superviseur souhaitez-vous déléguer ?'}]
+    def __init__(self) -> None:
+        self.__questions = [{'type': 'list', 'name': 'choix', 'message': "Que voulez-vous faire ?",
+                             'choices': ['A) Déléguer un agent de votre équipe', 'B) Déléguer toute votre équipe',
+                                         'C) Retourner au menu principal']}]
+        self.__questions1 = [{'type': 'input', 'name': 'id_agent', 'message': 'Quel agent voulez-vous déléguer ?'}]
+        self.__questions2 = [
+            {'type': 'input', 'name': 'id_superviseur', 'message': 'À quel superviseur souhaitez-vous déléguer ?'}]
 
     def make_choice(self):
         answers = prompt(self.__questions)
         if 'a' in str.lower(answers['choix']):
             answers1 = prompt(self.__questions1)
             answers2 = prompt(self.__questions2)
-            probleme = AgentService.deleguer_agent(answers1['id_agent'], answers2['id_superviseur'])
-            if not(probleme):
+            probleme = AgentService().deleguer_agent(answers1['id_agent'], answers2['id_superviseur'])
+            if not probleme:
                 print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
-            return DeleguerView(self.__session)
+            return DeleguerView()
         if 'b' in str.lower(answers['choix']):
             answers2 = prompt(self.__questions2)
-            probleme = AgentService.deleguer_agent(self.__session.agent.agent_id, answers2['id_superviseur'])
-            if not(probleme):
+            probleme = AgentService().deleguer_agent(Session().agent.agent_id, answers2['id_superviseur'])
+            if not probleme:
                 print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
-            return DeleguerView(self.__session)
-        else :
+            return DeleguerView()
+        else:
             return MenuPrincipalView()

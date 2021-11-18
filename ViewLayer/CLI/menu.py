@@ -35,25 +35,25 @@ class MenuPrincipalView(AbstractView):
                 return ModifierView()
             elif 'C' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.deconnexion_view import DeconnexionView
-                return DeconnexionView(Session())
+                return DeconnexionView()
             elif 'D' in str.upper(answers['choix'][0]) or 'E' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.deleguer_view import DeleguerView
-                return DeleguerView(Session())
+                return DeleguerView()
             elif 'G' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.changer_droits_view import ChangerDroitsView
-                return ChangerDroitsView(Session())
+                return ChangerDroitsView()
             elif 'H' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
-                return NouvelUtilisateurView(Session())
+                return NouvelUtilisateurView()
             elif 'I' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
-                return GestionEquipeView(Session())
+                return GestionEquipeView()
             elif 'J' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.import_export_view import ImportExportView
                 return ImportExportView()
             elif 'K' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.controle_view import ControlerView
-                return ControlerView(Session())
+                return ControlerView()
             elif 'L' in str.upper(answers['choix'][0]):
                 from ViewLayer.CLI.reprendre_view import ReprendreView
-                return ReprendreView(Session())
+                return ReprendreView()

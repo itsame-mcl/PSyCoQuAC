@@ -4,7 +4,7 @@ from ViewLayer.CLI.menu import MenuPrincipalView
 
 
 class DeconnexionView(AbstractView):
-    def __init__(self, session : Session) -> None:
+    def __init__(self) -> None:
         pass
 
     def display_info(self):
