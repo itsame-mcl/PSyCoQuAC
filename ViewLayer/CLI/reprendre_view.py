@@ -29,10 +29,13 @@ class ReprendreView(AbstractView):
 
     def display_info(self):
         pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
-        fiche = pot[self.__curseur]
-        print('Fiche adresse n°' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + str(
-            fiche.adresse_initiale) + 'Données API : Adresse finale : ' + str(
-            fiche.adresse_finale) + 'Coordonnées GPS :' + str(fiche.coords_wgs84))
+        if len(pot) > 0:
+            fiche = pot[self.__curseur]
+            print('Fiche adresse n°' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + str(
+                fiche.adresse_initiale) + 'Données API : Adresse finale : ' + str(
+                fiche.adresse_finale) + 'Coordonnées GPS :' + str(fiche.coords_wgs84))
+        else:
+            print("Le pot est vide.")
 
     def __choix_modifier_adresse(self, fiche: FicheAdresse):
         answers3 = prompt(self.__questions3)
