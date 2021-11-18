@@ -1,14 +1,13 @@
 from random import *
 from typing import Dict, List
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
-from BusinessLayer.BusinessObjects.session import Session
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
-from DataLayer.DAO.interface_agent import InterfaceAgent
+from DataLayer.DAO.dao_agent import DAOAgent
 
 
 class AffectationService:
 
-    def echantilloner_fiches(fiches_a_controler : List[FicheAdresse], taille_max_travail : int) -> List[FicheAdresse]:
+    def echantilloner_fiches(self, fiches_a_controler : List[FicheAdresse], taille_max_travail : int) -> List[FicheAdresse]:
         n = len(fiches_a_controler)
         l = [i for i in range (n)]
         liste_aleatoire = sample(l, taille_max_travail) # Contruction d'une liste aléatoire d'entier compris entre 0 et n-1 de taille nb_fiche_à_controler 
@@ -17,20 +16,17 @@ class AffectationService:
             liste_echantillonne.append(fiches_a_controler[liste_aleatoire[i]])
         return liste_echantillonne
 
-    def repartition(session_utilisateur : Session, fiches_a_controler : List[FicheAdresse], taille_max_travail : int, fiches_a_reprendre : List[FicheAdresse]) -> Dict :
-        if session_utilisateur.droits_superviseurs == False :
-            raise ValueError("Le gestionnaire ne peut pas appliquer la répartition des fiches")
-        liste_echantillonne = AffectationService.echantilloner_fiches(fiches_a_controler, taille_max_travail)
+    def repartition(self, id_superviseur: int, fiches_a_controler : List[FicheAdresse], taille_max_travail : int, fiches_a_reprendre : List[FicheAdresse]) -> Dict :
+        liste_echantillonne = self.echantilloner_fiches(fiches_a_controler, taille_max_travail)
         fiches_a_repartir = fiches_a_reprendre + liste_echantillonne
         repartition = {} # repartition est un dictionnaire, avec comme clés les agents_id et comme valeurs les fiches_id
-        superviseur = session_utilisateur.utilisateur_connecte
-        liste_agents = InterfaceAgent.recuperer_liste_agents(superviseur.agent_id)
+        liste_agents = DAOAgent().recuperer_equipe(id_superviseur)
         for i in range (len(fiches_a_repartir)): # Pour chaque fiche à répartir, on détermine l'agent qui va s'occuper de cette fiche
             fiche_a_repartir = fiches_a_repartir[i]
             id_fiche_a_repartir = fiche_a_repartir.agent_id
             dict_pots = {}
             for agent in liste_agents : # On crée un dictionnaire contenant le nombre de fiches dans le lot de chaque agent
-                pot = DAOFicheAdresse.recuperer_pot(agent.agent_id)
+                pot = DAOFicheAdresse().recuperer_pot(agent.agent_id)
                 taille_pot = len(pot)
                 dict_pots[agent.agent_id] = taille_pot
             min = float("inf")
@@ -39,14 +35,13 @@ class AffectationService:
                 if val < min :
                     min = val
                     agent_choisi = k
-            res = DAOFicheAdresse.affecter_fiches_adresse(agent_choisi, [id_fiche_a_repartir]) # On affecte la fiche à l'agent choisi
+            res = DAOFicheAdresse().affecter_fiches_adresse(agent_choisi, [id_fiche_a_repartir]) # On affecte la fiche à l'agent choisi
             repartition[agent_choisi] = id_fiche_a_repartir
         return repartition
 
-    def appliquer_repartition(session_utilisateur : Session, repartition : Dict) -> bool :
-        if session_utilisateur.droits_superviseurs == False :
-            raise ValueError("Ah ah ah... Vous n'avez pas dis le mot magique !\n Le gestionnaire ne peut pas appliquer la répartition des fiches")
-        else:
-            for agent in repartition.keys() :
-                res = DAOFicheAdresse.affecter_fiches_adresse(agent, repartition[agent]) # On affecte les fiches
-            return True       
+    def appliquer_repartition(self, repartition : Dict) -> bool :
+            res = True
+            for agent in repartition.keys():
+                res_agent = DAOFicheAdresse().affecter_fiches_adresse(agent, repartition[agent]) # On affecte les fiches
+                res = res * res_agent
+            return res

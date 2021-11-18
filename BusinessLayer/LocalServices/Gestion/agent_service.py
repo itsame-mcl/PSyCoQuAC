@@ -1,6 +1,5 @@
 from BusinessLayer.BusinessObjects.agent import Agent
 import BusinessLayer.BusinessObjects.agent_factory as agent_factory
-from BusinessLayer.BusinessObjects.session import Session
 from DataLayer.DAO.dao_agent import DAOAgent
 from utils.singleton import Singleton
 from typing import List
@@ -33,8 +32,8 @@ class AgentService(metaclass=Singleton):
         return DAOAgent().recuperer_id_superviseur(id_agent)['id_superviseur']
 
     @staticmethod
-    def recuperer_equipe(session_supervsieur: Session) -> List[Agent]:
-        return DAOAgent().recuperer_equipe(session_supervsieur.utilisateur_connecte.agent_id)
+    def recuperer_equipe(id_superviseur: int) -> List[Agent]:
+        return DAOAgent().recuperer_equipe(id_superviseur)
 
     @staticmethod
     def ajout_agent_equipe(id_superviseur: int, id_agent: int) -> bool:
