@@ -1,4 +1,3 @@
-from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
@@ -17,21 +16,22 @@ class ControlerView(AbstractView):
             {'type': 'list', 'name': 'choix', 'message': 'Confirmez-vous votre décision ?', 'choices': ['Oui', 'Non']}]
 
     def display_info(self):
-        pot = DAOFicheAdresse().recuperer_pot(Session().agent.agent_id)
+        pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
         fiche = pot[self.__curseur]
         print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(
             fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : ' + str(
             fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
 
     def make_choice(self):
-        pot = DAOFicheAdresse().recuperer_pot(Session().agent.agent_id)
+        pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
         fiche = pot[self.__curseur]
         answers = prompt(self.__questions)
         if 'c' in str.lower(answers['choix']):
             answers2 = prompt(self.__questions2)
             if str.lower(answers2['choix']) == 'oui':
-                probleme = ControleRepriseService().modifier_fiche(fiche.fiche_id, {'code_res': 'VC'})
-                if not probleme:
+                fiche.code_res = "VC"
+                succes = ControleRepriseService().modifier_fiche(fiche)
+                if not succes:
                     print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
                     return ControlerView(self.__curseur + 1)
                 else:
@@ -41,8 +41,9 @@ class ControlerView(AbstractView):
         elif 'i' in str.lower(answers['choix']):
             answers2 = prompt(self.__questions2)
             if str.lower(answers2['choix']) == 'oui':
-                probleme = ControleRepriseService().modifier_fiche(fiche.fiche_id, {'code_res': 'TR'})
-                if not probleme:
+                fiche.code_res = "TR"
+                succes = ControleRepriseService().modifier_fiche(fiche)
+                if not succes:
                     print("Le contrôle a échoué. Veuillez réessayer ultérieurement.")
                     return ControlerView(self.__curseur + 1)
                 else:
