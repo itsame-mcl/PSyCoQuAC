@@ -3,6 +3,7 @@ from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.WebServices.BANClient import BANClient
+from ViewLayer.CLI.menu import MenuPrincipalView
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
 
@@ -72,43 +73,54 @@ class ReprendreView(AbstractView):
 
     def make_choice(self):
         pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
-        fiche = pot[self.__curseur]
-        answers = prompt(self.__questions)
-        if 'a' in str.lower(answers['choix'][0]):
-            res = self.__choix_modifier_adresse(fiche)
-            if res:
-                res2 = self.__soumettre_api(fiche)
-                if not res2:
-                    print("Échec dans l'enregistrement des modifications.")
-            else:
-                print("Échec dans l'enregistrement des modifications.")
-            return ReprendreView(self.__curseur)
-        elif 'c' in str.lower(answers['choix'][0]):
-            res = self.__choix_modifier_coordonnees(fiche)
-            if res:
-                res2 = self.__soumettre_api(fiche, True)
-                if not res2:
-                    print("Échec dans l'enregistrement des modifications.")
-            else:
-                print("Échec dans l'enregistrement des modifications.")
-            return ReprendreView(self.__curseur)
-        elif 'v' in str.lower(answers['choix'][0]) or 'd' in str.lower(answers['choix'][0]):
-            ans = self.__confirmation()
-            if ans:
-                if 'v' in str.lower(answers['choix'][0]):
-                    fiche.code_res = "VR"
+        if len(pot) > 0:
+            fiche = pot[self.__curseur]
+            answers = prompt(self.__questions)
+            if str.lower(answers['choix'][0]) == 'a':
+                res = self.__choix_modifier_adresse(fiche)
+                if res:
+                    res2 = self.__soumettre_api(fiche)
+                    if not res2:
+                        print("Échec dans l'enregistrement des modifications.")
                 else:
-                    fiche.code_res = "DR"
-                res = ControleRepriseService.modifier_fiche(fiche)
-                if not res:
                     print("Échec dans l'enregistrement des modifications.")
-            return ReprendreView(self.__curseur)
-        elif 'p' in str.lower(answers['choix'][0]):
-            curseur = (self.__curseur - 1) % len(pot)
-            return ReprendreView(curseur)
-        elif 's' in str.lower(answers['choix'][0]):
-            curseur = (self.__curseur + 1) % len(pot)
-            return ReprendreView(curseur)
-        elif 'm' in str.lower(answers['choix'][0]):
-            from ViewLayer.CLI.menu import MenuPrincipalView
+                return ReprendreView(self.__curseur)
+            elif str.lower(answers['choix'][0]) == 'c':
+                res = self.__choix_modifier_coordonnees(fiche)
+                if res:
+                    res2 = self.__soumettre_api(fiche, True)
+                    if not res2:
+                        print("Échec dans l'enregistrement des modifications.")
+                else:
+                    print("Échec dans l'enregistrement des modifications.")
+                return ReprendreView(self.__curseur)
+            elif str.lower(answers['choix'][0]) in ['v', 'd']:
+                ans = self.__confirmation()
+                if ans:
+                    if str.lower(answers['choix'][0]) == 'v':
+                        fiche.code_res = "VR"
+                    else:
+                        fiche.code_res = "DR"
+                    res = ControleRepriseService.modifier_fiche(fiche)
+                    if res:
+                        if len(pot) > 1:
+                            return ReprendreView(self.__curseur % (len(pot) - 1))
+                        else:
+                            return ReprendreView(0)
+                    else:
+                        print("Échec dans l'enregistrement des modifications.")
+                        return ReprendreView(self.__curseur)
+                else:
+                    return ReprendreView(self.__curseur)
+            elif str.lower(answers['choix'][0]) == 'p':
+                curseur = (self.__curseur - 1) % len(pot)
+                return ReprendreView(curseur)
+            elif str.lower(answers['choix'][0]) == 's':
+                curseur = (self.__curseur + 1) % len(pot)
+                return ReprendreView(curseur)
+            elif str.lower(answers['choix'][0]) == 'm':
+                return MenuPrincipalView()
+            else:
+                return ReprendreView(self.__curseur)
+        else:
             return MenuPrincipalView()
