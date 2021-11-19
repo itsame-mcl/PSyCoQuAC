@@ -52,6 +52,7 @@ class FicheAdresse:
     @agent_id.setter
     def agent_id(self, value):
         self._agent_id = value
+        self._date_modification = date.today()
 
     @property
     def lot_id(self):
@@ -78,26 +79,31 @@ class FicheAdresse:
         if self._code_res == "TI":
             if value in ["TA", "DI"]:
                 self._code_res = value
+                self._date_modification = date.today()
             else:
                 raise ValueError("La transition depuis l'état TI ne peut se faire que vers l'état TA ou l'état DI.")
         elif self._code_res == "TA":
             if value in ["TH", "TR"]:
                 self._code_res = value
+                self._date_modification = date.today()
             else:
                 raise ValueError("La transition depuis l'état TA ne peut se faire que vers l'état TH ou l'état TR.")
         elif self._code_res == "TH":
             if value in ["TC", "VA"]:
                 self._code_res = value
+                self._date_modification = date.today()
             else:
                 raise ValueError("La transition depuis l'état TH ne peut se faire que vers l'état TC ou l'état VA.")
         elif self._code_res == "TC":
             if value in ["TR", "VC"]:
                 self._code_res = value
+                self._date_modification = date.today()
             else:
                 raise ValueError("La transition depuis l'état TC ne peut se faire que vers l'état TR ou l'état VC.")
         elif self._code_res == "TR":
             if value in ["VR", "ER"]:
                 self._code_res = value
+                self._date_modification = date.today()
             else:
                 raise ValueError("La transition depuis l'état TR ne peut se faire que vers l'état VR ou l'état ER.")
         elif self._code_res == "DI":
@@ -122,6 +128,7 @@ class FicheAdresse:
     @adresse_finale.setter
     def adresse_finale(self, value):
         self._adresse_finale = value
+        self._date_modification = date.today()
 
     @property
     def coords_wgs84(self):
@@ -130,6 +137,7 @@ class FicheAdresse:
     @coords_wgs84.setter
     def coords_wgs84(self, value):
         self._coords_wgs84 = value
+        self._date_modification = date.today()
 
     @property
     def champs_supplementaires(self):
@@ -138,8 +146,9 @@ class FicheAdresse:
     @champs_supplementaires.setter
     def champs_supplementaires(self, value):
         self._champs_supplementaires = value
+        self._date_modification = date.today()
 
-    def as_dict(self):
+    def as_dict(self, expand: bool = False):
         data = dict()
         data["identifiant_fa"] = self.fiche_id
         data["identifiant_pot"] = self.agent_id
@@ -156,5 +165,9 @@ class FicheAdresse:
         data["final_code_postal"] = self.adresse_finale.cp
         data["final_ville"] = self.adresse_finale.ville
         data["coordonnees_wgs84"] = self.coords_wgs84
-        data["champs_supplementaires"] = self.champs_supplementaires
+        if expand:
+            for key, value in self.champs_supplementaires.items():
+                data[key] = value
+        else:
+            data["champs_supplementaires"] = self.champs_supplementaires
         return data

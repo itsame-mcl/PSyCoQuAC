@@ -27,7 +27,7 @@ class CSVHandler(AbstractHandler):
 
     def export_to_file(self, lot: List[FicheAdresse], path: str):
         with open(path, 'w') as file:
-            writer = csv.DictWriter(file, lot[0].as_dict().keys())
+            writer = csv.DictWriter(file, lot[0].as_dict(True).keys())
             writer.writeheader()
             for fiche in lot:
-                writer.writerow(fiche.as_dict())
+                writer.writerow(fiche.as_dict(True))
