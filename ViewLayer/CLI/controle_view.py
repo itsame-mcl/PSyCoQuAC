@@ -20,9 +20,9 @@ class ControlerView(AbstractView):
         pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
         if len(pot) > 0:
             fiche = pot[self.__curseur]
-            print('Fiche adresse n°' + str(fiche.fiche_id) + '\n   Données initiales :\nAdresse initiale : ' + str(
-                    fiche.adresse_initiale) + '\n   Données API :\nAdresse finale : ' + str(
-                    fiche.adresse_finale) + '\nCoordonnées GPS : ' + str(fiche.coords_wgs84))
+            print('Fiche adresse n°' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + 
+                str(fiche.adresse_initiale) + 'Données API : Adresse finale : ' + str(fiche.adresse_finale) + 
+                'Coordonnées GPS :' + str(fiche.coords_wgs84))
         else:
             print("Le pot est vide.")
 
