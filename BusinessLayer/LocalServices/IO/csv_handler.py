@@ -17,8 +17,11 @@ class CSVHandler(AbstractHandler):
                 voie = [str(row[index]) for index in model.correspondances.position_voie]
                 cp = [str(row[index]) for index in model.correspondances.position_cp]
                 ville = [str(row[index]) for index in model.correspondances.position_ville]
+                donnees_supplementaires = dict()
+                for cle, position in model.correspondances.positions_supplementaires.items():
+                    donnees_supplementaires[cle] = str(row[position])
                 adresse = Adresse(' '.join(numero), ' '.join(voie), ' '.join(cp), ' '.join(ville))
-                fa = FicheAdresse(0, id_superviseur, id_lot, adresse)
+                fa = FicheAdresse(0, id_superviseur, id_lot, adresse, champs_supplementaires=donnees_supplementaires)
                 liste_fa.append(fa)
         return liste_fa
 

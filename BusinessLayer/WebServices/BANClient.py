@@ -83,7 +83,7 @@ class BANClient(metaclass=Singleton):
                                               data["result_city"])
                         fiches_a_traiter[index].adresse_finale = adresse_api
                     if data["longitude"] == "" or data["latitude"] == "":
-                        pass
+                        fiches_a_traiter[index].coords_wgs84 = tuple()
                     else:
                         fiches_a_traiter[index].coords_wgs84 = (data["longitude"], data["latitude"])
                     if data["result_score"] == "" or float(data["result_score"]) < seuil_score:
