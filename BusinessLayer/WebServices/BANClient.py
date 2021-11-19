@@ -4,6 +4,7 @@ import requests
 import csv
 import os
 
+from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from utils.singleton import Singleton
@@ -50,8 +51,12 @@ class BANClient(metaclass=Singleton):
         return score, fiche_a_traiter
 
     @staticmethod
-    def geocodage_par_lot(fiches_a_traiter: List[FicheAdresse]) -> Tuple[List[float], List[FicheAdresse]]:
-        scores = list()
+    def geocodage_par_lot(id_lot: int,  seuil_score : float = 0.9) -> bool:
+        lot = DAOFicheAdresse().recuperer_lot(id_lot)
+        fiches_a_traiter = list()
+        for fiche in lot:
+            if fiche.code_res == "TA":
+                fiches_a_traiter.append(fiche)
         try:
             with open("search.csv", "w") as file:
                 writer = csv.writer(file)
@@ -71,7 +76,7 @@ class BANClient(metaclass=Singleton):
                 reader = csv.DictReader(reponse, delimiter=",")
                 for index, data in zip(range(len(fiches_a_traiter)), reader):
                     if data["result_housenumber"] == "" and data["result_name"] == "" and data[
-                        "result_postcode"] == "" and data["result_city"] == "":
+                      "result_postcode"] == "" and data["result_city"] == "":
                         pass
                     else:
                         adresse_api = Adresse(data["result_housenumber"], data["result_name"], data["result_postcode"],
@@ -81,13 +86,17 @@ class BANClient(metaclass=Singleton):
                         pass
                     else:
                         fiches_a_traiter[index].coords_wgs84 = (data["longitude"], data["latitude"])
-                    if data["result_score"] == "":
-                        scores.append(0)
+                    if data["result_score"] == "" or float(data["result_score"]) < seuil_score:
+                        fiches_a_traiter[index].code_res = "TR"
                     else:
-                        scores.append(data["result_score"])
+                        fiches_a_traiter[index].code_res = "TH"
+                    DAOFicheAdresse().modifier_fiche_adresse(fiches_a_traiter[index])
+            res = True
+        except:
+            res = False
         finally:
             if os.path.exists("search.csv"):
                 os.remove("search.csv")
             if os.path.exists("answer.csv"):
                 os.remove("answer.csv")
-        return scores, fiches_a_traiter
+        return res

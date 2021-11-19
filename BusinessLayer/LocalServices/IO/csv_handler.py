@@ -2,8 +2,6 @@ from BusinessLayer.LocalServices.IO.abstract_handler import AbstractHandler
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.modele import Modele
-from BusinessLayer.BusinessObjects.correspondance import Correspondance
-from BusinessLayer.BusinessObjects.agent import Agent
 from typing import List
 import csv
 
@@ -13,6 +11,7 @@ class CSVHandler(AbstractHandler):
         with open(path, 'r') as file:
             reader = csv.reader(file, delimiter=';')
             liste_fa = []
+            next(reader)
             for row in reader:
                 adresse = Adresse(row[model.correspondances.position_numero], row[model.correspondances.position_voie],
                                   row[model.correspondances.position_cp], row[model.correspondances.position_ville])

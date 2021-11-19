@@ -15,7 +15,7 @@ class ImportationService(metaclass=Singleton):
     def __identifier_modele(self, nom_fichier) -> Modele:
         id_modele = 1
         liste_modeles = DAOModele().recuperer_regex()
-        for modele, regex in liste_modeles:
+        for modele, regex in liste_modeles.items():
             match = re.match(re.compile(regex), nom_fichier)
             if match:
                 id_modele = modele
@@ -30,17 +30,14 @@ class ImportationService(metaclass=Singleton):
         liste_fa = handler.import_from_file(chemin_fichier, id_superviseur, id_lot, modele)
         return liste_fa
 
-    def importer_lot(self, id_superviseur, chemin_fichier, seuil_score : float = 0.9):
+    def importer_lot(self, id_superviseur, chemin_fichier) -> bool:
         liste_fa = self.__charger_lot(id_superviseur, chemin_fichier)
         for fa in liste_fa:
             if fa.adresse_initiale.voie is not None and (fa.adresse_initiale.cp is not None or fa.adresse_finale.ville is not None):
                 fa.code_res = "TA"
-                score, fa = BANClient().geocodage_par_fiche(fa)
-                if score > seuil_score:
-                    fa.code_res = "TH"
-                else:
-                    fa.code_res = "TR"
             else:
                 fa.code_res = "DI"
             DAOFicheAdresse().creer_fiche_adresse(fa)
         DAOFicheAdresse().incrementer_id_lot()
+        res = BANClient().geocodage_par_lot(DAOFicheAdresse().recuperer_dernier_id_lot())
+        return res

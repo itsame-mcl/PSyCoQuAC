@@ -5,7 +5,7 @@ from utils.singleton import Singleton
 
 class DAOModele(metaclass=Singleton):
     def __init__(self):
-        self.__interface = factory.InterfaceFactory.get_interface("Agent")
+        self.__interface = factory.InterfaceFactory.get_interface("Modele")
 
     def recuperer_modele(self, identifiant: int) -> Modele:
         data = self.__interface.recuperer_modele(identifiant)

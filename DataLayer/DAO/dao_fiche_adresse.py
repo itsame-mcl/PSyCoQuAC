@@ -61,4 +61,5 @@ class DAOFicheAdresse(metaclass=Singleton):
         return value
 
     def incrementer_id_lot(self) -> bool:
-        raise NotImplementedError
+        res = self.__interface.incrementer_id_lot()
+        return res

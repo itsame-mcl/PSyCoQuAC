@@ -42,7 +42,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         else:
             request = "SELECT * FROM fa"
         curseur = DBConnexion().connexion.cursor()
-        curseur.execute(request, {"id_agent": id_agent})
+        curseur.execute(request, {"id_agent": id_agent, "id_lot": id_lot})
         rows = curseur.fetchall()
         curseur.close()
         answer = list()
