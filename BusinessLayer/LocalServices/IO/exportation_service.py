@@ -1,20 +1,13 @@
-from BusinessLayer.LocalServices.IO.csv_exportation import CSVExportation
+import BusinessLayer.LocalServices.IO.factory_handler as factory
+from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from utils.singleton import Singleton
 
+import pathlib
 
-@Singleton
-class ExportationServices:
-    def __init__(self, id_lot, chemin_destination, type_fichier):
-        if type_fichier == "CSV":
-            self.__type_fichier = CSVExportation()
-        self.__exportation = self.__type_fichier.exporter_lot(id_lot, chemin_destination)
+class ExportationService(metaclass=Singleton):
 
-    @property
-    def exportation(self):
-        """
-        return the opened connection.
-
-        :return: the opened connection.
-        """
-        return self.__exportation
-        
+    def exporter_lot(self, id_lot, chemin_fichier):
+        path = pathlib.Path(chemin_fichier)
+        handler = factory.HandlerFactory.get_handler_from_ext(path.suffixes[-1])
+        lot = DAOFicheAdresse().recuperer_lot(id_lot)
+        handler.export_to_file(lot, chemin_fichier)

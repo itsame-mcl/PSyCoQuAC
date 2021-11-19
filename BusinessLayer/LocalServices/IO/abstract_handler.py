@@ -10,5 +10,5 @@ class AbstractHandler(ABC):
     def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
         raise NotImplementedError
 
-    def export_to_file(self, fiches: List[FicheAdresse], path, model: Modele) -> bool:
+    def export_to_file(self, fiches: List[FicheAdresse], path: str) -> bool:
         raise NotImplementedError
