@@ -7,7 +7,7 @@ from BusinessLayer.BusinessObjects.modele import Modele
 
 class AbstractHandler(ABC):
     @abstractmethod
-    def import_from_file(self, path, id_agent: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
+    def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
         raise NotImplementedError
 
     def export_to_file(self, fiches: List[FicheAdresse], path, model: Modele) -> bool:

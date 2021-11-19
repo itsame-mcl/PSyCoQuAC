@@ -48,3 +48,8 @@ VALUES
     ("agents",0),
     ("modeles",0),
     ("lots",0);
+
+INSERT INTO modeles(nom_modele, regex_nom_fichier, position_champ_numero,
+                    position_champ_voie, position_champ_code_postal,
+                    position_champ_ville)
+VALUES ("defaut",".*",0,1,2,3);

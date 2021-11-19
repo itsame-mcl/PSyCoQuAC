@@ -9,14 +9,14 @@ import csv
 
 
 class CSVHandler(AbstractHandler):
-    def import_from_file(self, path, id_agent: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
+    def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
         file = open(path, 'r')
         reader = csv.reader(file, delimiter=';')
         liste_fa = []
         for row in reader:
             adresse = Adresse(row[model.correspondances.position_numero], row[model.correspondances.position_voie],
                               row[model.correspondances.position_cp], row[model.correspondances.position_ville])
-            fa = FicheAdresse(0, id_agent, id_lot, adresse)
+            fa = FicheAdresse(0, id_superviseur, id_lot, adresse)
             liste_fa.append(fa)
         return liste_fa
 
