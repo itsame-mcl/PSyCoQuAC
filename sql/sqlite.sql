@@ -35,10 +35,10 @@ CREATE TABLE IF NOT EXISTS modeles (
     identifiant_modele INTEGER PRIMARY KEY AUTOINCREMENT,
     nom_modele TEXT NOT NULL,
     regex_nom_fichier TEXT,
-    position_champ_numero INTEGER,
-    position_champ_voie INTEGER,
-    position_champ_code_postal INTEGER,
-    position_champ_ville INTEGER,
+    position_champ_numero TEXT,
+    position_champ_voie TEXT,
+    position_champ_code_postal TEXT,
+    position_champ_ville TEXT,
     position_champs_supplementaires TEXT
 );
 
@@ -51,5 +51,5 @@ VALUES
 
 INSERT INTO modeles(nom_modele, regex_nom_fichier, position_champ_numero,
                     position_champ_voie, position_champ_code_postal,
-                    position_champ_ville)
-VALUES ("defaut",".*",0,1,2,3);
+                    position_champ_ville,position_champs_supplementaires)
+VALUES ("defaut",".*","(0)","(1)","(2)","(3)","{}");

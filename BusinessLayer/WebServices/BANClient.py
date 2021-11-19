@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import Tuple
 from time import time_ns, sleep
 import requests
 import csv
@@ -18,7 +18,7 @@ class BANClient(metaclass=Singleton):
     @staticmethod
     def __json_to_fa(json_data, fiche):
         coordonnees_gps = json_data["geometry"]["coordinates"]
-        fiche.coords_wgs84 = coordonnees_gps
+        fiche.coords_wgs84 = tuple(coordonnees_gps)
         adresse_api = Adresse(json_data["properties"]["housenumber"], json_data["properties"]["street"],
                               json_data["properties"]["postcode"], json_data["properties"]["city"])
         fiche.adresse_finale = adresse_api
@@ -46,12 +46,12 @@ class BANClient(metaclass=Singleton):
         response = requests.get("https://api-adresse.data.gouv.fr/reverse/?lon=" + str(lon) + "&lat=" + str(lat))
         self.__lastcall = time_ns()
         response = response.json()
-        score = response["score"]
-        fiche_a_traiter = self.__json_to_fa(response, fiche_a_traiter)
+        score = response["features"][0]["properties"]["score"]
+        fiche_a_traiter = self.__json_to_fa(response["features"][0], fiche_a_traiter)
         return score, fiche_a_traiter
 
     @staticmethod
-    def geocodage_par_lot(id_lot: int,  seuil_score : float = 0.9) -> bool:
+    def geocodage_par_lot(id_lot: int,  seuil_score: float = 0.9) -> bool:
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
         fiches_a_traiter = list()
         for fiche in lot:
@@ -92,7 +92,7 @@ class BANClient(metaclass=Singleton):
                         fiches_a_traiter[index].code_res = "TH"
                     DAOFicheAdresse().modifier_fiche_adresse(fiches_a_traiter[index])
             res = True
-        except:
+        except Exception:
             res = False
         finally:
             if os.path.exists("search.csv"):

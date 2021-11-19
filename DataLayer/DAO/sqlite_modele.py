@@ -7,14 +7,20 @@ class SQLiteModele(InterfaceModele):
     
     @staticmethod
     def __sqlite_to_dao(data: dict) -> dict:
-        if data["position_champs_supplementaires"] is not None:
-            data["position_champs_supplementaires"] = literal_eval(data["position_champs_supplementaires"])
+        data["position_champ_numero"] = literal_eval(data["position_champ_numero"])
+        data["position_champ_voie"] = literal_eval(data["position_champ_voie"])
+        data["position_champ_code_postal"] = literal_eval(data["position_champ_code_postal"])
+        data["position_champ_ville"] = literal_eval(data["position_champ_ville"])
+        data["position_champs_supplementaires"] = literal_eval(data["position_champs_supplementaires"])
         return data
 
     @staticmethod
     def __dao_to_sqlite(data: dict) -> dict:
-        if data["position_champs_supplementaires"] is not None:
-            data["position_champs_supplementaires"] = repr(data["position_champs_supplementaires"])
+        data["position_champ_numero"] = repr(data["position_champ_numero"])
+        data["position_champ_voie"] = repr(data["position_champ_voie"])
+        data["position_champ_code_postal"] = repr(data["position_champ_code_postal"])
+        data["position_champ_ville"] = repr(data["position_champ_ville"])
+        data["position_champs_supplementaires"] = repr(data["position_champs_supplementaires"])
         return data
 
     def recuperer_modele(self, identifiant: int) -> dict:

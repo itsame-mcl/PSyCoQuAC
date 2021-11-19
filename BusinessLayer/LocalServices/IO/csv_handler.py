@@ -13,8 +13,11 @@ class CSVHandler(AbstractHandler):
             liste_fa = []
             next(reader)
             for row in reader:
-                adresse = Adresse(row[model.correspondances.position_numero], row[model.correspondances.position_voie],
-                                  row[model.correspondances.position_cp], row[model.correspondances.position_ville])
+                numero = [str(row[index]) for index in model.correspondances.position_numero]
+                voie = [str(row[index]) for index in model.correspondances.position_voie]
+                cp = [str(row[index]) for index in model.correspondances.position_cp]
+                ville = [str(row[index]) for index in model.correspondances.position_ville]
+                adresse = Adresse(' '.join(numero), ' '.join(voie), ' '.join(cp), ' '.join(ville))
                 fa = FicheAdresse(0, id_superviseur, id_lot, adresse)
                 liste_fa.append(fa)
         return liste_fa
