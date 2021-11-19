@@ -36,3 +36,7 @@ class Adresse:
     @ville.setter
     def ville(self, value):
         self._ville = str(value)
+
+    def __str__(self):
+        res = str(self.numero) + " " + str(self.voie) + " " + str(self.cp) + " " + str(self.ville)
+        return res

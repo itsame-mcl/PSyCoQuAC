@@ -14,7 +14,8 @@ class ControleRepriseService(metaclass=Singleton):
         res = DAOFicheAdresse().modifier_fiche_adresse(fiche_modifiee)
         return res
 
-    def validation_fiche(self, fiche: FicheAdresse, validation: bool) -> bool:
+    @staticmethod
+    def validation_fiche(fiche: FicheAdresse, validation: bool) -> bool:
         if validation:
             fiche.code_res = "VC"
         else:
