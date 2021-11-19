@@ -11,8 +11,7 @@ class DeleguerView(AbstractView):
                              'choices': ['A) Déléguer un agent de votre équipe', 'B) Déléguer toute votre équipe',
                                          'C) Retourner au menu principal']}]
         self.__questions1 = [{'type': 'input', 'name': 'id_agent', 'message': 'Quel agent voulez-vous déléguer ?'}]
-        self.__questions2 = [
-            {'type': 'input', 'name': 'id_superviseur', 'message': 'À quel superviseur souhaitez-vous déléguer ?'}]
+        self.__questions2 = [{'type': 'input', 'name': 'id_superviseur', 'message': 'À quel superviseur souhaitez-vous déléguer ?'}]
 
     def make_choice(self):
         answers = prompt(self.__questions)
