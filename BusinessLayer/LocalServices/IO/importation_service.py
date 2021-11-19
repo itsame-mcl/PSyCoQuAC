@@ -30,7 +30,7 @@ class ImportationService(metaclass=Singleton):
         liste_fa = handler.import_from_file(chemin_fichier, id_superviseur, id_lot, modele)
         return liste_fa
 
-    def importer_lot(self, id_superviseur, chemin_fichier, seuil_score:float = 0.9):
+    def importer_lot(self, id_superviseur, chemin_fichier, seuil_score : float = 0.9):
         liste_fa = self.__charger_lot(id_superviseur, chemin_fichier)
         for fa in liste_fa:
             if fa.adresse_initiale.voie is not None and (fa.adresse_initiale.cp is not None or fa.adresse_finale.ville is not None):

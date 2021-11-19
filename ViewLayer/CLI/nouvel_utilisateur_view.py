@@ -1,9 +1,8 @@
 from PyInquirer import prompt
+from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
-from DataLayer.DAO.dao_agent import DAOAgent
-import BusinessLayer.BusinessObjects.agent_factory as factory
 
 
 class NouvelUtilisateurView(AbstractView):
@@ -17,12 +16,11 @@ class NouvelUtilisateurView(AbstractView):
 
     def make_choice(self):
         answers = prompt(self.__questions)
-        answers['identifiant_agent'] = DAOAgent().recuperer_dernier_id_agent() + 1
-        if not (answers['est_superviseur']):
+        if not(answers['est_superviseur']):
             answers['identifiant_superviseur'] = Session().agent.agent_id
-        nouvel_agent = factory.AgentFactory.from_dict(answers)
-        probleme = DAOAgent().creer_agent(nouvel_agent, answers['nom_utilisateur'], answers['mot_de_passe'])
-        if not probleme:
+        succes = AgentService().creer_agent(answers['est_superviseur'], answers['quotite'], answers['identifiant_superviseur'],
+                                            answers['nom_utilisateur'], answers['mot_de_passe'], answers['prenom'], answers['nom'])
+        if not(succes):
             print("L'enregistrement du nouvel utilisateur a échoué. Veuillez réessayer ultérieurement.")
             return MenuPrincipalView()
         else:
