@@ -1,18 +1,15 @@
-from BusinessLayer.LocalServices.IO.csv_importation import CSVImportation
 from utils.singleton import Singleton
-from DataLayer import DAO as dao
+from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
+import BusinessLayer.LocalServices.IO.factory_handler as factory
 import pathlib
 
 
 @Singleton
-class ImportationServices:
-    def __init__(self, agent, chemin_fichier): # Pour l'instant, on part du principe que l'utilisateur connaît le chemin du fichier qu'il souhaite importer
-        path = pathlib.Path(chemin_fichier)
-        if path.suffixes[-1] == ".csv": # path.suffixes permet de gérer les cas où le chemin a plusieurs suffixes comme extension
-            self.__type_fichier = CSVImportation()
-        id_lot = dao.DAOFicheAdresse.recuperer_prochain_id_lot()
-        self.__importation = self.__type_fichier.importer_lot(agent, id_lot, chemin_fichier)
+class ImportationService:
 
-    @property
-    def importation(self):
-        return self.__importation
+    def importer_lot(self, id_agent, chemin_fichier):
+        path = pathlib.Path(chemin_fichier)
+        handler = factory.HandlerFactory.get_handler_from_ext(path.suffixes[-1])
+        id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
+        liste_fa = handler.import_from_file(chemin_fichier, id_agent, id_lot)
+
