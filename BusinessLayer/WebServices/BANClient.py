@@ -59,7 +59,8 @@ class BANClient(metaclass=Singleton):
         file.write(stream.getvalue().encode())
         file.seek(0)
         file.name = f'search.csv'
-        response = requests.post(url="https://api-adresse.data.gouv.fr/search/csv/", data=file)
+        response = requests.post(url="https://api-adresse.data.gouv.fr/search/csv/", data=file,
+                                 headers={'Content-Type': 'multipart/form-data'})
         return response
 
     def reverse_par_lot(self, fiches_a_traiter: List[FicheAdresse]) -> Tuple[List[float], List[FicheAdresse]]:
