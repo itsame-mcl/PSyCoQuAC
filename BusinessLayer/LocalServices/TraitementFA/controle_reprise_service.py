@@ -14,6 +14,16 @@ class ControleRepriseService(metaclass=Singleton):
         res = DAOFicheAdresse().modifier_fiche_adresse(fiche_modifiee)
         return res
 
+    def validation_fiche(self, fiche: FicheAdresse, validation: bool) -> bool:
+        if validation:
+            fiche.code_res = "VC"
+        else:
+            fiche.code_res = "TR"
+        res = DAOFicheAdresse().modifier_fiche_adresse(fiche)
+        if not res:
+            print("La sauvegarde du contrôle a échoué. Veuillez réessayer ultérieurement.")
+        return res
+
     @staticmethod
     def consulter_pot(id_agent: int) -> List[FicheAdresse]:
         return DAOFicheAdresse().recuperer_pot(id_agent)
