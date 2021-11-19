@@ -1,5 +1,7 @@
 from PyInquirer import prompt
+from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
+from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
 from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
 
@@ -18,14 +20,12 @@ class GestionEquipeView(AbstractView):
         answers = prompt(self.__questions)
         if '1' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
             return ConsulterPotView(int(answers2['id']))
         elif '2' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
             probleme = AgentService().ajout_agent_equipe(Session().agent.agent_id, answers2['id'])
             if not probleme:
-                print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
+                print("L'ajout de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
                 return GestionEquipeView()
@@ -33,10 +33,9 @@ class GestionEquipeView(AbstractView):
                 return MenuPrincipalView()
         elif '3' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
             probleme = AgentService().supprimer_agent(answers2['id'])
             if not probleme:
-                print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
+                print("La suppression de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
                 return GestionEquipeView()
@@ -44,10 +43,9 @@ class GestionEquipeView(AbstractView):
                 return MenuPrincipalView()
         elif '4' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
             probleme = AgentService().promouvoir_agent(Session().agent.agent_id, answers2['id'])
             if not probleme:
-                print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
+                print("La promotion de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
                 return GestionEquipeView()
