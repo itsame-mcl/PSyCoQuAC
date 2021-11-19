@@ -14,7 +14,8 @@ class BANClient(metaclass=Singleton):
         self.__wait_ns = 2000000
         self.__lastcall = 0
 
-    def __json_to_fa(self, json_data, fiche):
+    @staticmethod
+    def __json_to_fa(json_data, fiche):
         coordonnees_gps = json_data["geometry"]["coordinates"]
         fiche.coords_wgs84 = coordonnees_gps
         adresse_api = Adresse(json_data["properties"]["housenumber"], json_data["properties"]["street"],
@@ -48,31 +49,42 @@ class BANClient(metaclass=Singleton):
         fiche_a_traiter = self.__json_to_fa(response, fiche_a_traiter)
         return score, fiche_a_traiter
 
-    def geocodage_par_lot(self, fiches_a_traiter: List[FicheAdresse]) -> Tuple[List[float], List[FicheAdresse]]:
+    @staticmethod
+    def geocodage_par_lot(fiches_a_traiter: List[FicheAdresse]) -> Tuple[List[float], List[FicheAdresse]]:
         scores = list()
         try:
-            with open("search.csv","w") as file:
+            with open("search.csv", "w") as file:
                 writer = csv.writer(file)
                 writer.writerow(["id", "adresse", "postcode", "city"])
                 for fiche in fiches_a_traiter:
                     writer.writerow(
                         [str(fiche.fiche_id), str(fiche.adresse_finale.numero) + " " + str(fiche.adresse_finale.voie),
                          str(fiche.adresse_finale.cp), str(fiche.adresse_finale.ville)])
-            with open("search.csv","r") as file:
+            with open("search.csv", "r") as file:
                 response = requests.post(url="https://api-adresse.data.gouv.fr/search/csv/", data={
-                        'columns': ["adresse","city"], 'postcode': "postcode", 'result_columns': [
-                        "result_housenumber","result_name","result_postcode","result_city","latitude", "longitude",
-                        "result_score"]}, files={'data':file})
-            with open("answer.csv","wb") as reponse:
+                    'columns': ["adresse", "city"], 'postcode': "postcode", 'result_columns': [
+                        "result_housenumber", "result_name", "result_postcode", "result_city", "latitude", "longitude",
+                        "result_score"]}, files={'data': file})
+            with open("answer.csv", "wb") as reponse:
                 reponse.write(response.content)
             with open("answer.csv", "r") as reponse:
                 reader = csv.DictReader(reponse, delimiter=",")
                 for index, data in zip(range(len(fiches_a_traiter)), reader):
-                    adresse_api = Adresse(data["result_housenumber"], data["result_name"], data["result_postcode"],
-                                          data["result_city"])
-                    fiches_a_traiter[index].adresse_finale = adresse_api
-                    fiches_a_traiter[index].coords_wgs84 = [data["longitude"], data["latitude"]]
-                    scores.append(data["result_score"])
+                    if data["result_housenumber"] == "" and data["result_name"] == "" and data[
+                        "result_postcode"] == "" and data["result_city"] == "":
+                        pass
+                    else:
+                        adresse_api = Adresse(data["result_housenumber"], data["result_name"], data["result_postcode"],
+                                              data["result_city"])
+                        fiches_a_traiter[index].adresse_finale = adresse_api
+                    if data["longitude"] == "" or data["latitude"] == "":
+                        pass
+                    else:
+                        fiches_a_traiter[index].coords_wgs84 = (data["longitude"], data["latitude"])
+                    if data["result_score"] == "":
+                        scores.append(0)
+                    else:
+                        scores.append(data["result_score"])
         finally:
             if os.path.exists("search.csv"):
                 os.remove("search.csv")

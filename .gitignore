@@ -133,3 +133,6 @@ out/uml/
 
 # SQLite Databases
 sql/*.sqlite
+
+# Generic test file
+/test.py
