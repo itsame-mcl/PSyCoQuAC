@@ -53,13 +53,13 @@ class ReprendreView(AbstractView):
 
     def __soumettre_api(self, fiche: FicheAdresse, reverse: bool = False):
         answers4 = prompt(self.__questions4)
-        if str.lower(answers4['choix']) == 'Oui':
+        if str.lower(answers4['choix']) == 'oui':
             # Resoumettre à l'API
             if not reverse:
                 score, fiche = BANClient().geocodage_par_fiche(fiche)
             else:
                 score, fiche = BANClient().reverse_par_fiche(fiche)
-            print("Le score de l'API est" + str(score))
+            print("Le score de l'API est " + str(score))
             res = ControleRepriseService().modifier_fiche(fiche)
             return res
         else:
