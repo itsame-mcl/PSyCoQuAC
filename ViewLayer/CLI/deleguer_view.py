@@ -18,14 +18,14 @@ class DeleguerView(AbstractView):
         if 'a' in str.lower(answers['choix']):
             answers1 = prompt(self.__questions1)
             answers2 = prompt(self.__questions2)
-            probleme = AgentService().deleguer_agent(answers1['id_agent'], answers2['id_superviseur'])
-            if not probleme:
+            succes = AgentService().deleguer_agent(answers1['id_agent'], answers2['id_superviseur'])
+            if not(succes):
                 print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
             return DeleguerView()
         if 'b' in str.lower(answers['choix']):
             answers2 = prompt(self.__questions2)
-            probleme = AgentService().deleguer_agent(Session().agent.agent_id, answers2['id_superviseur'])
-            if not probleme:
+            succes = AgentService().deleguer_agent(Session().agent.agent_id, answers2['id_superviseur'])
+            if not(succes):
                 print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
             return DeleguerView()
         else:

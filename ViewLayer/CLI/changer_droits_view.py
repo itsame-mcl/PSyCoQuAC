@@ -12,8 +12,8 @@ class ChangerDroitsView(AbstractView):
 
     def make_choice(self):
         answers = prompt(self.__questions)
-        probleme = AgentService().changer_droits(answers['id_agent'])
-        if not probleme:
+        succes = AgentService().changer_droits(answers['id_agent'])
+        if not(succes):
             print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
         answers2 = prompt(self.__questions2)
         if 'o' in str.lower(answers2['choix']):

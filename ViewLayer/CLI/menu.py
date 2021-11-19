@@ -41,7 +41,7 @@ class MenuPrincipalView(AbstractView):
             if 'A' in str.upper(answers['choix'][0]):
                 return ConsulterPotView()
             elif 'B' in str.upper(answers['choix'][0]):
-                return ModifierView()
+                return ModifierView(Session().agent)
             elif 'C' in str.upper(answers['choix'][0]):
                 return DeconnexionView()
             elif 'D' in str.upper(answers['choix'][0]):
@@ -49,7 +49,7 @@ class MenuPrincipalView(AbstractView):
             elif 'E' in str.upper(answers['choix'][0]):
                 answers3 = prompt(self.__questions3)
                 agent = AgentService.recuperer_agent(answers3['agent'][0])
-                return ModifierView()
+                return ModifierView(agent)
             elif 'F' in str.upper(answers['choix'][0]):
                 return NouvelUtilisateurView()
             elif 'G' in str.upper(answers['choix'][0]):

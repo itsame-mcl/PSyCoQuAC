@@ -34,8 +34,8 @@ class ModifierView(AbstractView):
         if '1' in answers0['choix']:
             answers1 = prompt(self.__questions1)
             self.__agent.prenom = answers1['prenom']
-            probleme = AgentService().modifier_agent(self.__agent.as_dict())
-            if not probleme:
+            succes = AgentService().modifier_agent(self.__agent.as_dict())
+            if not(succes):
                 print('La modification a échoué. Veuillez réessayer ultérieurement.')
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
@@ -45,8 +45,8 @@ class ModifierView(AbstractView):
         elif '2' in answers0['choix']:
             answers2 = prompt(self.__questions2)
             self.__agent.nom = answers2['nom']
-            probleme = AgentService().modifier_agent(self.__agent.as_dict())
-            if not probleme:
+            succes = AgentService().modifier_agent(self.__agent.as_dict())
+            if not(succes):
                 print('La modification a échoué. Veuillez réessayer ultérieurement.')
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
@@ -56,8 +56,8 @@ class ModifierView(AbstractView):
         elif '3' in answers0['choix']:
             answers3 = prompt(self.__questions3)
             self.__agent.quotite = answers3['quotite']
-            probleme = AgentService().modifier_agent(self.__agent.as_dict())
-            if not probleme:
+            succes = AgentService().modifier_agent(self.__agent.as_dict())
+            if not(succes):
                 print('La modification a échoué. Veuillez réessayer ultérieurement.')
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
@@ -68,8 +68,8 @@ class ModifierView(AbstractView):
             answers4 = prompt(self.__questions4)
             nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers4['util'], answers4['mdp'])
             nouvel_agent = {'nom_utilisateur': answers4['util'], 'mot_de_passe': nouveau_mdp_hache}
-            probleme = AgentService().modifier_agent(nouvel_agent)
-            if not probleme:
+            succes = AgentService().modifier_agent(nouvel_agent)
+            if not(succes):
                 print("La modification a échoué. Veuillez réessayer ultérieurement.")
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):
@@ -80,8 +80,8 @@ class ModifierView(AbstractView):
             answers5 = prompt(self.__questions5)
             nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers5['util'], answers5['mdp'])
             nouvel_agent = {'mot_de_passe': nouveau_mdp_hache}
-            probleme = AgentService().modifier_agent(nouvel_agent)
-            if not probleme:
+            succes = AgentService().modifier_agent(nouvel_agent)
+            if not(succes):
                 print("La modification a échoué. Veuillez réessayer ultérieurement.")
             answers = prompt(self.__questions)
             if 'o' in str.lower(answers['choix']):

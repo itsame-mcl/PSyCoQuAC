@@ -23,8 +23,8 @@ class GestionEquipeView(AbstractView):
             return ConsulterPotView(int(answers2['id']))
         elif '2' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            probleme = AgentService().ajout_agent_equipe(Session().agent.agent_id, answers2['id'])
-            if not probleme:
+            succes = AgentService().ajout_agent_equipe(Session().agent.agent_id, answers2['id'])
+            if not(succes):
                 print("L'ajout de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
@@ -33,8 +33,8 @@ class GestionEquipeView(AbstractView):
                 return MenuPrincipalView()
         elif '3' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            probleme = AgentService().supprimer_agent(answers2['id'])
-            if not probleme:
+            succes = AgentService().supprimer_agent(answers2['id'])
+            if not(succes):
                 print("La suppression de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
@@ -43,8 +43,8 @@ class GestionEquipeView(AbstractView):
                 return MenuPrincipalView()
         elif '4' in answers['choix']:
             answers2 = prompt(self.__questions2)
-            probleme = AgentService().promouvoir_agent(Session().agent.agent_id, answers2['id'])
-            if not probleme:
+            succes = AgentService().promouvoir_agent(Session().agent.agent_id, answers2['id'])
+            if not(succes):
                 print("La promotion de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
