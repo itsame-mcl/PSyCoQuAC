@@ -26,11 +26,11 @@ class ControlerView(AbstractView):
                     res = ControleRepriseService().validation_fiche(self.__fiche, True)
                 else:
                     res = ControleRepriseService().validation_fiche(self.__fiche, True)
-                return res, self.__caller
+                return res, self.__fiche, self.__caller
             elif str.upper(answers2['choix'][0]) == 'N':
                 res = False
-                return res, self.__caller
+                return res,self.__fiche, self.__caller
         elif str.upper(answers['choix'][0]) == 'Q':
-            return False, self.__caller
+            return False, self.__fiche, self.__caller
         else:
             raise ValueError

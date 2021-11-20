@@ -98,4 +98,4 @@ class ReprendreView(AbstractView):
                 res = False
             else:
                 raise ValueError
-        return res, self.__caller
+        return res, self.__fiche, self.__caller
