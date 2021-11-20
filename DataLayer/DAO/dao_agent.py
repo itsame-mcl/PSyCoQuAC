@@ -64,6 +64,19 @@ class DAOAgent(metaclass=Singleton):
         else:
             raise ConnectionRefusedError
 
+    def modifier_identifiants(self, id_agent: int, nom_utilisateur: str, mot_de_passe_en_clair: str) -> bool:
+        mdp_sale_hashe = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe_en_clair)
+        res = self.__interface.modifier_identifiants(id_agent, nom_utilisateur, mdp_sale_hashe)
+        return res
+
+    def verifier_identifiants(self, id_agent: int, nom_utilisateur: str, mot_de_passe_en_clair: str) -> bool:
+        mdp_sale_hashe = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe_en_clair)
+        res = self.__interface.verifier_identifiants(id_agent, nom_utilisateur, mdp_sale_hashe)
+        return res
+
+    def recuperer_nom_utilisateur(self, id_agent: int) -> str:
+        return self.__interface.recuperer_nom_utilisateur(id_agent)
+
     def recuperer_dernier_id_agent(self) -> int:
         return self.__interface.recuperer_dernier_id_agent()
 

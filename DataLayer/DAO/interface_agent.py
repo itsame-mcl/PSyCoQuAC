@@ -32,7 +32,19 @@ class InterfaceAgent(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def modifier_identifiants(self, id_agent: int, nom_utilisateur: str, mdp_sale_hashe: str) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def verifier_identifiants(self, id_agent: int, nom_utilisateur: str, mdp_sale_hashe: str) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
     def connexion_agent(self, nom_utilisateur: str, mdp_sale_hashe: str) -> dict:
+        raise NotImplementedError
+
+    @abstractmethod
+    def recuperer_nom_utilisateur(self, id_agent: int) -> str:
         raise NotImplementedError
 
     @abstractmethod

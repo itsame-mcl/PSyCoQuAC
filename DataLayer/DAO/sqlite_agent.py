@@ -127,6 +127,36 @@ class SQLiteAgent(InterfaceAgent):
             data = None
         return data
 
+    def modifier_identifiants(self, id_agent: int, nom_utilisateur: str, mdp_sale_hashe: str) -> bool:
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("""
+            UPDATE agents SET nom_utilisateur=:login, mot_de_passe=:pwd
+            WHERE identifiant_agent=:id
+            """, {'id': id_agent, 'login': nom_utilisateur, 'pwd': mdp_sale_hashe})
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def verifier_identifiants(self, id_agent: int, nom_utilisateur: str, mdp_sale_hashe: str) -> bool:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT nom_utilisateur, mot_de_passe FROM agents WHERE identifiant_agent=:id",
+                        {'id': id_agent})
+        row = curseur.fetchone()
+        curseur.close()
+        return nom_utilisateur == row['nom_utilisateur'] and mdp_sale_hashe == row['mot_de_passe']
+
+    def recuperer_nom_utilisateur(self, id_agent: int) -> str:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT nom_utilisateur FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
+        row = curseur.fetchone()
+        curseur.close()
+        data = str(row['nom_utilisateur'])
+        return data
+
     def recuperer_dernier_id_agent(self) -> int:
         curseur = DBConnexion().connexion.cursor()
         curseur.execute("SELECT seq FROM sqlite_sequence WHERE name='agents'")
