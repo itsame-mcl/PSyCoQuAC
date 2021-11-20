@@ -3,9 +3,9 @@ from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.WebServices.BANClient import BANClient
-from ViewLayer.CLI.menu import MenuPrincipalView
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
+import ViewLayer.CLI.menu as mp
 
 
 class ReprendreView(AbstractView):
@@ -122,8 +122,8 @@ class ReprendreView(AbstractView):
                 curseur = (self.__curseur + 1) % len(pot)
                 return ReprendreView(curseur)
             elif str.lower(answers['choix'][0]) == 'm':
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
             else:
                 return ReprendreView(self.__curseur)
         else:
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()

@@ -1,11 +1,11 @@
 from PyInquirer import prompt
 from ViewLayer.CLI.abstract_view import AbstractView
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
-from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from ViewLayer.CLI.controle_view import ControlerView
 from ViewLayer.CLI.reprendre_view import ReprendreView
+import ViewLayer.CLI.menu as mp
 
 
 class ConsulterPotView(AbstractView):
@@ -52,6 +52,6 @@ class ConsulterPotView(AbstractView):
                 elif fiche.code_res == ['TR']:
                     return ReprendreView(self.__curseur)
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         else:
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()

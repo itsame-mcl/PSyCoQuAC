@@ -10,7 +10,7 @@ from ViewLayer.CLI.import_export_view import ImportExportView
 from ViewLayer.CLI.modifier_view import ModifierView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
 from ViewLayer.CLI.reprendre_view import ReprendreView
-from ViewLayer.CLI.start_view import StartView
+import ViewLayer.CLI.start_view as start
 from ViewLayer.CLI.session import Session
 
 
@@ -31,7 +31,7 @@ class MenuPrincipalView(AbstractView):
 
     def make_choice(self):
         if Session().agent is None:
-            return StartView()
+            return start.StartView()
         else:
             if Session().droits:
                 answers = prompt(self.__questions2)

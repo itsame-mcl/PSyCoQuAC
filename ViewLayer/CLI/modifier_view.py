@@ -1,9 +1,9 @@
 from PyInquirer import prompt
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
-from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.BusinessObjects.agent import Agent
+import ViewLayer.CLI.menu as mp
 
 
 class ModifierView(AbstractView):
@@ -41,7 +41,7 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         elif '2' in answers0['choix']:
             answers2 = prompt(self.__questions2)
             self.__agent.nom = answers2['nom']
@@ -52,7 +52,7 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         elif '3' in answers0['choix']:
             answers3 = prompt(self.__questions3)
             self.__agent.quotite = answers3['quotite']
@@ -63,7 +63,7 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         elif '4' in answers0['choix']:
             answers4 = prompt(self.__questions4)
             nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers4['util'], answers4['mdp'])
@@ -75,7 +75,7 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         elif '5' in answers0['choix']:
             answers5 = prompt(self.__questions5)
             nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers5['util'], answers5['mdp'])
@@ -87,6 +87,6 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         else:
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()

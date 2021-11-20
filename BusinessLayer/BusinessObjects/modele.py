@@ -55,3 +55,18 @@ class Modele:
         data["position_champ_ville"] = self.correspondances.position_ville
         data["position_champs_supplementaires"] = self.correspondances.positions_supplementaires
         return data
+
+    def __str__(self) -> str:
+        chaine = "Modèle " + str(self.nom_modele) + "\n"
+        chaine += "Expression régulière : " + str(self.regex) + "\n"
+        numero = ', '.join([str(pos + 1) for pos in self.correspondances.position_numero])
+        chaine += "Colonnes du numéro de l'habitation : " + numero + '\n'
+        voie = ', '.join([str(pos + 1) for pos in self.correspondances.position_voie])
+        chaine += "Colonnes du nom de la voie : " + voie + '\n'
+        cp = ', '.join([str(pos + 1) for pos in self.correspondances.position_cp])
+        chaine += "Colonnes du code postal : " + cp + '\n'
+        ville = ', '.join([str(pos + 1) for pos in self.correspondances.position_ville])
+        chaine += "Colonnes de la ville : " + ville + '\n'
+        for champ, position in self.correspondances.positions_supplementaires.items():
+            chaine += "Colonne de " + str(champ) + " : " + str(position+1) + '\n'
+        return chaine

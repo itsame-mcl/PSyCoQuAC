@@ -51,13 +51,17 @@ class BANClient(metaclass=Singleton):
         return score, fiche_a_traiter
 
     @staticmethod
-    def geocodage_par_lot(id_lot: int,  seuil_score: float = 0.9) -> bool:
+    def geocodage_par_lot(id_lot: int,  seuil_score: float = 0.9, verbose = False) -> bool:
+        if verbose:
+            print("Chargement du lot à traiter...")
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
         fiches_a_traiter = list()
         for fiche in lot:
             if fiche.code_res == "TA":
                 fiches_a_traiter.append(fiche)
         try:
+            if verbose:
+                print("Préparation de la requête API...")
             with open("search.csv", "w") as file:
                 writer = csv.writer(file)
                 writer.writerow(["id", "adresse", "postcode", "city"])
@@ -65,11 +69,15 @@ class BANClient(metaclass=Singleton):
                     writer.writerow(
                         [str(fiche.fiche_id), str(fiche.adresse_finale.numero) + " " + str(fiche.adresse_finale.voie),
                          str(fiche.adresse_finale.cp), str(fiche.adresse_finale.ville)])
+            if verbose:
+                print("Envoi de la requête à l'API...")
             with open("search.csv", "r") as file:
                 response = requests.post(url="https://api-adresse.data.gouv.fr/search/csv/", data={
                     'columns': ["adresse", "city"], 'postcode': "postcode", 'result_columns': [
                         "result_housenumber", "result_name", "result_postcode", "result_city", "latitude", "longitude",
                         "result_score"]}, files={'data': file})
+            if verbose:
+                print("Réponse de l'API reçue, analyse des résultats...")
             with open("answer.csv", "wb") as reponse:
                 reponse.write(response.content)
             with open("answer.csv", "r") as reponse:
@@ -91,8 +99,12 @@ class BANClient(metaclass=Singleton):
                     else:
                         fiches_a_traiter[index].code_res = "TH"
                     DAOFicheAdresse().modifier_fiche_adresse(fiches_a_traiter[index])
+            if verbose:
+                print("Traitement du lot terminé avec succès !")
             res = True
         except Exception:
+            if verbose:
+                print("Des erreurs sont survenues dans le traitement du lot.")
             res = False
         finally:
             if os.path.exists("search.csv"):

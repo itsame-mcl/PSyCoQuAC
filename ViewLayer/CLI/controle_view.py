@@ -1,9 +1,8 @@
 from ViewLayer.CLI.abstract_view import AbstractView
-from ViewLayer.CLI.menu import MenuPrincipalView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
-
+import ViewLayer.CLI.menu as mp
 
 class ControlerView(AbstractView):
     def __init__(self, curseur: int = 0) -> None:
@@ -55,8 +54,8 @@ class ControlerView(AbstractView):
                 curseur = (self.__curseur + 1) % len(pot)
                 return ControlerView(curseur)
             elif str.lower(answers['choix'][0]) == 'm':
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
             else:
                 return ControlerView(self.__curseur)
         else:
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()

@@ -1,6 +1,6 @@
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
-from ViewLayer.CLI.menu import MenuPrincipalView
+import ViewLayer.CLI.menu as mp
 
 
 class DeconnexionView(AbstractView):
@@ -12,4 +12,4 @@ class DeconnexionView(AbstractView):
 
     def make_choice(self):
         Session().agent = None
-        return MenuPrincipalView()
+        return mp.MenuPrincipalView()

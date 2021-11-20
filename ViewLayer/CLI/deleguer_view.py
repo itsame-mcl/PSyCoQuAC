@@ -1,8 +1,8 @@
 from PyInquirer import prompt
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
-from ViewLayer.CLI.menu import MenuPrincipalView
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
+import ViewLayer.CLI.menu as mp
 
 
 class DeleguerView(AbstractView):
@@ -29,4 +29,4 @@ class DeleguerView(AbstractView):
                 print("L'enregistrement a échoué. Veuillez réessayer ultérieurement.")
             return DeleguerView()
         else:
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()
