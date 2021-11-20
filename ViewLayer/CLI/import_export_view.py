@@ -70,7 +70,7 @@ class ImportExportView(AbstractView):
                 else:
                     raise ValueError
             else:
-                print("Tous les lots importés ont déjà été traités par l'API.")
+                print("Tous les lots que vous avez importés ont déjà été traités par l'API.")
             return ImportExportView()
         elif str.upper(answers['choix'][0]) == 'X':
             liste_lots = StatistiqueService().fiches_par_lot()

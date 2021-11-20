@@ -7,6 +7,7 @@ from ViewLayer.CLI.deleguer_view import DeleguerView
 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
 from ViewLayer.CLI.import_export_view import ImportExportView
 from ViewLayer.CLI.modifier_view import ModifierView
+from ViewLayer.CLI.repartir_view import RepartirView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
 import ViewLayer.CLI.start_view as start
 from ViewLayer.CLI.session import Session
@@ -29,10 +30,11 @@ class MenuPrincipalView(AbstractView):
         else:
             if Session().droits:
                 self.__questions[0]['choices'].insert(0, "I) Importer/Exporter des lots")
-                self.__questions[0]['choices'].insert(5, "T) Modifier le compte d'un agent")
-                self.__questions[0]['choices'].insert(6, "D) Déleguer votre équipe/un agent")
-                self.__questions[0]['choices'].insert(7, "U) Créer un nouvel utilisateur")
-                self.__questions[0]['choices'].insert(8, "G) Gérer l'équipe")
+                self.__questions[0]['choices'].insert(1, "F) Affecter des lots")
+                self.__questions[0]['choices'].insert(6, "T) Modifier le compte d'un agent")
+                self.__questions[0]['choices'].insert(7, "D) Déleguer votre équipe/un agent")
+                self.__questions[0]['choices'].insert(8, "U) Créer un nouvel utilisateur")
+                self.__questions[0]['choices'].insert(9, "G) Gérer l'équipe")
             self.__questions[0]['choices'].append('Q) Se déconnecter')
             answers = prompt(self.__questions)
             if str.upper(answers['choix'][0]) == "P":
@@ -58,3 +60,5 @@ class MenuPrincipalView(AbstractView):
                 return GestionEquipeView()
             elif str.upper(answers['choix'][0]) == "I":
                 return ImportExportView()
+            elif str.upper(answers['choix'][0]) == "F":
+                return RepartirView()
