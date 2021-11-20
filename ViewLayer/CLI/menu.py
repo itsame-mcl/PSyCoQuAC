@@ -2,14 +2,12 @@ from PyInquirer import prompt
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
-from ViewLayer.CLI.controler_view import ControlerView
 from ViewLayer.CLI.deconnexion_view import DeconnexionView
 from ViewLayer.CLI.deleguer_view import DeleguerView
 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
 from ViewLayer.CLI.import_export_view import ImportExportView
 from ViewLayer.CLI.modifier_view import ModifierView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
-from ViewLayer.CLI.reprendre_view import ReprendreView
 import ViewLayer.CLI.start_view as start
 from ViewLayer.CLI.session import Session
 
@@ -57,6 +55,6 @@ class MenuPrincipalView(AbstractView):
             elif 'H' in str.upper(answers['choix'][0]):
                 return ImportExportView()
             elif 'I' in str.upper(answers['choix'][0]):
-                return ControlerView()
+                return ConsulterPotView(controle=True, reprise=False)
             elif 'J' in str.upper(answers['choix'][0]):
-                return ReprendreView()
+                return ConsulterPotView(controle=False, reprise=True)
