@@ -15,12 +15,6 @@ class ConsulterPotView(AbstractView):
             self.__id_agent = id_agent
         self.pot = ControleRepriseService().consulter_pot_controle_reprise(self.__id_agent, controle, reprise)
         self.__curseur = curseur
-        self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?',
-                             'choices': ['p) Retourner à la fiche précédente', 's) Passer à la fiche suivante',
-                                         'm) Retourner au menu principal']}]
-        self.__questions2 = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?',
-                             'choices': ['p) Retourner à la fiche précédente', 's) Passer à la fiche suivante',
-                                         'c) Controler/Reprendre la fiche', 'm) Retourner au menu principal']}]
 
     def display_info(self):
         if len(self.pot) > 0:
@@ -33,17 +27,24 @@ class ConsulterPotView(AbstractView):
     def make_choice(self):
         if len(self.pot) > 0:
             fiche = self.pot[self.__curseur]
+            questions = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?', 'choices': []}]
+            if len(self.pot) > 1:
+                questions[0]['choices'].append("P) Retourner à la fiche précédente")
+                questions[0]['choices'].append("S) Passer à la fiche suivante")
             if self.__id_agent == Session().agent.agent_id:
-                answers = prompt(self.__questions2)
-            else:
-                answers = prompt(self.__questions)
-            if 'p' in str.lower(answers['choix'][0]):
+                if fiche.code_res == "TC":
+                    questions[0]['choices'].append("C) Contrôler la fiche")
+                elif fiche.code_res == "TR":
+                    questions[0]['choices'].append("R) Reprendre la fiche")
+            questions[0]['choices'].append('Q) Retourner au menu principal')
+            answers = prompt(questions)
+            if str.upper(answers['choix'][0]) == "P":
                 self.__curseur = (self.__curseur - 1) % len(self.pot)
                 return self
-            elif 's' in str.lower(answers['choix'][0]):
+            elif str.upper(answers['choix'][0]) == "S":
                 self.__curseur = (self.__curseur + 1) % len(self.pot)
                 return self
-            elif 'c' in str.lower(answers['choix'][0]):
+            elif str.upper(answers['choix'][0]) in ["C", "R"]:
                 if fiche.code_res == "TC":
                     modal = ControlerView(self, fiche)
                 elif fiche.code_res == "TR":
@@ -55,7 +56,9 @@ class ConsulterPotView(AbstractView):
                 if res:
                     caller.pot.remove(fiche)
                 return caller
-            else:
+            elif str.upper(answers['choix'][0]) == "Q":
                 return mp.MenuPrincipalView()
+            else:
+                raise ValueError
         else:
             return mp.MenuPrincipalView()

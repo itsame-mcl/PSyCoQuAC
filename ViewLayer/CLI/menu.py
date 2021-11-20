@@ -24,7 +24,8 @@ class MenuPrincipalView(AbstractView):
         self.__questions2 = [{'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous faire ?',
                             'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter',
                             'D) Déleguer votre équipe/un agent', "E) Modifier le compte d'un agent",
-                            'F) Créer un nouvel utilisateur', "G) Gestion de l'équipe", "H) Importer/Exporter des fichiers d'adresse"]}]
+                            'F) Créer un nouvel utilisateur', "G) Gestion de l'équipe", "H) Importer/Exporter des fichiers d'adresse",
+                                        'I) Contrôler une fiche', 'J) Reprendre  une fiche']}]
         self.__questions3 = [{'type': 'input', 'name': 'agent', 'message': "Quel est l'identifiant de l'agent ?"}]
 
     def make_choice(self):
