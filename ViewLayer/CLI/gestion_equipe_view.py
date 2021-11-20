@@ -3,7 +3,7 @@ from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
 from ViewLayer.CLI.session import Session
-from ViewLayer.CLI.menu import MenuPrincipalView
+import ViewLayer.CLI.menu as mp
 
 
 class GestionEquipeView(AbstractView):
@@ -30,7 +30,7 @@ class GestionEquipeView(AbstractView):
             if 'o' in str.lower(answers3['choix']):
                 return GestionEquipeView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         elif '3' in answers['choix']:
             answers2 = prompt(self.__questions2)
             succes = AgentService().supprimer_agent(answers2['id'])
@@ -40,7 +40,7 @@ class GestionEquipeView(AbstractView):
             if 'o' in str.lower(answers3['choix']):
                 return GestionEquipeView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         elif '4' in answers['choix']:
             answers2 = prompt(self.__questions2)
             succes = AgentService().promouvoir_agent(Session().agent.agent_id, answers2['id'])
@@ -50,6 +50,6 @@ class GestionEquipeView(AbstractView):
             if 'o' in str.lower(answers3['choix']):
                 return GestionEquipeView()
             else:
-                return MenuPrincipalView()
+                return mp.MenuPrincipalView()
         else:
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()

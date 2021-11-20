@@ -2,7 +2,7 @@ from PyInquirer import prompt
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
-from ViewLayer.CLI.menu import MenuPrincipalView
+import ViewLayer.CLI.menu as mp
 
 
 class NouvelUtilisateurView(AbstractView):
@@ -22,4 +22,6 @@ class NouvelUtilisateurView(AbstractView):
                                             answers['nom_utilisateur'], answers['mot_de_passe'], answers['prenom'], answers['nom'])
         if not(succes):
             print("L'enregistrement du nouvel utilisateur a échoué. Veuillez réessayer ultérieurement.")
-        return MenuPrincipalView()
+            return mp.MenuPrincipalView()
+        else:
+            return mp.MenuPrincipalView()

@@ -6,7 +6,7 @@ from BusinessLayer.LocalServices.Gestion.statistique_service import StatistiqueS
 from BusinessLayer.WebServices.BANClient import BANClient
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
-from ViewLayer.CLI.menu import MenuPrincipalView
+import ViewLayer.CLI.menu as mp
 
 
 class ImportExportView(AbstractView):
@@ -95,6 +95,6 @@ class ImportExportView(AbstractView):
                 print("Aucun lot n'est disponible pour l'exportation.")
             return ImportExportView()
         elif str.upper(answers['choix'][0]) == 'Q':
-            return MenuPrincipalView()
+            return mp.MenuPrincipalView()
         else:
             raise ValueError
