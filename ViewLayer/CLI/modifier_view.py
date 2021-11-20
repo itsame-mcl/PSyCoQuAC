@@ -3,7 +3,7 @@ from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.BusinessObjects.agent import Agent
-import ViewLayer.CLI.menu as mp
+from ViewLayer.CLI.menu import MenuPrincipalView
 
 
 class ModifierView(AbstractView):
@@ -63,7 +63,7 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return mp.MenuPrincipalView()
+                return MenuPrincipalView()
         elif '4' in answers0['choix']:
             answers4 = prompt(self.__questions4)
             nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers4['util'], answers4['mdp'])
@@ -75,7 +75,7 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return mp.MenuPrincipalView()
+                return MenuPrincipalView()
         elif '5' in answers0['choix']:
             answers5 = prompt(self.__questions5)
             nouveau_mdp_hache = AgentService().saler_hasher_mdp(answers5['util'], answers5['mdp'])
@@ -87,6 +87,6 @@ class ModifierView(AbstractView):
             if 'o' in str.lower(answers['choix']):
                 return ModifierView()
             else:
-                return mp.MenuPrincipalView()
+                return MenuPrincipalView()
         else:
-            return mp.MenuPrincipalView()
+            return MenuPrincipalView()

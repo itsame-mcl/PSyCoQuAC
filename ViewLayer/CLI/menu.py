@@ -8,7 +8,7 @@ from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
 from ViewLayer.CLI.import_export_view import ImportExportView
 from ViewLayer.CLI.modifier_view import ModifierView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
-import ViewLayer.CLI.start_view as start
+from ViewLayer.CLI.start_view import StartView
 from ViewLayer.CLI.session import Session
 
 
@@ -25,12 +25,12 @@ class MenuPrincipalView(AbstractView):
                             'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter',
                             'D) Déleguer votre équipe/un agent', "E) Modifier le compte d'un agent",
                             'F) Créer un nouvel utilisateur', "G) Gestion de l'équipe", "H) Importer/Exporter des fichiers d'adresse",
-                                        'I) Contrôler une fiche', 'J) Reprendre  une fiche']}]
+                            'I) Contrôler une fiche', 'J) Reprendre  une fiche']}]
         self.__questions3 = [{'type': 'input', 'name': 'agent', 'message': "Quel est l'identifiant de l'agent ?"}]
 
     def make_choice(self):
         if Session().agent is None:
-            return start.StartView()
+            return StartView()
         else:
             if Session().droits:
                 answers = prompt(self.__questions2)

@@ -4,7 +4,7 @@ from ViewLayer.CLI.session import Session
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from ViewLayer.CLI.controler_view import ControlerView
 from ViewLayer.CLI.reprendre_view import ReprendreView
-import ViewLayer.CLI.menu as mp
+from ViewLayer.CLI.menu import MenuPrincipalView
 
 
 class ConsulterPotView(AbstractView):
@@ -65,8 +65,8 @@ class ConsulterPotView(AbstractView):
                         caller.pot[caller.pot.index(fiche)] = nouv_fiche
                 return caller
             elif str.upper(answers['choix'][0]) == "Q":
-                return mp.MenuPrincipalView()
+                return MenuPrincipalView()
             else:
                 raise ValueError
         else:
-            return mp.MenuPrincipalView()
+            return MenuPrincipalView()
