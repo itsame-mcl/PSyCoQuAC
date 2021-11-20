@@ -15,11 +15,24 @@ class StatistiqueService(metaclass=Singleton):
         return res
 
     @staticmethod
-    def lots_a_traiter_api():
+    def lots_a_traiter_api(id_superviseur: int):
         lots = list()
-        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_code_resultat="TA")
+        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
+                                                     filtre_code_resultat="TA")
         for ligne in res:
             lots.append(ligne[0])
+        return lots
+
+    @staticmethod
+    def lots_a_affecter(id_superviseur: int):
+        lots = list()
+        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur)
+        for ligne in res:
+            lots.append(ligne[0])
+        rem = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
+                                                     filtre_code_resultat="TA")
+        for ligne in rem:
+            lots.remove(ligne[0])
         return lots
 
     @staticmethod

@@ -34,11 +34,10 @@ class ImportExportView(AbstractView):
             if res:
                 print("Lot numéro " + str(lot) + " importé avec succès !")
                 self.__traitement_api(lot)
-            return ImportExportView()
         elif str.upper(answers_modele['choix'][0]) == 'N':
             raise NotImplementedError
         elif str.upper(answers_modele['choix'][0]) == 'Q':
-            return ImportExportView()
+            pass
         else:
             raise ValueError
 
@@ -51,8 +50,9 @@ class ImportExportView(AbstractView):
         answers = prompt(self.__questions)
         if str.upper(answers['choix'][0]) == 'I':
             self.__importation()
+            return ImportExportView()
         elif str.upper(answers['choix'][0]) == 'A':
-            liste_lots = StatistiqueService().lots_a_traiter_api()
+            liste_lots = StatistiqueService().lots_a_traiter_api(Session().agent.agent_id)
             if len(liste_lots) > 0:
                 choices = list()
                 for lot in liste_lots:
