@@ -8,8 +8,7 @@ from copy import deepcopy
 
 
 class ReprendreView(AbstractView):
-    def __init__(self, caller: AbstractView, fiche: FicheAdresse) -> None:
-        self.__caller = caller
+    def __init__(self, fiche: FicheAdresse) -> None:
         self.__fiche = fiche
         self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?',
                              'choices': ["A) Modifier l'adresse", 'C) Modifier les coordonnées GPS',
@@ -98,4 +97,4 @@ class ReprendreView(AbstractView):
                 res = False
             else:
                 raise ValueError
-        return res, self.__fiche, self.__caller
+        return res, self.__fiche

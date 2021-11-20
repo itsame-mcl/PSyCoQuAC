@@ -14,26 +14,26 @@ class ConsulterPotView(AbstractView):
         else:
             self.__id_agent = id_agent
         if controle or reprise:
-            self.__work = True
-            self.pot = ControleRepriseService().consulter_pot_controle_reprise(self.__id_agent, controle, reprise)
+            self.__delete_on_commit = True
+            self.__pot = ControleRepriseService().consulter_pot_controle_reprise(self.__id_agent, controle, reprise)
         else:
-            self.__work = False
-            self.pot = ControleRepriseService().consulter_pot(self.__id_agent)
+            self.__delete_on_commit = False
+            self.__pot = ControleRepriseService().consulter_pot(self.__id_agent)
         self.__curseur = curseur
 
     def display_info(self):
-        if len(self.pot) > 0:
-            self.__curseur = self.__curseur % len(self.pot)
-            fiche = self.pot[self.__curseur]
+        if len(self.__pot) > 0:
+            self.__curseur = self.__curseur % len(self.__pot)
+            fiche = self.__pot[self.__curseur]
             print(fiche)
         else:
             print("Le pot de fiches à traiter est vide.")
 
     def make_choice(self):
-        if len(self.pot) > 0:
-            fiche = self.pot[self.__curseur]
+        if len(self.__pot) > 0:
+            fiche = self.__pot[self.__curseur]
             questions = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?', 'choices': []}]
-            if len(self.pot) > 1:
+            if len(self.__pot) > 1:
                 questions[0]['choices'].append("P) Retourner à la fiche précédente")
                 questions[0]['choices'].append("S) Passer à la fiche suivante")
             if self.__id_agent == Session().agent.agent_id:
@@ -44,26 +44,26 @@ class ConsulterPotView(AbstractView):
             questions[0]['choices'].append('Q) Retourner au menu principal')
             answers = prompt(questions)
             if str.upper(answers['choix'][0]) == "P":
-                self.__curseur = (self.__curseur - 1) % len(self.pot)
+                self.__curseur = (self.__curseur - 1) % len(self.__pot)
                 return self
             elif str.upper(answers['choix'][0]) == "S":
-                self.__curseur = (self.__curseur + 1) % len(self.pot)
+                self.__curseur = (self.__curseur + 1) % len(self.__pot)
                 return self
             elif str.upper(answers['choix'][0]) in ["C", "R"]:
                 if fiche.code_res == "TC":
-                    modal = ControlerView(self, fiche)
+                    modal = ControlerView(fiche)
                 elif fiche.code_res == "TR":
-                    modal = ReprendreView(self, fiche)
+                    modal = ReprendreView(fiche)
                 else:
                     return self
                 modal.display_info()
-                res, nouv_fiche, caller = modal.make_choice()
+                res, nouv_fiche = modal.make_choice()
                 if res:
-                    if self.__work:
-                        caller.pot.remove(fiche)
+                    if self.__delete_on_commit:
+                        self.__pot.remove(fiche)
                     else:
-                        caller.pot[caller.pot.index(fiche)] = nouv_fiche
-                return caller
+                        self.__pot[self.__pot.index(fiche)] = nouv_fiche
+                return self
             elif str.upper(answers['choix'][0]) == "Q":
                 return mp.MenuPrincipalView()
             else:

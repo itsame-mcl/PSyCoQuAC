@@ -5,8 +5,7 @@ from PyInquirer import prompt
 
 
 class ControlerView(AbstractView):
-    def __init__(self, caller: AbstractView, fiche: FicheAdresse) -> None:
-        self.__caller = caller
+    def __init__(self, fiche: FicheAdresse) -> None:
         self.__fiche = fiche
         self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Comment qualifier les données de cette fiche ?',
                              'choices': ['C) Les données sont correctes', 'I) Les données sont incorrectes ',
@@ -26,11 +25,11 @@ class ControlerView(AbstractView):
                     res = ControleRepriseService().validation_fiche(self.__fiche, True)
                 else:
                     res = ControleRepriseService().validation_fiche(self.__fiche, True)
-                return res, self.__fiche, self.__caller
+                return res, self.__fiche
             elif str.upper(answers2['choix'][0]) == 'N':
                 res = False
-                return res,self.__fiche, self.__caller
+                return res,self.__fiche
         elif str.upper(answers['choix'][0]) == 'Q':
-            return False, self.__fiche, self.__caller
+            return False, self.__fiche
         else:
             raise ValueError
