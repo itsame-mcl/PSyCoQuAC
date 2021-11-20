@@ -63,5 +63,5 @@ class AgentService(metaclass=Singleton):
         return DAOAgent().deleguer_equipe(id_superviseur, id_delegue)
 
     @staticmethod
-    def recuperer_agent(self, id_agent: int) -> Agent:
+    def recuperer_agent(id_agent: int) -> Agent:
         return DAOAgent().recuperer_agent(id_agent)

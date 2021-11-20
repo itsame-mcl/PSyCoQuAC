@@ -18,44 +18,43 @@ class MenuPrincipalView(AbstractView):
             prenom = ""
         else:
             prenom = Session().agent.prenom
-        self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous faire ?',
-                            'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter',
-                            'I) Contrôler une fiche', 'J) Reprendre  une fiche']}]
-        self.__questions2 = [{'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous faire ?',
-                            'choices': ['A) Consulter son pot', 'B) Modifier son compte', 'C) Se déconnecter',
-                            'D) Déleguer votre équipe/un agent', "E) Modifier le compte d'un agent",
-                            'F) Créer un nouvel utilisateur', "G) Gestion de l'équipe", "H) Importer/Exporter des fichiers d'adresse",
-                                        'I) Contrôler une fiche', 'J) Reprendre  une fiche']}]
-        self.__questions3 = [{'type': 'input', 'name': 'agent', 'message': "Quel est l'identifiant de l'agent ?"}]
+        self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous '
+                                                                                               'faire ?',
+                             'choices': ['P) Consulter son pot', 'C) Contrôler des fiches', 'R) Reprendre des fiches',
+                                         'M) Modifier son compte']}]
 
     def make_choice(self):
         if Session().agent is None:
             return start.StartView()
         else:
             if Session().droits:
-                answers = prompt(self.__questions2)
-            else:
-                answers = prompt(self.__questions)
-            print(answers)
-            if 'A' in str.upper(answers['choix'][0]):
+                self.__questions[0]['choices'].insert(0, "I) Importer/Exporter des lots")
+                self.__questions[0]['choices'].insert(5, "T) Modifier le compte d'un agent")
+                self.__questions[0]['choices'].insert(6, "D) Déleguer votre équipe/un agent")
+                self.__questions[0]['choices'].insert(7, "U) Créer un nouvel utilisateur")
+                self.__questions[0]['choices'].insert(8, "G) Gérer l'équipe")
+            self.__questions[0]['choices'].append('Q) Se déconnecter')
+            answers = prompt(self.__questions)
+            if str.upper(answers['choix'][0]) == "P":
                 return ConsulterPotView()
-            elif 'B' in str.upper(answers['choix'][0]):
-                return ModifierView(Session().agent)
-            elif 'C' in str.upper(answers['choix'][0]):
-                return DeconnexionView()
-            elif 'D' in str.upper(answers['choix'][0]):
-                return DeleguerView()
-            elif 'E' in str.upper(answers['choix'][0]):
-                answers3 = prompt(self.__questions3)
-                agent = AgentService.recuperer_agent(answers3['agent'][0])
-                return ModifierView(agent)
-            elif 'F' in str.upper(answers['choix'][0]):
-                return NouvelUtilisateurView()
-            elif 'G' in str.upper(answers['choix'][0]):
-                return GestionEquipeView()
-            elif 'H' in str.upper(answers['choix'][0]):
-                return ImportExportView()
-            elif 'I' in str.upper(answers['choix'][0]):
+            elif str.upper(answers['choix'][0]) == "C":
                 return ConsulterPotView(controle=True, reprise=False)
-            elif 'J' in str.upper(answers['choix'][0]):
+            elif str.upper(answers['choix'][0]) == "R":
                 return ConsulterPotView(controle=False, reprise=True)
+            elif str.upper(answers['choix'][0]) == "M":
+                return ModifierView(Session().agent)
+            elif str.upper(answers['choix'][0]) == "Q":
+                return DeconnexionView()
+            elif str.upper(answers['choix'][0]) == "T":
+                choix_agent = prompt([{'type': 'input', 'name': 'agent',
+                                       'message': "Quel est l'identifiant de l'agent ?"}])
+                agent = AgentService().recuperer_agent(choix_agent['agent'][0])
+                return ModifierView(agent)
+            elif str.upper(answers['choix'][0]) == "D":
+                return DeleguerView()
+            elif str.upper(answers['choix'][0]) == "U":
+                return NouvelUtilisateurView()
+            elif str.upper(answers['choix'][0]) == "G":
+                return GestionEquipeView()
+            elif str.upper(answers['choix'][0]) == "I":
+                return ImportExportView()
