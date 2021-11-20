@@ -135,11 +135,10 @@ class SQLiteAgent(InterfaceAgent):
         value = row["seq"]
         return value
 
-    def recuperer_id_superviseur(self, id_agent: int) -> dict:
+    def recuperer_id_superviseur(self, id_agent: int) -> int:
         curseur = DBConnexion().connexion.cursor()
-        curseur.execute("SELECT * FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
+        curseur.execute("SELECT identifiant_superviseur FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
         row = curseur.fetchone()
         curseur.close()
-        data = dict(zip(row.keys(), row))
-        data = self.__sqlite_to_dao(data)
+        data = int(row['identifiant_superviseur'])
         return data

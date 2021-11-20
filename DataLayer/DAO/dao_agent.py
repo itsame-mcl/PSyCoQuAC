@@ -28,7 +28,7 @@ class DAOAgent(metaclass=Singleton):
             equipe.append(agent_factory.AgentFactory.from_dict(row))
         return equipe
 
-    def deleguer_agent(self, id_agent: int, id_delegue: int) -> bool:
+    def deleguer_agent(self, id_agent: List[int], id_delegue: int) -> bool:
         return self.__interface.modifier_superviseur(list(id_agent), id_delegue)
 
     def deleguer_equipe(self, id_superviseur: int, id_delegue: int) -> bool:
@@ -67,5 +67,5 @@ class DAOAgent(metaclass=Singleton):
     def recuperer_dernier_id_agent(self) -> int:
         return self.__interface.recuperer_dernier_id_agent()
 
-    def recuperer_id_superviseur(self, id_agent : int) -> dict:
+    def recuperer_id_superviseur(self, id_agent: int) -> int:
         return self.__interface.recuperer_id_superviseur(id_agent)

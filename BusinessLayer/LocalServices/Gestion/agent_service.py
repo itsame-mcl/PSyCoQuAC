@@ -11,8 +11,8 @@ class AgentService(metaclass=Singleton):
     def creer_agent(est_superviseur: bool, quotite: float, id_superviseur: int, nom_utilisateur: str,
                     mot_de_passe: str, prenom: str, nom: str) -> bool:
         data_agent = {'est_superviseur': est_superviseur, 'prenom': prenom, 'nom': nom, 'quotite': quotite,
-                      'id_superviseur': id_superviseur}
-        data_agent['identifiant_agent'] = DAOAgent().recuperer_dernier_id_agent() + 1
+                      'id_superviseur': id_superviseur,
+                      'identifiant_agent': DAOAgent().recuperer_dernier_id_agent() + 1}
         nouvel_agent = agent_factory.AgentFactory.from_dict(data_agent)
         return DAOAgent().creer_agent(nouvel_agent, nom_utilisateur, mot_de_passe)
 
@@ -27,17 +27,20 @@ class AgentService(metaclass=Singleton):
 
     @staticmethod
     def supprimer_agent(agent_a_supprimer: int) -> bool:
-        pot_agent = DAOFicheAdresse().recuperer_pot(agent_a_supprimer.agent_id)
+        pot_agent = DAOFicheAdresse().recuperer_pot(agent_a_supprimer)
         liste_id_pot = []
         for fiche in pot_agent:
             liste_id_pot.append(fiche.fiche_id)
-        id_superviseur = DAOAgent().recuperer_id_superviseur(agent_a_supprimer.agent_id)
-        probleme = DAOAgent().supprimer_agent(agent_a_supprimer) and DAOFicheAdresse().affecter_fiches_adresse(id_superviseur, liste_id_pot)
-        return probleme
+        id_superviseur = DAOAgent().recuperer_id_superviseur(agent_a_supprimer)
+        res_reaffect = DAOFicheAdresse().affecter_fiches_adresse(id_superviseur, liste_id_pot)
+        res_suppr = False
+        if res_reaffect:
+            res_suppr = DAOAgent().supprimer_agent(agent_a_supprimer)
+        return res_reaffect and res_suppr
 
     @staticmethod
     def recuperer_id_superviseur(id_agent: int) -> int:
-        return DAOAgent().recuperer_id_superviseur(id_agent)['id_superviseur']
+        return DAOAgent().recuperer_id_superviseur(id_agent)
 
     @staticmethod
     def recuperer_equipe(id_superviseur: int) -> List[Agent]:
@@ -55,7 +58,7 @@ class AgentService(metaclass=Singleton):
         return DAOAgent().changer_droits(agent)
 
     @staticmethod
-    def deleguer_agent(id_agent: int, id_delegue: int) -> bool:
+    def deleguer_agent(id_agent: List[int], id_delegue: int) -> bool:
         return DAOAgent().deleguer_agent(id_agent, id_delegue)
 
     @staticmethod

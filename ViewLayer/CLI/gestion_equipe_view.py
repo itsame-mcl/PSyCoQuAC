@@ -34,7 +34,7 @@ class GestionEquipeView(AbstractView):
         elif '3' in answers['choix']:
             answers2 = prompt(self.__questions2)
             succes = AgentService().supprimer_agent(answers2['id'])
-            if not(succes):
+            if not succes:
                 print("La suppression de l'agent a échoué. Veuillez réessayer ultérieurement.")
             answers3 = prompt(self.__questions3)
             if 'o' in str.lower(answers3['choix']):
