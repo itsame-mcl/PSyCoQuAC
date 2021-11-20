@@ -28,3 +28,16 @@ class ControleRepriseService(metaclass=Singleton):
     @staticmethod
     def consulter_pot(id_agent: int) -> List[FicheAdresse]:
         return DAOFicheAdresse().recuperer_pot(id_agent)
+
+    @staticmethod
+    def consulter_pot_controle_reprise(id_agent: int, controle=True, reprise=True) -> List[FicheAdresse]:
+        pot = DAOFicheAdresse().recuperer_pot(id_agent)
+        pot_cr = list()
+        for fiche in pot:
+            if controle:
+                if fiche.code_res == "TC":
+                    pot_cr.append(fiche)
+            if reprise:
+                if fiche.code_res == "TR":
+                    pot_cr.append(fiche)
+        return pot_cr

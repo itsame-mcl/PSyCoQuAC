@@ -171,3 +171,11 @@ class FicheAdresse:
         else:
             data["champs_supplementaires"] = self.champs_supplementaires
         return data
+
+    def __str__(self) -> str:
+        chaine = "Fiche adresse n°" + str(self.fiche_id) + " - Lot n°" + str(self.lot_id) + "\n"
+        chaine += "Etat actuel : " + str(self.code_res) + "\n"
+        chaine += "Adresse initiale : " + str(self.adresse_initiale) + "\n"
+        chaine += "Adresse finale : " + str(self.adresse_finale) + "\n"
+        chaine += "Coordonnées WGS84 (GPS) : " + str(self.coords_wgs84)
+        return chaine

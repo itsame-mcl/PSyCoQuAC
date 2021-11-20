@@ -2,7 +2,7 @@ from PyInquirer import prompt
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
-from ViewLayer.CLI.controle_view import ControlerView
+from ViewLayer.CLI.controler_view import ControlerView
 from ViewLayer.CLI.deconnexion_view import DeconnexionView
 from ViewLayer.CLI.deleguer_view import DeleguerView
 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
