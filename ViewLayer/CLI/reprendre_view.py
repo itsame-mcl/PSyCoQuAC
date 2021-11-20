@@ -87,7 +87,7 @@ class ReprendreView(AbstractView):
                 self.__soumettre_api()
             elif str.upper(answers['choix'][0]) == 'C':
                 self.__choix_modifier_wgs84()
-                self.__soumettre_api()
+                self.__soumettre_api(reverse=True)
             elif str.upper(answers['choix'][0]) in ['V', 'D']:
                 ans = self.__confirmation()
                 if ans:
