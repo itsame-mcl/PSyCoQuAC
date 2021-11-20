@@ -134,5 +134,6 @@ out/uml/
 # SQLite Databases
 sql/*.sqlite
 
-# Generic test file
+# Generic test files
 /test.py
+/test.csv

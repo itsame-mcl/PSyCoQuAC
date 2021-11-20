@@ -47,9 +47,9 @@ class ConsulterPotView(AbstractView):
                 curseur = (self.__curseur + 1) % len(pot)
                 return ConsulterPotView(self.__id_agent, curseur)
             elif 'c' in str.lower(answers['choix'][0]):
-                if fiche.code_res == ['TC']:
+                if fiche.code_res == "TC":
                     return ControlerView(self.__curseur)
-                elif fiche.code_res == ['TR']:
+                elif fiche.code_res == "TR":
                     return ReprendreView(self.__curseur)
             else:
                 return mp.MenuPrincipalView()

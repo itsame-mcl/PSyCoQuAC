@@ -15,6 +15,14 @@ class StatistiqueService(metaclass=Singleton):
         return res
 
     @staticmethod
+    def lots_a_traiter_api():
+        lots = list()
+        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_code_resultat="TA")
+        for ligne in res:
+            lots.append(ligne[0])
+        return lots
+
+    @staticmethod
     def fiches_par_code_res():
         res = DAOFicheAdresse().obtenir_statistiques(par_code_resultat=True)
         return res
