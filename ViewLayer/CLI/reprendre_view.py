@@ -1,129 +1,104 @@
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from ViewLayer.CLI.abstract_view import AbstractView
-from ViewLayer.CLI.session import Session
 from BusinessLayer.WebServices.BANClient import BANClient
 from BusinessLayer.LocalServices.TraitementFA.controle_reprise_service import ControleRepriseService
 from PyInquirer import prompt
-import ViewLayer.CLI.menu as mp
+from copy import deepcopy
 
 
 class ReprendreView(AbstractView):
-    def __init__(self, curseur: int = 0) -> None:
-        self.__curseur = curseur
+    def __init__(self, caller: AbstractView, fiche: FicheAdresse) -> None:
+        self.__caller = caller
+        self.__fiche = fiche
         self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?',
-                             'choices': ["a) Modifier l'adresse", 'c) Modifier les coordonnées GPS',
-                                         'v) Valider la fiche', 'd) Marquer la fiche en déchet',
-                                         'p) Passer à la fiche précédente', 's) Passer à la fiche suivante',
-                                         'm) Retourner au menu principal']}]
-        self.__questions2 = [
-            {'type': 'list', 'name': 'choix', 'message': 'Confirmez-vous ?', 'choices': ['Oui', 'Non']}]
-        self.__questions3 = [{'type': 'input', 'name': 'numero', 'message': 'Numéro de voie :'},
-                             {'type': 'input', 'name': 'voie', 'message': 'Nom de la voie', },
-                             {'type': 'input', 'name': 'cp', 'message': 'Code postal :'},
-                             {'type': 'input', 'name': 'ville', 'message': 'Ville :'}]
-        self.__questions4 = [{'type': 'list', 'name': 'choix', 'message': "Voulez vous resoumettre la fiche à l'API ?",
-                              'choices': ['Oui', 'Non']}]
-        self.__questions5 = [{'type': 'input', 'name': 'lat', 'message': 'Latitude :'},
-                             {'type': 'input', 'name': 'lon', 'message': 'Longitude :'}]
+                             'choices': ["A) Modifier l'adresse", 'C) Modifier les coordonnées GPS',
+                                         'V) Valider la fiche', 'D) Marquer la fiche en déchet',
+                                         'Q) Décider plus tard']}]
+        self.__oui_non = [
+            {'type': 'list', 'name': 'choix', 'message': '', 'choices': ['Oui', 'Non']}]
 
     def display_info(self):
-        pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
-        if len(pot) > 0:
-            fiche = pot[self.__curseur]
-            print('Fiche adresse n°' + str(fiche.fiche_id) + 'Données initiales : adresse initiale : ' + 
-                str(fiche.adresse_initiale) + 'Données API : Adresse finale : ' + str(fiche.adresse_finale) + 
-                'Coordonnées GPS :' + str(fiche.coords_wgs84))
-        else:
-            print("Le pot est vide.")
+        pass
 
-    def __choix_modifier_adresse(self, fiche: FicheAdresse):
-        answers3 = prompt(self.__questions3)
-        nouvelle_adresse = Adresse(answers3['numero'], answers3['voie'], answers3['cp'], answers3['ville'])
-        fiche.adresse_finale = nouvelle_adresse
-        res = ControleRepriseService().modifier_fiche(fiche)
-        return res
+    def __choix_modifier_adresse(self):
+        prompt_adresse = [{'type': 'input', 'name': 'numero', 'message': 'Numéro de voie :',
+                           'default': self.__fiche.adresse_finale.numero},
+                             {'type': 'input', 'name': 'voie', 'message': 'Nom de la voie',
+                              'default': self.__fiche.adresse_finale.voie},
+                             {'type': 'input', 'name': 'cp', 'message': 'Code postal :',
+                              'default': self.__fiche.adresse_finale.cp},
+                             {'type': 'input', 'name': 'ville', 'message': 'Ville :',
+                              'default': self.__fiche.adresse_finale.ville}]
+        nouv_data = prompt(prompt_adresse)
+        nouvelle_adresse = Adresse(nouv_data['numero'], nouv_data['voie'], nouv_data['cp'], nouv_data['ville'])
+        self.__fiche.adresse_finale = nouvelle_adresse
 
-    def __choix_modifier_coordonnees(self, fiche: FicheAdresse):
-        answers5 = prompt(self.__questions5)
-        nouvelles_coords = (answers5['lat'], answers5['lon'])
-        fiche.coords_wgs84 = nouvelles_coords
-        res = ControleRepriseService().modifier_fiche(fiche)
-        return res
+    def __choix_modifier_wgs84(self):
+        prompt_wgs84 = [{'type': 'input', 'name': 'lat', 'message': 'Latitude :',
+                         'default': self.__fiche.coords_wgs84[1]},
+                             {'type': 'input', 'name': 'lon', 'message': 'Longitude :',
+                              'default': self.__fiche.coords_wgs84[0]}]
+        nouvelles_coords = prompt(prompt_wgs84)
+        self.__fiche.coords_wgs84 = (nouvelles_coords['lon'], nouvelles_coords['lat'])
 
-    def __soumettre_api(self, fiche: FicheAdresse, reverse: bool = False):
-        answers4 = prompt(self.__questions4)
-        if str.lower(answers4['choix']) == 'oui':
+    def __soumettre_api(self, reverse: bool = False):
+        prompt_api = self.__oui_non
+        prompt_api[0]["message"] = "Voulez vous resoumettre la fiche à l'API ?"
+        answer = prompt(prompt_api)
+        if str.upper(answer['choix'][0]) == 'O':
+            original = deepcopy(self.__fiche)
             # Resoumettre à l'API
             if not reverse:
-                score, fiche = BANClient().geocodage_par_fiche(fiche)
+                score, prop_fiche = BANClient().geocodage_par_fiche(self.__fiche)
             else:
-                score, fiche = BANClient().reverse_par_fiche(fiche)
-            print("Le score de l'API est " + str(score))
-            res = ControleRepriseService().modifier_fiche(fiche)
-            return res
-        else:
-            return True
+                score, prop_fiche = BANClient().reverse_par_fiche(self.__fiche)
+            print("La fiche proposée par l'API est :")
+            print(prop_fiche)
+            print("Le score de confiance de l'API est " + str(score))
+            prompt_conservation = [
+                {'type': 'list', 'name': 'choix', 'message': "Quelle fiche souhaitez-vous conserver ?",
+                 'choices': ["A) La fiche recodée par l'API", "M) La fiche saisie manuellement"]}]
+            choix_conservation = prompt(prompt_conservation)
+            if str.upper(choix_conservation['choix']) == 'A':
+                self.__fiche = prop_fiche
+            else:
+                self.__fiche = original
 
     def __confirmation(self):
-        answers2 = prompt(self.__questions2)
-        if str.lower(answers2['choix']) == 'oui':
+        prompt_conf = self.__oui_non
+        prompt_conf[0]["message"] = "Voulez vous confirmer votre choix ?"
+        answer = prompt(prompt_conf)
+        if str.upper(answer['choix'][0]) == 'O':
             return True
-        elif str.lower(answers2['choix']) == 'non':
+        elif str.lower(answer['choix'][0]) == 'N':
             return False
         else:
             raise ValueError
 
     def make_choice(self):
-        pot = ControleRepriseService().consulter_pot(Session().agent.agent_id)
-        if len(pot) > 0:
-            fiche = pot[self.__curseur]
+        flag_continue = True
+        res = False
+        while flag_continue:
+            print(self.__fiche)
             answers = prompt(self.__questions)
-            if str.lower(answers['choix'][0]) == 'a':
-                res = self.__choix_modifier_adresse(fiche)
-                if res:
-                    res2 = self.__soumettre_api(fiche)
-                    if not res2:
-                        print("Échec dans l'enregistrement des modifications.")
-                else:
-                    print("Échec dans l'enregistrement des modifications.")
-                return ReprendreView(self.__curseur)
-            elif str.lower(answers['choix'][0]) == 'c':
-                res = self.__choix_modifier_coordonnees(fiche)
-                if res:
-                    res2 = self.__soumettre_api(fiche, True)
-                    if not res2:
-                        print("Échec dans l'enregistrement des modifications.")
-                else:
-                    print("Échec dans l'enregistrement des modifications.")
-                return ReprendreView(self.__curseur)
-            elif str.lower(answers['choix'][0]) in ['v', 'd']:
+            if str.upper(answers['choix'][0]) == 'A':
+                self.__choix_modifier_adresse()
+                self.__soumettre_api()
+            elif str.upper(answers['choix'][0]) == 'C':
+                self.__choix_modifier_wgs84()
+                self.__soumettre_api()
+            elif str.upper(answers['choix'][0]) in ['V', 'D']:
                 ans = self.__confirmation()
                 if ans:
-                    if str.lower(answers['choix'][0]) == 'v':
-                        fiche.code_res = "VR"
+                    flag_continue = False
+                    if str.upper(answers['choix'][0]) == 'V':
+                        res = ControleRepriseService().validation_fiche(self.__fiche, True)
                     else:
-                        fiche.code_res = "DR"
-                    res = ControleRepriseService.modifier_fiche(fiche)
-                    if res:
-                        if len(pot) > 1:
-                            return ReprendreView(self.__curseur % (len(pot) - 1))
-                        else:
-                            return ReprendreView(0)
-                    else:
-                        print("Échec dans l'enregistrement des modifications.")
-                        return ReprendreView(self.__curseur)
-                else:
-                    return ReprendreView(self.__curseur)
-            elif str.lower(answers['choix'][0]) == 'p':
-                curseur = (self.__curseur - 1) % len(pot)
-                return ReprendreView(curseur)
-            elif str.lower(answers['choix'][0]) == 's':
-                curseur = (self.__curseur + 1) % len(pot)
-                return ReprendreView(curseur)
-            elif str.lower(answers['choix'][0]) == 'm':
-                return mp.MenuPrincipalView()
+                        res = ControleRepriseService().validation_fiche(self.__fiche, False)
+            elif str.upper(answers['choix'][0]) == 'Q':
+                flag_continue = False
+                res = False
             else:
-                return ReprendreView(self.__curseur)
-        else:
-            return mp.MenuPrincipalView()
+                raise ValueError
+        return res, self.__caller

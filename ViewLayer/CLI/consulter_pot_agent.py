@@ -24,6 +24,7 @@ class ConsulterPotView(AbstractView):
 
     def display_info(self):
         if len(self.pot) > 0:
+            self.__curseur = self.__curseur % len(self.pot)
             fiche = self.pot[self.__curseur]
             print(fiche)
         else:
@@ -45,13 +46,15 @@ class ConsulterPotView(AbstractView):
             elif 'c' in str.lower(answers['choix'][0]):
                 if fiche.code_res == "TC":
                     modal = ControlerView(self, fiche)
-                    modal.display_info()
-                    res, caller = modal.make_choice()
-                    if res:
-                        caller.pot.remove(fiche)
-                    return caller
                 elif fiche.code_res == "TR":
-                    return ReprendreView(self.__curseur)
+                    modal = ReprendreView(self, fiche)
+                else:
+                    return self
+                modal.display_info()
+                res, caller = modal.make_choice()
+                if res:
+                    caller.pot.remove(fiche)
+                return caller
             else:
                 return mp.MenuPrincipalView()
         else:

@@ -16,13 +16,19 @@ class ControleRepriseService(metaclass=Singleton):
 
     @staticmethod
     def validation_fiche(fiche: FicheAdresse, validation: bool) -> bool:
-        if validation:
-            fiche.code_res = "VC"
-        else:
-            fiche.code_res = "TR"
+        if fiche.code_res == "TC":
+            if validation:
+                fiche.code_res = "VC"
+            else:
+                fiche.code_res = "TR"
+        elif fiche.code_res == "TR":
+            if validation:
+                fiche.code_res = "VR"
+            else:
+                fiche.code_res = "ER"
         res = DAOFicheAdresse().modifier_fiche_adresse(fiche)
         if not res:
-            print("La sauvegarde du contrôle a échoué. Veuillez réessayer ultérieurement.")
+            print("La sauvegarde a échoué. Veuillez réessayer ultérieurement.")
         return res
 
     @staticmethod

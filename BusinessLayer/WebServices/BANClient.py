@@ -19,8 +19,10 @@ class BANClient(metaclass=Singleton):
     def __json_to_fa(json_data, fiche):
         coordonnees_gps = json_data["geometry"]["coordinates"]
         fiche.coords_wgs84 = tuple(coordonnees_gps)
-        adresse_api = Adresse(json_data["properties"]["housenumber"], json_data["properties"]["street"],
-                              json_data["properties"]["postcode"], json_data["properties"]["city"])
+        adresse_api = Adresse(json_data["properties"].setdefault("housenumber", ""),
+                              json_data["properties"].setdefault("street", ""),
+                              json_data["properties"].setdefault("postcode", ""),
+                              json_data["properties"].setdefault("city", ""))
         fiche.adresse_finale = adresse_api
         return fiche
 
