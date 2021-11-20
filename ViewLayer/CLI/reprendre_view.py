@@ -18,9 +18,6 @@ class ReprendreView(AbstractView):
         self.__oui_non = [
             {'type': 'list', 'name': 'choix', 'message': '', 'choices': ['Oui', 'Non']}]
 
-    def display_info(self):
-        pass
-
     def __choix_modifier_adresse(self):
         prompt_adresse = [{'type': 'input', 'name': 'numero', 'message': 'Numéro de voie :',
                            'default': self.__fiche.adresse_finale.numero},
