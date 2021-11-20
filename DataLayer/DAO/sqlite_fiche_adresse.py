@@ -132,7 +132,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             filters.append('identifiant_lot=' + str(criteria[4]))
         if criteria[5] is not None:
             if criteria[5] in ["TI", "TA", "TH", "TC", "TR", "DI", "ER", "VA", "VC", "VR"]:  # sécurité anti_injection
-                filters.append('code_resultat=' + criteria[5])
+                filters.append('code_resultat=' + '"' + criteria[5] + '"')
         request = "SELECT " + str(fields).strip('[]').replace("'", "") + " FROM fa"
         if len(filters) > 0:
             request = request + " WHERE " + str(filters).strip('[]').replace("'", "").replace(",", " AND")
