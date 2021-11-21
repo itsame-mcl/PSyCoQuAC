@@ -19,41 +19,35 @@ class GestionEquipeView(AbstractView):
                               'choices': ['O) Oui', 'N) Non']}]
 
     def make_choice(self):
-        answers = prompt(self.__questions)
-        if str.upper(answers['choix'][0]) == "V":
-            answers2 = prompt(self.__questions2)
-            return ConsulterPotView(int(answers2['id']))
-        elif str.upper(answers['choix'][0]) == "A":
-            succes = NouvelUtilisateurView().make_choice()
-            if not succes:
-                print("L'ajout de l'agent a échoué. Veuillez réessayer ultérieurement.")
-            answers3 = prompt(self.__questions3)
-            if 'o' in str.lower(answers3['choix']):
-                return GestionEquipeView()
+        continuer = True
+        while continuer:
+            answers = prompt(self.__questions)
+            if str.upper(answers['choix'][0]) == "Q":
+                continuer = False
             else:
-                return mp.MenuPrincipalView()
-        elif str.upper(answers['choix'][0]) == "S":
-            answers2 = prompt(self.__questions2)
-            succes = AgentService().supprimer_agent(answers2['id'])
-            if not succes:
-                print("La suppression de l'agent a échoué. Veuillez réessayer ultérieurement.")
-            answers3 = prompt(self.__questions3)
-            if 'o' in str.lower(answers3['choix']):
-                return GestionEquipeView()
-            else:
-                return mp.MenuPrincipalView()
-        elif str.upper(answers['choix'][0]) == "M":
-            answers2 = prompt(self.__questions2)
-            agent = AgentService().recuperer_agent(int(answers2['id']))
-            view = ModifierAgentView(agent)
-            view.display_info()
-            view.make_choice()
-            answers3 = prompt(self.__questions3)
-            if 'o' in str.lower(answers3['choix']):
-                return GestionEquipeView()
-            else:
-                return mp.MenuPrincipalView()
-        elif str.upper(answers['choix'][0]) == "D":
-            return DeleguerView()
-        else:
-            return mp.MenuPrincipalView()
+                if str.upper(answers['choix'][0]) == "V":
+                    answers2 = prompt(self.__questions2)
+                    return ConsulterPotView(int(answers2['id']))
+                elif str.upper(answers['choix'][0]) == "A":
+                    succes = NouvelUtilisateurView().make_choice()
+                    if not succes:
+                        print("L'ajout de l'agent a échoué. Veuillez réessayer ultérieurement.")
+                elif str.upper(answers['choix'][0]) == "S":
+                    answers2 = prompt(self.__questions2)
+                    succes = AgentService().supprimer_agent(answers2['id'])
+                    if not succes:
+                        print("La suppression de l'agent a échoué. Veuillez réessayer ultérieurement.")
+                elif str.upper(answers['choix'][0]) == "M":
+                    answers2 = prompt(self.__questions2)
+                    agent = AgentService().recuperer_agent(int(answers2['id']))
+                    view = ModifierAgentView(agent)
+                    view.display_info()
+                    view.make_choice()
+                elif str.upper(answers['choix'][0]) == "D":
+                    return DeleguerView()
+                answers3 = prompt(self.__questions3)
+                if 'o' in str.lower(answers3['choix']):
+                    continuer = True
+                else:
+                    continuer = False
+        return mp.MenuPrincipalView()
