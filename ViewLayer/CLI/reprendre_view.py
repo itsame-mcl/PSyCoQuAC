@@ -67,7 +67,7 @@ class ReprendreView(AbstractView):
         answer = prompt(prompt_conf)
         if str.upper(answer['choix'][0]) == 'O':
             return True
-        elif str.lower(answer['choix'][0]) == 'N':
+        elif str.upper(answer['choix'][0]) == 'N':
             return False
         else:
             raise ValueError
