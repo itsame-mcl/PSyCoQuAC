@@ -4,6 +4,7 @@ from BusinessLayer.LocalServices.IO.exportation_service import ExportationServic
 from BusinessLayer.LocalServices.TraitementFA.modele_service import ModeleService
 from BusinessLayer.LocalServices.Gestion.statistique_service import StatistiqueService
 from BusinessLayer.WebServices.BANClient import BANClient
+from ViewLayer.CLI.nouveau_modele_view import NouveauModeleView
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 import ViewLayer.CLI.menu as mp
@@ -26,20 +27,25 @@ class ImportExportView(AbstractView):
 
     def __importation(self):
         answers_import = prompt(self.__import)
-        modele = ModeleService().identifier_modele(answers_import['chemin'])
-        print(modele)
-        answers_modele = prompt(self.__validation_modele)
-        if str.upper(answers_modele['choix'][0]) == 'O':
-            lot, res = ImportationService().importer_lot(Session().agent.agent_id, answers_import['chemin'], modele)
-            if res:
-                print("Lot numéro " + str(lot) + " importé avec succès !")
-                self.__traitement_api(lot)
-        elif str.upper(answers_modele['choix'][0]) == 'N':
-            raise NotImplementedError
-        elif str.upper(answers_modele['choix'][0]) == 'Q':
-            pass
-        else:
-            raise ValueError
+        modele_a_valider = True
+        while modele_a_valider:
+            modele = ModeleService().identifier_modele(answers_import['chemin'])
+            print(modele)
+            answers_modele = prompt(self.__validation_modele)
+            if str.upper(answers_modele['choix'][0]) == 'O':
+                modele_a_valider = False
+                lot, res = ImportationService().importer_lot(Session().agent.agent_id, answers_import['chemin'], modele)
+                if res:
+                    print("Lot numéro " + str(lot) + " importé avec succès !")
+                    self.__traitement_api(lot)
+            elif str.upper(answers_modele['choix'][0]) == 'N':
+                res = NouveauModeleView(answers_import['chemin']).make_choice()
+                if not res:
+                    print("Erreur lors de la création du modèle.")
+            elif str.upper(answers_modele['choix'][0]) == 'Q':
+                modele_a_valider = False
+            else:
+                raise ValueError
 
     def __traitement_api(self, id_lot):
         answers_api = prompt(self.__appel_api)
