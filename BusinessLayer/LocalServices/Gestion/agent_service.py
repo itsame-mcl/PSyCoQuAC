@@ -26,49 +26,28 @@ class AgentService(metaclass=Singleton):
         return DAOAgent().changer_droits(agent_a_modifier)
 
     @staticmethod
-    def changer_identifiants(id_agent: int, ecraser_identifiants: bool = False,
-                             nouveau_nom_utilisateur: str = None, nouveau_mot_de_passe_en_clair: str = None,
-                             nom_utilisateur_actuel: str = None, mot_de_passe_actuel_en_clair: str = None) -> bool:
-        if ecraser_identifiants:
-            if nouveau_nom_utilisateur is not None:
-                if nouveau_mot_de_passe_en_clair is not None:
-                    return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur,
-                                                            nouveau_mot_de_passe_en_clair)
-                else:
-                    if mot_de_passe_actuel_en_clair is None:
-                        raise ValueError("Impossible de changer le nom d'utilisateur"
-                                             "sans connaître ou changer le mot de passe.")
-                    else:
-                        return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur,
-                                                                    mot_de_passe_actuel_en_clair)
-            elif nouveau_nom_utilisateur is None and nouveau_mot_de_passe_en_clair is not None:
-                nouveau_nom_utilisateur = DAOAgent().recuperer_nom_utilisateur(id_agent)
-                return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur,
-                                                        nouveau_mot_de_passe_en_clair)
-            else:
-                return False
+    def reinitialiser_identifiants(id_agent: int, nouveau_mot_de_passe_en_clair: str,
+                                   nouveau_nom_utilisateur: str = None) -> bool:
+        if nouveau_nom_utilisateur is None:
+            nouveau_nom_utilisateur = DAOAgent().recuperer_nom_utilisateur(id_agent)
+        res = DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur,
+                                               nouveau_mot_de_passe_en_clair)
+        return res
+
+    @staticmethod
+    def changer_identifiants(id_agent: int, nom_utilisateur_actuel: str, mot_de_passe_actuel_en_clair: str,
+                             nouveau_nom_utilisateur: str = None,
+                             nouveau_mot_de_passe_en_clair: str = None) -> bool:
+        validation_identifiants = DAOAgent().verifier_identifiants(id_agent, nom_utilisateur_actuel,
+                                                                   mot_de_passe_actuel_en_clair)
+        if validation_identifiants:
+            if nouveau_nom_utilisateur is None:
+                nouveau_nom_utilisateur = nom_utilisateur_actuel
+            if nouveau_mot_de_passe_en_clair is None:
+                nouveau_mot_de_passe_en_clair = mot_de_passe_actuel_en_clair
+            return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur, nouveau_mot_de_passe_en_clair)
         else:
-            if nom_utilisateur_actuel is not None and mot_de_passe_actuel_en_clair is not None:
-                continuer = DAOAgent().verifier_identifiants(id_agent, nom_utilisateur_actuel,
-                                                             mot_de_passe_actuel_en_clair)
-                if continuer:
-                    if nouveau_nom_utilisateur is not None:
-                        if nouveau_mot_de_passe_en_clair is not None:
-                            return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur,
-                                                                    nouveau_mot_de_passe_en_clair)
-                        else:
-                            return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur,
-                                                                    mot_de_passe_actuel_en_clair)
-                    else:
-                        if nouveau_mot_de_passe_en_clair is not None:
-                            return DAOAgent().modifier_identifiants(id_agent, nom_utilisateur_actuel,
-                                                                    nouveau_mot_de_passe_en_clair)
-                        else:
-                            return False
-                else:
-                    return False
-            else:
-                return False
+            return False
 
     @staticmethod
     def supprimer_agent(agent_a_supprimer: int) -> bool:
