@@ -99,14 +99,12 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def changer_droits(self, data: dict) -> bool:
-        data = self.__dao_to_sqlite(data)
-        data["est_superviseur"] = 1 - data["est_superviseur"]  # transforme 0 et 1 ou 1 en 0
+    def promouvoir_agent(self, agent_a_promouvoir: int) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
             curseur.execute("""
-            UPDATE agents SET est_superviseur=:est_superviseur WHERE identifiant_agent=:id_agent
-            """, data)
+            UPDATE agents SET est_superviseur=1, identifiant_superviseur=:id_agent WHERE identifiant_agent=:id_agent
+            """, {'id_agent': agent_a_promouvoir})
             DBConnexion().connexion.commit()
             curseur.close()
             return True

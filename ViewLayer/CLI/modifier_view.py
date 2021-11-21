@@ -1,4 +1,6 @@
 from PyInquirer import prompt
+
+from BusinessLayer.BusinessObjects.gestionnaire import Gestionnaire
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
@@ -16,20 +18,23 @@ class ModifierView(AbstractView):
             self.__modal = True
         self.__main_prompt = [{'type': 'list', 'name': 'choix',
                                'message': 'Quelle information souhaitez-vous modifier ?',
-                            'choices': ['P) Prénom', 'N) Nom']}]
+                               'choices': ['P) Prénom', 'N) Nom']}]
         if Session().droits:
             self.__main_prompt[0]['choices'].append("T) Quotité de travail")
         if not self.__modal:
             self.__main_prompt[0]['choices'].append("I) Identifiants (nom d'utilisateur/mot de passe)")
         if Session().droits and self.__modal:
-            self.__main_prompt[0]['choices'].append("R) Réinitialiser les identifiants (nom d'utilisateur/mot de passe)")
+            self.__main_prompt[0]['choices'].append(
+                "R) Réinitialiser les identifiants (nom d'utilisateur/mot de passe)")
+        if Session().droits and self.__modal and isinstance(self.__agent, Gestionnaire):
+            self.__main_prompt[0]['choices'].append("V) Promouvoir le gestionnaire en superviseur")
         self.__main_prompt[0]['choices'].append('Q) Retourner au menu principal')
         self.__continue_prompt = [{'type': 'list', 'name': 'choix', 'message': 'Souhaitez-vous modifier autre chose ?',
-                             'choices': ['O) Oui', 'N) Non']}]
+                                   'choices': ['O) Oui', 'N) Non']}]
 
     def display_info(self):
-        print('   Agent n°:' + str(self.__agent.agent_id) + '\nPrénom : ' + str(self.__agent.prenom) + 
-            '\nNom : ' + str(self.__agent.nom) + '\nQuotité de travail : ' + str(self.__agent.quotite))
+        print('   Agent n°:' + str(self.__agent.agent_id) + '\nPrénom : ' + str(self.__agent.prenom) +
+              '\nNom : ' + str(self.__agent.nom) + '\nQuotité de travail : ' + str(self.__agent.quotite))
 
     def make_choice(self):
         continuer = True
@@ -72,17 +77,19 @@ class ModifierView(AbstractView):
                                                                  answer['n_login'], answer['n_mdp'])
                 elif str.upper(answers0['choix'][0]) == "R":
                     prompt_reinit = [{'type': 'input', 'name': 'n_login',
-                                     'message': "Quel est le nouveau nom d'utilisateur "
-                                                "(laisser vide pour ne pas modifier) ?"},
-                                    {'type': 'input', 'name': 'n_mdp',
-                                     'message': "Quel est le nouveau mot de passe (obligatoire) ?"}]
+                                      'message': "Quel est le nouveau nom d'utilisateur "
+                                                 "(laisser vide pour ne pas modifier) ?"},
+                                     {'type': 'input', 'name': 'n_mdp',
+                                      'message': "Quel est le nouveau mot de passe (obligatoire) ?"}]
                     answer = prompt(prompt_reinit)
                     if answer['n_login'] == '':
                         answer['n_login'] = None
                     succes = AgentService().reinitialiser_identifiants(self.__agent.agent_id, answer['n_mdp'],
                                                                        answer['n_login'])
+                elif str.upper(answers0['choix'][0]) == "V":
+                    succes = AgentService().promouvoir_agent(self.__agent.agent_id)
                 else:
-                    succes = True # Clause ramasse-miette pour éviter un message d'erreur intempestif
+                    succes = True  # Clause ramasse-miette pour éviter un message d'erreur intempestif
                 if not succes:
                     print('La modification a échoué. Veuillez réessayer ultérieurement.')
                 answer_continuer = prompt(self.__continue_prompt)

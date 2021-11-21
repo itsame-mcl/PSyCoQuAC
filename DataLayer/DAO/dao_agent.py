@@ -52,8 +52,8 @@ class DAOAgent(metaclass=Singleton):
     def supprimer_agent(self, id_agent: int) -> bool:
         return self.__interface.supprimer_agent(id_agent)
 
-    def changer_droits(self, agent_a_modifier: Agent) -> bool:
-        return self.__interface.changer_droits(agent_a_modifier)
+    def promouvoir_agent(self, agent_a_promouvoir: int) -> bool:
+        return self.__interface.promouvoir_agent(agent_a_promouvoir)
 
     def connexion_agent(self, nom_utilisateur: str, mot_de_passe: str) -> Agent:
         mot_de_passe_sale_hashe = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe)

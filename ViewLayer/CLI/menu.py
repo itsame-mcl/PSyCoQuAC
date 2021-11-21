@@ -1,5 +1,4 @@
 from PyInquirer import prompt
-from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
 from ViewLayer.CLI.deconnexion_view import DeconnexionView

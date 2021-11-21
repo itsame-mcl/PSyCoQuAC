@@ -28,7 +28,7 @@ class InterfaceAgent(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def changer_droits(self, data: dict) -> bool:
+    def promouvoir_agent(self, agent_a_promouvoir: int) -> bool:
         raise NotImplementedError
 
     @abstractmethod

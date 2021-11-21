@@ -78,8 +78,7 @@ class AgentService(metaclass=Singleton):
 
     @staticmethod
     def promouvoir_agent(id_agent: int) -> bool:
-        agent = DAOAgent().recuperer_agent(id_agent)
-        return DAOAgent().changer_droits(agent)
+        return DAOAgent().promouvoir_agent(id_agent)
 
     @staticmethod
     def deleguer_agent(id_agent: List[int], id_delegue: int) -> bool:
