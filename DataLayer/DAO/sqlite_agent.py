@@ -147,6 +147,14 @@ class SQLiteAgent(InterfaceAgent):
         curseur.close()
         return nom_utilisateur == row['nom_utilisateur'] and mdp_sale_hashe == row['mot_de_passe']
 
+    def recuperer_quotite(self, id_agent: int) -> float:
+        curseur = DBConnexion().connexion.cursor()
+        curseur.execute("SELECT quotite FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
+        row = curseur.fetchone()
+        curseur.close()
+        data = float(row['quotite'])
+        return data
+
     def recuperer_nom_utilisateur(self, id_agent: int) -> str:
         curseur = DBConnexion().connexion.cursor()
         curseur.execute("SELECT nom_utilisateur FROM agents WHERE identifiant_agent=:id", {"id": id_agent})

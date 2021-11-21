@@ -72,6 +72,9 @@ class DAOAgent(metaclass=Singleton):
         res = self.__interface.verifier_identifiants(id_agent, nom_utilisateur, mdp_sale_hashe)
         return res
 
+    def recuperer_quotite(self, id_agent: int) -> float:
+        return self.__interface.recuperer_quotite(id_agent)
+
     def recuperer_nom_utilisateur(self, id_agent: int) -> str:
         return self.__interface.recuperer_nom_utilisateur(id_agent)
 

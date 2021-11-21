@@ -44,6 +44,10 @@ class InterfaceAgent(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def recuperer_quotite(self, id_agent: int) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
     def recuperer_nom_utilisateur(self, id_agent: int) -> str:
         raise NotImplementedError
 
