@@ -1,7 +1,7 @@
 from PyInquirer import prompt
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
-from ViewLayer.CLI.modifier_view import ModifierView
+from ViewLayer.CLI.modifier_agent_view import ModifierAgentView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
 from ViewLayer.CLI.session import Session
 import ViewLayer.CLI.menu as mp
@@ -45,7 +45,7 @@ class GestionEquipeView(AbstractView):
         elif '4' in answers['choix']:
             answers2 = prompt(self.__questions2)
             agent = AgentService().recuperer_agent(int(answers2['id']))
-            view = ModifierView(agent)
+            view = ModifierAgentView(agent)
             view.display_info()
             view.make_choice()
             answers3 = prompt(self.__questions3)

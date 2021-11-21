@@ -1,5 +1,4 @@
 from PyInquirer import prompt
-
 from BusinessLayer.BusinessObjects.gestionnaire import Gestionnaire
 from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
@@ -8,7 +7,7 @@ from BusinessLayer.BusinessObjects.agent import Agent
 import ViewLayer.CLI.menu as mp
 
 
-class ModifierView(AbstractView):
+class ModifierAgentView(AbstractView):
     def __init__(self, agent: Agent = None) -> None:
         if agent is None:
             self.__agent = Session().agent

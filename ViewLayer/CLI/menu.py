@@ -5,7 +5,7 @@ from ViewLayer.CLI.deconnexion_view import DeconnexionView
 from ViewLayer.CLI.deleguer_view import DeleguerView
 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
 from ViewLayer.CLI.import_export_view import ImportExportView
-from ViewLayer.CLI.modifier_view import ModifierView
+from ViewLayer.CLI.modifier_agent_view import ModifierAgentView
 from ViewLayer.CLI.repartir_view import RepartirView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
 import ViewLayer.CLI.start_view as start
@@ -42,7 +42,7 @@ class MenuPrincipalView(AbstractView):
             elif str.upper(answers['choix'][0]) == "R":
                 return ConsulterPotView(controle=False, reprise=True)
             elif str.upper(answers['choix'][0]) == "M":
-                return ModifierView()
+                return ModifierAgentView()
             elif str.upper(answers['choix'][0]) == "Q":
                 return DeconnexionView()
             elif str.upper(answers['choix'][0]) == "D":
