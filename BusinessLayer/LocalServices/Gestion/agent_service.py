@@ -1,5 +1,7 @@
 from BusinessLayer.BusinessObjects.agent import Agent
 import BusinessLayer.BusinessObjects.agent_factory as agent_factory
+from BusinessLayer.BusinessObjects.gestionnaire import Gestionnaire
+from BusinessLayer.BusinessObjects.superviseur import Superviseur
 from DataLayer.DAO.dao_agent import DAOAgent
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from utils.singleton import Singleton
@@ -69,22 +71,28 @@ class AgentService(metaclass=Singleton):
         return DAOAgent().recuperer_equipe(id_superviseur)
 
     @staticmethod
-    def ajout_agent_equipe(id_superviseur: int, id_agent: int) -> bool:
-        agent_a_modifier = DAOAgent().recuperer_agent(id_agent)
-        agent_a_modifier.superviseur_id = id_superviseur
-        return DAOAgent().modifier_agent(agent_a_modifier)
+    def recuperer_liste_delegues(id_superviseur: int) -> List[Gestionnaire]:
+        return DAOAgent().recuperer_liste_delegues(id_superviseur)
+
+    @staticmethod
+    def recuperer_liste_superviseurs() -> List[Superviseur]:
+        return DAOAgent().recuperer_liste_superviseurs()
 
     @staticmethod
     def promouvoir_agent(id_agent: int) -> bool:
         return DAOAgent().promouvoir_agent(id_agent)
 
     @staticmethod
-    def deleguer_agent(id_agent: List[int], id_delegue: int) -> bool:
+    def deleguer_agent(id_agent: int, id_delegue: int) -> bool:
         return DAOAgent().deleguer_agent(id_agent, id_delegue)
 
     @staticmethod
-    def deleguer_equipe(id_superviseur: int, id_delegue: int) -> bool:
-        return DAOAgent().deleguer_equipe(id_superviseur, id_delegue)
+    def transferer_agent(id_agent: int, id_nouveau_superviseur: int) -> bool:
+        return DAOAgent().transferer_agent(id_agent, id_nouveau_superviseur)
+
+    @staticmethod
+    def retroceder_agent(id_agent: int) -> bool:
+        return DAOAgent().retroceder_agent(id_agent)
 
     @staticmethod
     def recuperer_agent(id_agent: int) -> Agent:

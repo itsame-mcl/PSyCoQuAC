@@ -2,6 +2,8 @@ from typing import List
 import BusinessLayer.BusinessObjects.agent_factory as agent_factory
 import DataLayer.DAO.interface_factory as interface_factory
 from BusinessLayer.BusinessObjects.agent import Agent
+from BusinessLayer.BusinessObjects.gestionnaire import Gestionnaire
+from BusinessLayer.BusinessObjects.superviseur import Superviseur
 from utils.singleton import Singleton
 from hashlib import sha512
 
@@ -21,6 +23,14 @@ class DAOAgent(metaclass=Singleton):
         data = self.__interface.recuperer_agent(id_agent)
         return agent_factory.AgentFactory.from_dict(data)
 
+    def recuperer_liste_superviseurs(self) -> List[Superviseur]:
+        data = self.__interface.recuperer_liste_agents(0)
+        liste = list()
+        for row in data:
+            if row['est_superviseur']:
+                liste.append(agent_factory.AgentFactory.from_dict(row))
+        return liste
+
     def recuperer_equipe(self, id_superviseur: int) -> List[Agent]:
         data = self.__interface.recuperer_liste_agents(id_superviseur)
         equipe = list()
@@ -28,15 +38,22 @@ class DAOAgent(metaclass=Singleton):
             equipe.append(agent_factory.AgentFactory.from_dict(row))
         return equipe
 
-    def deleguer_agent(self, id_agent: List[int], id_delegue: int) -> bool:
-        return self.__interface.modifier_superviseur(list(id_agent), id_delegue)
-
-    def deleguer_equipe(self, id_superviseur: int, id_delegue: int) -> bool:
-        data = self.__interface.recuperer_liste_agents(id_superviseur)
+    def recuperer_liste_delegues(self, id_superviseur: int) -> List[Gestionnaire]:
+        data = self.__interface.recuperer_liste_agents(id_superviseur, True)
         equipe = list()
         for row in data:
-            equipe.append(row["identifiant_agent"])
-        return self.__interface.modifier_superviseur(equipe, id_delegue)
+            if not row['est_superviseur']:
+                equipe.append(agent_factory.AgentFactory.from_dict(row))
+        return equipe
+
+    def deleguer_agent(self, id_agent: int, id_delegue: int) -> bool:
+        return self.__interface.deleguer_agent(id_agent, id_delegue)
+
+    def retroceder_agent(self, id_agent: int) -> bool:
+        return self.__interface.retroceder_agent(id_agent)
+
+    def transferer_agent(self, id_agent: int, id_nouveau_superviseur: int) -> bool:
+        return self.__interface.transferer_agent(id_agent, id_nouveau_superviseur)
 
     def creer_agent(self, infos_agent: Agent, nom_utilisateur: str, mot_de_passe: str) -> bool:
         data = infos_agent.as_dict()

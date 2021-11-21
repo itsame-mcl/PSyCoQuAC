@@ -8,7 +8,7 @@ class InterfaceAgent(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def recuperer_liste_agents(self, id_superviseur: int) -> List[dict]:
+    def recuperer_liste_agents(self, id_superviseur: int, agents_delegues: bool = False) -> List[dict]:
         raise NotImplementedError
 
     @abstractmethod
@@ -24,7 +24,15 @@ class InterfaceAgent(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def modifier_superviseur(self, id_agents: List[int], id_superviseur: int) -> bool:
+    def deleguer_agent(self, id_agent: int, id_superviseur_delegue: int) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def retroceder_agent(self, id_agent: int) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def transferer_agent(self, id_agent: int, id_nouveau_superviseur: int) -> bool:
         raise NotImplementedError
 
     @abstractmethod

@@ -24,9 +24,13 @@ class SQLiteAgent(InterfaceAgent):
         data = self.__sqlite_to_dao(data)
         return data
 
-    def recuperer_liste_agents(self, id_superviseur: int) -> List[dict]:
+    def recuperer_liste_agents(self, id_superviseur: int, agents_delegues: bool = False) -> List[dict]:
         if id_superviseur > 0:
-            request = "SELECT * FROM agents WHERE identifiant_superviseur =:id_superviseur"
+            if not agents_delegues:
+                request = "SELECT * FROM agents WHERE identifiant_superviseur =:id_superviseur"
+            else:
+                request = """SELECT * FROM agents
+                WHERE identifiant_superviseur =:id_superviseur AND identifiant_delegue IS NOT NULL"""
         else:
             request = "SELECT * FROM agents"
         curseur = DBConnexion().connexion.cursor()
@@ -84,14 +88,51 @@ class SQLiteAgent(InterfaceAgent):
             print(e)
             return False
 
-    def modifier_superviseur(self, id_agents: List[int], id_superviseur: int) -> bool:
-        request = "UPDATE agents SET identifiant_superviseur=:id_superviseur WHERE identifiant_agent IN ({})".format(
-            ','.join(':{}'.format(i) for i in range(len(id_agents))))
-        params = {"id_superviseur": id_superviseur}
-        params.update({str(i): id_agent for i, id_agent in enumerate(id_agents)})
+    def deleguer_agent(self, id_agent: int, id_superviseur_delegue: int) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
-            curseur.execute(request, params)
+            curseur.execute("""SELECT identifiant_superviseur FROM agents
+            WHERE identifiant_agent=:identifiant_agent""", {'identifiant_agent': id_agent})
+            row = curseur.fetchone()
+            superviseur_actuel = row['identifiant_superviseur']
+            curseur.execute("""
+            UPDATE agents SET 
+            identifiant_superviseur=:identifiant_superviseur_delegue, identifiant_delegue=:superviseur_actuel
+            WHERE identifiant_agent=:identifiant_agent
+            """, {'identifiant_agent': id_agent, 'superviseur_actuel': superviseur_actuel,
+                  'identifiant_superviseur_delegue': id_superviseur_delegue})
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def retroceder_agent(self, id_agent: int) -> bool:
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("""SELECT identifiant_delegue FROM agents
+            WHERE identifiant_agent=:identifiant_agent""", {'identifiant_agent': id_agent})
+            row = curseur.fetchone()
+            superviseur_historique = row['identifiant_delegue']
+            curseur.execute("""
+            UPDATE agents SET 
+            identifiant_superviseur=:superviseur_historique, identifiant_delegue = NULL
+            WHERE identifiant_agent=:identifiant_agent
+            """, {'identifiant_agent': id_agent, 'superviseur_historique': superviseur_historique})
+            DBConnexion().connexion.commit()
+            curseur.close()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def transferer_agent(self, id_agent, id_nouveau_superviseur: int) -> bool:
+        try:
+            curseur = DBConnexion().connexion.cursor()
+            curseur.execute("""
+            UPDATE agents SET identifiant_superviseur=:id_nouveau_superviseur WHERE identifiant_agent=:id_agent
+            """, {'id_agent': id_agent, 'id_nouveau_superviseur': id_nouveau_superviseur})
             DBConnexion().connexion.commit()
             curseur.close()
             return True

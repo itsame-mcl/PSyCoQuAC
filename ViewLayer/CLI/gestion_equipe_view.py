@@ -55,7 +55,9 @@ class GestionEquipeView(AbstractView):
                     view.display_info()
                     view.make_choice()
                 elif answers['choix'] == "D":
-                    return DeleguerView()
+                    succes = DeleguerView().make_choice()
+                    if not succes:
+                        print("L'opération de délégation a échoué. Veuillez réessayer ultérieurement.")
                 answer_continue = prompt(self.__continue)
                 if answer_continue['choix'] == "O":
                     continuer = True
