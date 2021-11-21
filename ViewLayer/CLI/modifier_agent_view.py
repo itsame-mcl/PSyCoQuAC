@@ -60,11 +60,11 @@ class ModifierAgentView(AbstractView):
                     succes = AgentService().modifier_agent(self.__agent)
                 elif str.upper(answers0['choix'][0]) == "I":
                     prompt_chgmt = [{'type': 'input', 'name': 'login', 'message': "Quel est votre nom d'utilisateur ?"},
-                                    {'type': 'input', 'name': 'mdp', 'message': "Quel est votre mot de passe ?"},
+                                    {'type': 'password', 'name': 'mdp', 'message': "Quel est votre mot de passe ?"},
                                     {'type': 'input', 'name': 'n_login',
                                      'message': "Quel est votre nouveau nom d'utilisateur "
                                                 "(laisser vide pour ne pas modifier) ?"},
-                                    {'type': 'input', 'name': 'n_mdp',
+                                    {'type': 'password', 'name': 'n_mdp',
                                      'message': "Quel est votre nouveau mot de passe "
                                                 "(laisser vide pour ne pas modifier) ?"}]
                     answer = prompt(prompt_chgmt)
@@ -78,7 +78,7 @@ class ModifierAgentView(AbstractView):
                     prompt_reinit = [{'type': 'input', 'name': 'n_login',
                                       'message': "Quel est le nouveau nom d'utilisateur "
                                                  "(laisser vide pour ne pas modifier) ?"},
-                                     {'type': 'input', 'name': 'n_mdp',
+                                     {'type': 'password', 'name': 'n_mdp',
                                       'message': "Quel est le nouveau mot de passe (obligatoire) ?"}]
                     answer = prompt(prompt_reinit)
                     if answer['n_login'] == '':

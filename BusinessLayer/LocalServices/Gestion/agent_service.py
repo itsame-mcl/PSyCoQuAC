@@ -8,22 +8,17 @@ from typing import List
 
 class AgentService(metaclass=Singleton):
     @staticmethod
-    def creer_agent(est_superviseur: bool, quotite: float, id_superviseur: int, nom_utilisateur: str,
-                    mot_de_passe: str, prenom: str, nom: str) -> bool:
+    def creer_agent(est_superviseur: bool, quotite: float, nom_utilisateur: str,
+                    mot_de_passe: str, prenom: str, nom: str, id_superviseur: int = None) -> bool:
         data_agent = {'est_superviseur': est_superviseur, 'prenom': prenom, 'nom': nom, 'quotite': quotite,
-                      'id_superviseur': id_superviseur,
-                      'identifiant_agent': DAOAgent().recuperer_dernier_id_agent() + 1}
+                      'identifiant_superviseur': id_superviseur,
+                      'identifiant_agent' : DAOAgent().recuperer_dernier_id_agent() + 1}
         nouvel_agent = agent_factory.AgentFactory.from_dict(data_agent)
         return DAOAgent().creer_agent(nouvel_agent, nom_utilisateur, mot_de_passe)
 
     @staticmethod
     def modifier_agent(agent_a_modifier: Agent) -> bool:
         return DAOAgent().modifier_agent(agent_a_modifier)
-
-    @staticmethod
-    def changer_droits(id_agent: int) -> bool:
-        agent_a_modifier = DAOAgent().recuperer_agent(id_agent)
-        return DAOAgent().changer_droits(agent_a_modifier)
 
     @staticmethod
     def reinitialiser_identifiants(id_agent: int, nouveau_mot_de_passe_en_clair: str,

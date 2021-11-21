@@ -9,7 +9,7 @@ from BusinessLayer.BusinessObjects.agent import Agent
 class ConnexionView(AbstractView):
     def __init__(self) -> None:
         self.__questions = [{'type': 'input', 'name': 'nom_utilisateur', 'message': "Nom d'utilisateur"},
-                            {'type': 'input', 'name': 'mot_de_passe', 'message': 'Mot de passe :'}]
+                            {'type': 'password', 'name': 'mot_de_passe', 'message': 'Mot de passe :'}]
 
     def make_choice(self):
         answers = prompt(self.__questions)

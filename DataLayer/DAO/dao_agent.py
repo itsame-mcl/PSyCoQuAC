@@ -42,8 +42,6 @@ class DAOAgent(metaclass=Singleton):
         data = infos_agent.as_dict()
         data["nom_utilisateur"] = nom_utilisateur
         data["mot_de_passe"] = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe)
-        if data["est_superviseur"]:
-            data["identifiant_superviseur"] = 0
         return self.__interface.creer_agent(data)
 
     def modifier_agent(self, agent_a_modifier: Agent) -> bool:
