@@ -43,7 +43,7 @@ class SQLiteAgent(InterfaceAgent):
     def supprimer_agent(self, id_agent: int) -> bool:
         try:
             curseur = DBConnexion().connexion.cursor()
-            curseur.execute("DELETE FROM agents WHERE identifiant_agent=: id", {"id": id_agent})
+            curseur.execute("DELETE FROM agents WHERE identifiant_agent=:id", {"id": id_agent})
             DBConnexion().connexion.commit()
             curseur.close()
             return True

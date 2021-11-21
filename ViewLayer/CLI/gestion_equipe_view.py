@@ -5,6 +5,7 @@ from ViewLayer.CLI.deleguer_view import DeleguerView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
 from ViewLayer.CLI.modifier_agent_view import ModifierAgentView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
+from ViewLayer.CLI.session import Session
 import ViewLayer.CLI.menu as mp
 
 
@@ -13,37 +14,47 @@ class GestionEquipeView(AbstractView):
         self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Que voulez-vous faire ?',
                              'choices': ["V) Consulter le pot d'un agent", "A) Créer un nouvel agent",
                                          "S) Supprimer un agent", 'M) Modifier un agent',
-                                         "D) Déleguer l'équipe/un agent", 'Q) Retourner au menu principal']}]
-        self.__questions2 = [{'type': 'input', 'name': 'id', 'message': "Quel est l'identifiant de l'agent ?"}]
+                                         "D) Déleguer l'équipe/un agent", 'Q) Retourner au menu principal'],
+                             'filter': lambda val: str.upper(val)[0]}]
         self.__questions3 = [{'type': 'list', 'name': 'choix', 'message': 'Souhaitez-vous faire autre chose ?',
                               'choices': ['O) Oui', 'N) Non']}]
+
+    @staticmethod
+    def __prompt_agent() -> list:
+        equipe = AgentService().recuperer_equipe(Session().agent.agent_id)
+        choix_agent = [{'type': 'list', 'name': 'id', 'message': 'Choisissez un agent de votre équipe :',
+                               'choices': [], 'filter': lambda val: int(val.split()[0])}]
+        for agent in equipe:
+            choix_agent[0]['choices'].append(str(agent.agent_id) + " - " + str(agent.prenom) + " " +
+                                                    str(agent.nom))
+        return choix_agent
 
     def make_choice(self):
         continuer = True
         while continuer:
             answers = prompt(self.__questions)
-            if str.upper(answers['choix'][0]) == "Q":
+            if answers['choix'] == "Q":
                 continuer = False
             else:
-                if str.upper(answers['choix'][0]) == "V":
-                    answers2 = prompt(self.__questions2)
-                    return ConsulterPotView(int(answers2['id']))
-                elif str.upper(answers['choix'][0]) == "A":
+                if answers['choix'] == "V":
+                    id_agent = prompt(self.__prompt_agent())
+                    return ConsulterPotView(id_agent['id'])
+                elif answers['choix'] == "A":
                     succes = NouvelUtilisateurView().make_choice()
                     if not succes:
                         print("L'ajout de l'agent a échoué. Veuillez réessayer ultérieurement.")
-                elif str.upper(answers['choix'][0]) == "S":
-                    answers2 = prompt(self.__questions2)
-                    succes = AgentService().supprimer_agent(answers2['id'])
+                elif answers['choix'] == "S":
+                    id_agent = prompt(self.__prompt_agent())
+                    succes = AgentService().supprimer_agent(id_agent['id'])
                     if not succes:
                         print("La suppression de l'agent a échoué. Veuillez réessayer ultérieurement.")
-                elif str.upper(answers['choix'][0]) == "M":
-                    answers2 = prompt(self.__questions2)
-                    agent = AgentService().recuperer_agent(int(answers2['id']))
+                elif answers['choix'] == "M":
+                    id_agent = prompt(self.__prompt_agent())
+                    agent = AgentService().recuperer_agent(id_agent['id'])
                     view = ModifierAgentView(agent)
                     view.display_info()
                     view.make_choice()
-                elif str.upper(answers['choix'][0]) == "D":
+                elif answers['choix'] == "D":
                     return DeleguerView()
                 answers3 = prompt(self.__questions3)
                 if 'o' in str.lower(answers3['choix']):

@@ -51,7 +51,10 @@ class AgentService(metaclass=Singleton):
         for fiche in pot_agent:
             liste_id_pot.append(fiche.fiche_id)
         id_superviseur = DAOAgent().recuperer_id_superviseur(agent_a_supprimer)
-        res_reaffect = DAOFicheAdresse().affecter_fiches_adresse(id_superviseur, liste_id_pot)
+        if len(liste_id_pot) > 0:
+            res_reaffect = DAOFicheAdresse().affecter_fiches_adresse(id_superviseur, liste_id_pot)
+        else:
+            res_reaffect = True
         res_suppr = False
         if res_reaffect:
             res_suppr = DAOAgent().supprimer_agent(agent_a_supprimer)
