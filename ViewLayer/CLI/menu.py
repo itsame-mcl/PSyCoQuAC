@@ -31,10 +31,9 @@ class MenuPrincipalView(AbstractView):
             if Session().droits:
                 self.__questions[0]['choices'].insert(0, "I) Importer/Exporter des lots")
                 self.__questions[0]['choices'].insert(1, "F) Affecter des lots")
-                self.__questions[0]['choices'].insert(6, "T) Modifier le compte d'un agent")
-                self.__questions[0]['choices'].insert(7, "D) Déleguer votre équipe/un agent")
-                self.__questions[0]['choices'].insert(8, "U) Créer un nouvel utilisateur")
-                self.__questions[0]['choices'].insert(9, "G) Gérer l'équipe")
+                self.__questions[0]['choices'].insert(6, "D) Déleguer votre équipe/un agent")
+                self.__questions[0]['choices'].insert(7, "U) Créer un nouvel utilisateur")
+                self.__questions[0]['choices'].insert(8, "G) Gérer l'équipe")
             self.__questions[0]['choices'].append('Q) Se déconnecter')
             answers = prompt(self.__questions)
             if str.upper(answers['choix'][0]) == "P":
@@ -44,14 +43,9 @@ class MenuPrincipalView(AbstractView):
             elif str.upper(answers['choix'][0]) == "R":
                 return ConsulterPotView(controle=False, reprise=True)
             elif str.upper(answers['choix'][0]) == "M":
-                return ModifierView(Session().agent)
+                return ModifierView()
             elif str.upper(answers['choix'][0]) == "Q":
                 return DeconnexionView()
-            elif str.upper(answers['choix'][0]) == "T":
-                choix_agent = prompt([{'type': 'input', 'name': 'agent',
-                                       'message': "Quel est l'identifiant de l'agent ?"}])
-                agent = AgentService().recuperer_agent(choix_agent['agent'][0])
-                return ModifierView(agent)
             elif str.upper(answers['choix'][0]) == "D":
                 return DeleguerView()
             elif str.upper(answers['choix'][0]) == "U":

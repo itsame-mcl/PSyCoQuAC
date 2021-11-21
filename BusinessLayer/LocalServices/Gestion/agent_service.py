@@ -17,7 +17,7 @@ class AgentService(metaclass=Singleton):
         return DAOAgent().creer_agent(nouvel_agent, nom_utilisateur, mot_de_passe)
 
     @staticmethod
-    def modifier_agent(agent_a_modifier: dict) -> bool:
+    def modifier_agent(agent_a_modifier: Agent) -> bool:
         return DAOAgent().modifier_agent(agent_a_modifier)
 
     @staticmethod

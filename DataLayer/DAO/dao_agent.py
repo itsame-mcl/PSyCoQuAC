@@ -46,8 +46,8 @@ class DAOAgent(metaclass=Singleton):
             data["identifiant_superviseur"] = 0
         return self.__interface.creer_agent(data)
 
-    def modifier_agent(self, agent_a_modifier: dict) -> bool:
-        return self.__interface.modifier_agent(agent_a_modifier)
+    def modifier_agent(self, agent_a_modifier: Agent) -> bool:
+        return self.__interface.modifier_agent(agent_a_modifier.as_dict())
 
     def supprimer_agent(self, id_agent: int) -> bool:
         return self.__interface.supprimer_agent(id_agent)
