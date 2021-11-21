@@ -53,7 +53,7 @@ class BANClient(metaclass=Singleton):
         return score, fiche_a_traiter
 
     @staticmethod
-    def geocodage_par_lot(id_lot: int, seuil_score: float = 0.9, verbose=False) -> bool:
+    def geocodage_par_lot(id_lot: int, seuil_score: float = 0.8, verbose=False) -> bool:
         if verbose:
             print("Chargement du lot à traiter...")
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
