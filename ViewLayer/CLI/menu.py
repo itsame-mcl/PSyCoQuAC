@@ -2,7 +2,6 @@ from PyInquirer import prompt
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
 from ViewLayer.CLI.deconnexion_view import DeconnexionView
-from ViewLayer.CLI.deleguer_view import DeleguerView
 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
 from ViewLayer.CLI.import_export_view import ImportExportView
 from ViewLayer.CLI.modifier_agent_view import ModifierAgentView
@@ -19,8 +18,8 @@ class MenuPrincipalView(AbstractView):
             prenom = Session().agent.prenom
         self.__questions = [{'type': 'list', 'name': 'choix', 'message': 'Bonjour ' + prenom + ', que voulez-vous '
                                                                                                'faire ?',
-                             'choices': ['P) Consulter son pot', 'C) Contrôler des fiches', 'R) Reprendre des fiches',
-                                         'M) Modifier son compte']}]
+                             'choices': ['P) Consulter mon pot', 'C) Contrôler des fiches', 'R) Reprendre des fiches',
+                                         'M) Modifier mon compte']}]
 
     def make_choice(self):
         if Session().agent is None:
@@ -29,9 +28,8 @@ class MenuPrincipalView(AbstractView):
             if Session().droits:
                 self.__questions[0]['choices'].insert(0, "I) Importer/Exporter des lots")
                 self.__questions[0]['choices'].insert(1, "F) Affecter des lots")
-                self.__questions[0]['choices'].insert(6, "D) Déleguer votre équipe/un agent")
-                self.__questions[0]['choices'].insert(7, "G) Gérer l'équipe")
-            self.__questions[0]['choices'].append('Q) Se déconnecter')
+                self.__questions[0]['choices'].append("G) Gérer l'équipe et les agents")
+            self.__questions[0]['choices'].append('Q) Me déconnecter')
             answers = prompt(self.__questions)
             if str.upper(answers['choix'][0]) == "P":
                 return ConsulterPotView()
@@ -43,8 +41,6 @@ class MenuPrincipalView(AbstractView):
                 return ModifierAgentView()
             elif str.upper(answers['choix'][0]) == "Q":
                 return DeconnexionView()
-            elif str.upper(answers['choix'][0]) == "D":
-                return DeleguerView()
             elif str.upper(answers['choix'][0]) == "G":
                 return GestionEquipeView()
             elif str.upper(answers['choix'][0]) == "I":
