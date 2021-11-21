@@ -12,7 +12,7 @@ class AgentService(metaclass=Singleton):
                     mot_de_passe: str, prenom: str, nom: str, id_superviseur: int = None) -> bool:
         data_agent = {'est_superviseur': est_superviseur, 'prenom': prenom, 'nom': nom, 'quotite': quotite,
                       'identifiant_superviseur': id_superviseur,
-                      'identifiant_agent' : DAOAgent().recuperer_dernier_id_agent() + 1}
+                      'identifiant_agent': DAOAgent().recuperer_dernier_id_agent() + 1}
         nouvel_agent = agent_factory.AgentFactory.from_dict(data_agent)
         return DAOAgent().creer_agent(nouvel_agent, nom_utilisateur, mot_de_passe)
 
@@ -72,7 +72,7 @@ class AgentService(metaclass=Singleton):
     def ajout_agent_equipe(id_superviseur: int, id_agent: int) -> bool:
         agent_a_modifier = DAOAgent().recuperer_agent(id_agent)
         agent_a_modifier.superviseur_id = id_superviseur
-        return DAOAgent().modifier_agent(agent_a_modifier.as_dict())
+        return DAOAgent().modifier_agent(agent_a_modifier)
 
     @staticmethod
     def promouvoir_agent(id_agent: int) -> bool:

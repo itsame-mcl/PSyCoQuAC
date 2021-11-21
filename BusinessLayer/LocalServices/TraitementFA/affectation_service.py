@@ -1,5 +1,5 @@
-from random import *
-from typing import Dict, List
+from random import sample
+from typing import Dict, List, Tuple
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from DataLayer.DAO.dao_agent import DAOAgent
@@ -7,7 +7,6 @@ from utils.singleton import Singleton
 
 
 class AffectationService(metaclass=Singleton):
-
     @staticmethod
     def proposer_repartition(id_lot: int, id_agents: List[int],
                              poids_controle: float = 0.01, poids_reprise: float = 0.01):
@@ -42,7 +41,7 @@ class AffectationService(metaclass=Singleton):
                 if part_charge >= charge_par_agent[str(agent)]['actuelle']:
                     nouvelle_charge = part_charge - charge_par_agent[str(agent)]['actuelle']
                     base_charge -= part_charge
-                    proposition_de_repartition[str(agent)]['reprise'] = round(nouvelle_charge/poids_reprise)
+                    proposition_de_repartition[str(agent)]['reprise'] = round(nouvelle_charge / poids_reprise)
                 else:
                     # Si un agent est déjà très surchargé, on ne lui affecte pas de nouvelle charge
                     base_charge -= charge_par_agent[str(agent)]['actuelle']
@@ -51,19 +50,19 @@ class AffectationService(metaclass=Singleton):
             # Si des fiches sont éligibles au contrôle
             quotite_restante = 0
             for agent in id_agents:
-                quotite_restante += max(charge_par_agent[str(agent)]['quotite'] - \
-                                    charge_par_agent[str(agent)]['actuelle'] - \
-                                    proposition_de_repartition[str(agent)]['reprise'] * poids_reprise, 0)
+                quotite_restante += max(charge_par_agent[str(agent)]['quotite'] -
+                                        charge_par_agent[str(agent)]['actuelle'] -
+                                        proposition_de_repartition[str(agent)]['reprise'] * poids_reprise, 0)
             if quotite_restante > 0:
                 # Et si il reste de la charge disponible après affectation des fiches en reprise
-                fiches_controlables = round(quotite_restante/poids_controle)
+                fiches_controlables = round(quotite_restante / poids_controle)
                 if controle_lot > fiches_controlables:
                     # Si il y'a plus de fiches à contrôler que de fiches contrôlables, on sature les quotités
                     for agent in id_agents:
-                        capacite_restante = charge_par_agent[str(agent)]['quotite'] -\
-                                            charge_par_agent[str(agent)]['actuelle'] -\
+                        capacite_restante = charge_par_agent[str(agent)]['quotite'] - \
+                                            charge_par_agent[str(agent)]['actuelle'] - \
                                             proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
-                        fiches_a_controler = round(capacite_restante/poids_controle)
+                        fiches_a_controler = round(capacite_restante / poids_controle)
                         if fiches_a_controler > 0:
                             proposition_de_repartition[str(agent)]['controle'] = fiches_a_controler
                 else:
@@ -75,65 +74,48 @@ class AffectationService(metaclass=Singleton):
                         part_charge = part_quotite * base_charge
                         if part_charge >= (charge_par_agent[str(agent)]['actuelle'] +
                                            proposition_de_repartition[str(agent)]['reprise'] * poids_reprise):
-                            nouvelle_charge = part_charge - charge_par_agent[str(agent)]['actuelle'] -\
+                            nouvelle_charge = part_charge - charge_par_agent[str(agent)]['actuelle'] - \
                                               proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
                             base_charge -= part_charge
                             proposition_de_repartition[str(agent)]['controle'] = round(nouvelle_charge / poids_controle)
                         else:
                             # Si un agent est déjà très surchargé, on ne lui affecte pas de nouvelle charge
-                            base_charge -= charge_par_agent[str(agent)]['actuelle'] +\
+                            base_charge -= charge_par_agent[str(agent)]['actuelle'] + \
                                            proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
                         base_quotite -= charge_par_agent[str(agent)]['quotite']
         # A la fin du calcul, on retourne la répartition proposée
         return proposition_de_repartition
 
     @staticmethod
-    def echantilloner_fiches(fiches_a_controler: List[FicheAdresse], taille_max_travail: int) -> List[FicheAdresse]:
-        n = len(fiches_a_controler)
-        liste = [i for i in range(n)]
-        liste_aleatoire = sample(liste,
-                                 taille_max_travail)  # Contruction d'une liste aléatoire d'entier compris entre 0 et
-        # n-1 de taille nb_fiche_à_controler
-        liste_echantillonne = []
-        for i in range(taille_max_travail):
-            liste_echantillonne.append(fiches_a_controler[liste_aleatoire[i]])
-        return liste_echantillonne
+    def echantilloner_fiches(lot_fiches: List[FicheAdresse], taille_echantillon: int) ->\
+            Tuple[List[FicheAdresse], List[FicheAdresse]]:
+        echantillon_tc = sample(lot_fiches, taille_echantillon)
+        for fiche in lot_fiches:
+            if fiche in echantillon_tc:
+                fiche.code_res = "TC"
+            else:
+                fiche.code_res = "VA"
+        return [fiche for fiche in lot_fiches if fiche.code_res == "TC"],\
+               [fiche for fiche in lot_fiches if fiche.code_res == "VA"]
 
-    def repartition(self, id_superviseur: int, fiches_a_controler: List[FicheAdresse], taille_max_travail: int,
-                    fiches_a_reprendre: List[FicheAdresse]) -> Dict:
-        liste_echantillonne = self.echantilloner_fiches(fiches_a_controler, taille_max_travail)
-        fiches_a_repartir = fiches_a_reprendre + liste_echantillonne
-        repartition = {}  # repartition est un dictionnaire, avec comme clés les agents_id et comme valeurs les
-        # fiches_id
-        liste_agents = DAOAgent().recuperer_equipe(id_superviseur)
-        for i in range(
-                len(fiches_a_repartir)):  # Pour chaque fiche à répartir, on détermine l'agent qui va s'occuper de
-            # cette fiche
-            fiche_a_repartir = fiches_a_repartir[i]
-            id_fiche_a_repartir = fiche_a_repartir.agent_id
-            dict_pots = {}
-            for agent in liste_agents:  # On crée un dictionnaire contenant le nombre de fiches dans le lot de chaque
-                # agent
-                pot = DAOFicheAdresse().recuperer_pot(agent.agent_id)
-                taille_pot = len(pot)
-                dict_pots[agent.agent_id] = taille_pot
-            mini = float("inf")
-            agent_choisi = 0
-            for (k,
-                 val) in dict_pots.items():  # On récupère l'agent qui a le moins de fiches pour lui en ajouter en
-                # priorité
-                if val < mini:
-                    mini = val
-                    agent_choisi = k
-            DAOFicheAdresse().affecter_fiches_adresse(agent_choisi, [
-                id_fiche_a_repartir])  # On affecte la fiche à l'agent choisi
-            repartition[agent_choisi] = id_fiche_a_repartir
-        return repartition
-
-    @staticmethod
-    def appliquer_repartition(repartition: Dict) -> bool:
+    def appliquer_repartition(self, id_lot: int, repartition: Dict) -> bool:
+        lot = DAOFicheAdresse().recuperer_lot(id_lot)
+        taille_echantillon_controle = sum([item['controle'] for item in repartition.values()])
+        lot_a_echantillonner = [fiche for fiche in lot if fiche.code_res == "TH"]
+        lot_tc, lot_va = self.echantilloner_fiches(lot_a_echantillonner, taille_echantillon_controle)
+        lot_tr = [fiche for fiche in lot if fiche.code_res == "TR"]
         res = True
-        for agent in repartition.keys():
-            res_agent = DAOFicheAdresse().affecter_fiches_adresse(agent, repartition[agent])  # On affecte les fiches
-            res = res * res_agent
+        for id_agent, repartition_agent in repartition.items():
+            fiches_agent = lot_tr[:repartition_agent['reprise']]
+            fiches_agent.extend(lot_tc[:repartition_agent['controle']])
+            for fiche in fiches_agent:
+                fiche.agent_id = int(id_agent)
+                update = DAOFicheAdresse().modifier_fiche_adresse(fiche)
+                res = res * update
+            lot_tr = lot_tr[repartition_agent['reprise']:]
+            lot_tc = lot_tc[repartition_agent['controle']:]
+        for fiche in lot_va:
+            fiche.agent_id = fiche.agent_id * -1
+            update = DAOFicheAdresse().modifier_fiche_adresse(fiche)
+            res = res * update
         return res

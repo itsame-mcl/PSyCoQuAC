@@ -17,16 +17,16 @@ class GestionEquipeView(AbstractView):
                                          "D) Déleguer l'équipe/un agent", 'Q) Retourner au menu principal'],
                              'filter': lambda val: str.upper(val)[0]}]
         self.__continue = [{'type': 'list', 'name': 'choix', 'message': 'Souhaitez-vous faire autre chose ?',
-                              'choices': ['O) Oui', 'N) Non'], 'filter': lambda val: str.upper(val)[0]}]
+                            'choices': ['O) Oui', 'N) Non'], 'filter': lambda val: str.upper(val)[0]}]
 
     @staticmethod
     def __prompt_agent() -> list:
         equipe = AgentService().recuperer_equipe(Session().agent.agent_id)
         choix_agent = [{'type': 'list', 'name': 'id', 'message': 'Choisissez un agent de votre équipe :',
-                               'choices': [], 'filter': lambda val: int(val.split()[0])}]
+                        'choices': [], 'filter': lambda val: int(val.split()[0])}]
         for agent in equipe:
             choix_agent[0]['choices'].append(str(agent.agent_id) + " - " + str(agent.prenom) + " " +
-                                                    str(agent.nom))
+                                             str(agent.nom))
         return choix_agent
 
     def make_choice(self):
