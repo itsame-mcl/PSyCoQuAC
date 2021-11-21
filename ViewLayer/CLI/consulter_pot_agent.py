@@ -8,7 +8,8 @@ import ViewLayer.CLI.menu as mp
 
 
 class ConsulterPotView(AbstractView):
-    def __init__(self, id_agent: int = None, controle: bool = False, reprise: bool = False, curseur: int = 0) -> None:
+    def __init__(self, id_agent: int = None, controle: bool = False, reprise: bool = False, curseur: int = 0,
+                 caller: AbstractView = None) -> None:
         if id_agent is None:
             self.__id_agent = Session().agent.agent_id
         else:
@@ -20,6 +21,10 @@ class ConsulterPotView(AbstractView):
             self.__delete_on_commit = False
             self.__pot = ControleRepriseService().consulter_pot(self.__id_agent)
         self.__curseur = curseur
+        if caller is not None:
+            self.__caller = caller
+        else:
+            self.__caller = mp.MenuPrincipalView()
 
     def display_info(self):
         if len(self.__pot) > 0:
@@ -65,8 +70,8 @@ class ConsulterPotView(AbstractView):
                         self.__pot[self.__pot.index(fiche)] = nouv_fiche
                 return self
             elif str.upper(answers['choix'][0]) == "Q":
-                return mp.MenuPrincipalView()
+                return self.__caller
             else:
                 raise ValueError
         else:
-            return mp.MenuPrincipalView()
+            return self.__caller

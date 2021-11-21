@@ -16,8 +16,8 @@ class GestionEquipeView(AbstractView):
                                          "S) Supprimer un agent", 'M) Modifier un agent',
                                          "D) Déleguer l'équipe/un agent", 'Q) Retourner au menu principal'],
                              'filter': lambda val: str.upper(val)[0]}]
-        self.__questions3 = [{'type': 'list', 'name': 'choix', 'message': 'Souhaitez-vous faire autre chose ?',
-                              'choices': ['O) Oui', 'N) Non']}]
+        self.__continue = [{'type': 'list', 'name': 'choix', 'message': 'Souhaitez-vous faire autre chose ?',
+                              'choices': ['O) Oui', 'N) Non'], 'filter': lambda val: str.upper(val)[0]}]
 
     @staticmethod
     def __prompt_agent() -> list:
@@ -38,7 +38,7 @@ class GestionEquipeView(AbstractView):
             else:
                 if answers['choix'] == "V":
                     id_agent = prompt(self.__prompt_agent())
-                    return ConsulterPotView(id_agent['id'])
+                    return ConsulterPotView(id_agent['id'], caller=self)
                 elif answers['choix'] == "A":
                     succes = NouvelUtilisateurView().make_choice()
                     if not succes:
@@ -56,8 +56,8 @@ class GestionEquipeView(AbstractView):
                     view.make_choice()
                 elif answers['choix'] == "D":
                     return DeleguerView()
-                answers3 = prompt(self.__questions3)
-                if 'o' in str.lower(answers3['choix']):
+                answer_continue = prompt(self.__continue)
+                if answer_continue['choix'] == "O":
                     continuer = True
                 else:
                     continuer = False
