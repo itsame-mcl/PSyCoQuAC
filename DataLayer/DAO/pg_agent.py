@@ -7,25 +7,22 @@ class PGAgent(InterfaceAgent):
     def recuperer_agent(self, id_agent: int) -> dict:
         with DBConnexion().connexion.cursor() as curseur:
             row = curseur.execute("SELECT * FROM agents WHERE identifiant_agent=(%s)", (id_agent,)).fetchone()
-        data = dict(zip(row.keys(), row))
-        return data
+        return row
 
     def recuperer_liste_agents(self, id_superviseur: int, agents_delegues: bool = False) -> List[dict]:
         if id_superviseur > 0:
+            params = (id_superviseur,)
             if not agents_delegues:
                 request = "SELECT * FROM agents WHERE identifiant_superviseur =(%s)"
             else:
                 request = """SELECT * FROM agents
                 WHERE identifiant_superviseur =(%s) AND identifiant_delegue IS NOT NULL"""
         else:
+            params = ()
             request = "SELECT * FROM agents"
         with DBConnexion().connexion.cursor() as curseur:
-            rows = curseur.execute(request, (id_superviseur,)).fetchall()
-        answer = list()
-        for row in rows:
-            data = dict(zip(row.keys(), row))
-            answer.append(data)
-        return answer
+            rows = curseur.execute(request, params).fetchall()
+        return rows
 
     def supprimer_agent(self, id_agent: int) -> bool:
         try:
@@ -122,11 +119,7 @@ class PGAgent(InterfaceAgent):
         with DBConnexion().connexion.cursor() as curseur:
             row = curseur.execute("SELECT * FROM agents WHERE nom_utilisateur=(%s) AND mot_de_passe=(%s)",
                                   (nom_utilisateur, mdp_sale_hashe)).fetchone()
-        if row is not None:
-            data = dict(zip(row.keys(), row))
-        else:
-            data = None
-        return data
+        return row
 
     def modifier_identifiants(self, id_agent: int, nom_utilisateur: str, mdp_sale_hashe: str) -> bool:
         try:
@@ -149,7 +142,7 @@ class PGAgent(InterfaceAgent):
     def recuperer_quotite(self, id_agent: int) -> float:
         with DBConnexion().connexion.cursor() as curseur:
             row = curseur.execute("SELECT quotite FROM agents WHERE identifiant_agent=(%s)", (id_agent,)).fetchone()
-        data = float(row['quotite'])
+        data = row['quotite']
         return data
 
     def recuperer_nom_utilisateur(self, id_agent: int) -> str:
@@ -157,7 +150,7 @@ class PGAgent(InterfaceAgent):
             row = curseur.execute("SELECT nom_utilisateur FROM agents WHERE identifiant_agent=(%s)",
                                   (id_agent,)).fetchone()
         curseur.close()
-        data = str(row['nom_utilisateur'])
+        data = row['nom_utilisateur']
         return data
 
     def recuperer_dernier_id_agent(self) -> int:
@@ -173,5 +166,5 @@ class PGAgent(InterfaceAgent):
         with DBConnexion().connexion.cursor() as curseur:
             row = curseur.execute("SELECT identifiant_superviseur FROM agents WHERE identifiant_agent=(%s)",
                                   (id_agent,)).fetchone()
-        data = int(row['identifiant_superviseur'])
+        data = row['identifiant_superviseur']
         return data
