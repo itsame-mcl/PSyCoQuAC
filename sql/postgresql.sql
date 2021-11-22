@@ -39,13 +39,13 @@ CREATE TABLE IF NOT EXISTS modeles (
     identifiant_modele SERIAL PRIMARY KEY,
     nom_modele VARCHAR(50) NOT NULL,
     regex_nom_fichier VARCHAR(255) NOT NULL,
-    position_champ_numero SMALLINT NOT NULL,
-    position_champ_voie SMALLINT NOT NULL,
-    position_champ_code_postal SMALLINT NOT NULL,
-    position_champ_ville SMALLINT NOT NULL,
+    position_champ_numero SMALLINT[] NOT NULL,
+    position_champ_voie SMALLINT[] NOT NULL,
+    position_champ_code_postal SMALLINT[] NOT NULL,
+    position_champ_ville SMALLINT[] NOT NULL,
     position_champs_supplementaires TEXT[][]
 );
 
 INSERT INTO modeles (nom_modele, regex_nom_fichier, position_champ_numero,
                      position_champ_voie, position_champ_code_postal, position_champ_ville)
-VALUES ('Modèle par défaut','.*',0,1,2,3);
+VALUES ('Modèle par défaut','.*','{0}','{1}','{2}','{3}');
