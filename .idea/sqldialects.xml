@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/DataLayer/DAO/sqlite_agent.py" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/DataLayer/DAO/sqlite_fiche_adresse.py" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/DataLayer/DAO/sqlite_modele.py" dialect="SQLite" />
+    <file url="file://$PROJECT_DIR$/sql/postgresql.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/sql/sqlite.sql" dialect="SQLite" />
   </component>
 </project>
