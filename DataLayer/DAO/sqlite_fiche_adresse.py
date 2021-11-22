@@ -71,6 +71,13 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
+    def creer_multiple_fiche_adresse(self, data: List[dict]) -> bool:
+        res = True
+        for line in data:
+            new_res = self.creer_fiche_adresse(line)
+            res = res * new_res
+        return res
+
     def modifier_fiche_adresse(self, data: dict) -> bool:
         data = self.__dao_to_sqlite(data)
         try:

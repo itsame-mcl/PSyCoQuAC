@@ -71,6 +71,25 @@ class PGFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
+    def creer_multiple_fiche_adresse(self, data: List[dict]) -> bool:
+        data_pg = [self.__dao_to_pg(item) for item in data]
+        copy_list = [[data['identifiant_pot'], data['identifiant_lot'], data['code_resultat'], data['date_importation'],
+                      data['date_dernier_traitement'], data['initial_numero'], data['initial_voie'],
+                      data['initial_code_postal'], data['initial_ville'], data['final_numero'], data['final_voie'],
+                      data['final_code_postal'], data['final_ville'], data['coordonnees_wgs84'],
+                      data['champs_supplementaires']] for data in data_pg]
+        try:
+            with DBConnexion().connexion.cursor().copy("""COPY fa(identifiant_pot, identifiant_lot, code_resultat,
+            date_importation, date_dernier_traitement, initial_numero, initial_voie, initial_code_postal, initial_ville,
+            final_numero, final_voie, final_code_postal, final_ville,
+            coordonnees_wgs84, champs_supplementaires) FROM STDIN""") as curseur:
+                for line in copy_list:
+                    curseur.write_row(line)
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
     def modifier_fiche_adresse(self, data: dict) -> bool:
         data = self.__dao_to_pg(data)
         try:

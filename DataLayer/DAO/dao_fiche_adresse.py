@@ -34,6 +34,11 @@ class DAOFicheAdresse(metaclass=Singleton):
         res = self.__interface.creer_fiche_adresse(fa.as_dict())
         return res
 
+    def creer_multiple_fiche_adresse(self, liste_fa: List[FicheAdresse]) -> bool:
+        liste_dict = [fa.as_dict() for fa in liste_fa]
+        res = self.__interface.creer_multiple_fiche_adresse(liste_dict)
+        return res
+
     def modifier_fiche_adresse(self, fa: FicheAdresse) -> bool:
         res = self.__interface.modifier_fiche_adresse(fa.as_dict())
         return res

@@ -17,6 +17,10 @@ class InterfaceFicheAdresse(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def creer_multiple_fiche_adresse(self, data: List[dict]) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
     def modifier_fiche_adresse(self, data: dict) -> bool:
         raise NotImplementedError
 

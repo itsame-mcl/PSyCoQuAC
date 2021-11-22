@@ -21,7 +21,6 @@ class ImportationService(metaclass=Singleton):
                 fa.code_res = "TA"
             else:
                 fa.code_res = "DI"
-            new_res = DAOFicheAdresse().creer_fiche_adresse(fa)
-            res = res * new_res
+        res = DAOFicheAdresse().creer_multiple_fiche_adresse(liste_fa)
         DAOFicheAdresse().incrementer_id_lot()
         return id_lot, res
