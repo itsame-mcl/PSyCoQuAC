@@ -33,9 +33,9 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         return data
 
     def recuperer_liste_fiches_adresse(self, id_agent: int, id_lot: int) -> List[dict]:
-        if id_agent > 0 and id_lot < 0:
+        if id_agent > 0 > id_lot:
             request = "SELECT * FROM fa WHERE identifiant_pot=:id_agent"
-        elif id_agent < 0 and id_lot > 0:
+        elif id_agent < 0 < id_lot:
             request = "SELECT * FROM fa WHERE identifiant_lot=:id_lot"
         elif id_agent > 0 and id_lot > 0:
             request = "SELECT * FROM fa WHERE identifiant_pot=:id_agent AND identifiant_lot=:id_lot"
@@ -117,28 +117,7 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             return False
 
     def obtenir_statistiques(self, criteria: list) -> List[tuple]:
-        fields = list()
-        filters = list()
-        if criteria[0]:
-            fields.append('identifiant_pot')
-        if criteria[1]:
-            fields.append('identifiant_lot')
-        if criteria[2]:
-            fields.append('code_resultat')
-        fields.append("COUNT(identifiant_fa)")
-        if criteria[3] is not None:
-            filters.append('identifiant_pot=' + str(criteria[3]))
-        if criteria[4] is not None:
-            filters.append('identifiant_lot=' + str(criteria[4]))
-        if criteria[5] is not None:
-            if criteria[5] in ["TI", "TA", "TH", "TC", "TR", "DI", "ER", "VA", "VC", "VR"]:  # sécurité anti_injection
-                filters.append('code_resultat=' + '"' + criteria[5] + '"')
-        request = "SELECT " + str(fields).strip('[]').replace("'", "") + " FROM fa"
-        if len(filters) > 0:
-            request = request + " WHERE " + str(filters).strip('[]').replace("'", "").replace(",", " AND")
-        fields.remove("COUNT(identifiant_fa)")
-        if len(fields) > 0:
-            request = request + " GROUP BY " + str(fields).strip('[]').replace("'", "")
+        request = self._obtenir_statistiques_request_helper(criteria)
         curseur = DBConnexion().connexion.cursor()
         curseur.execute(request)
         rows = curseur.fetchall()

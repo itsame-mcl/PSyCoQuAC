@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS fa (
     final_voie VARCHAR(100),
     final_code_postal VARCHAR(10),
     final_ville VARCHAR(100),
-    coordonnees_wgs84 POINT,
-    champs_supplementaires TEXT[][]
+    coordonnees_wgs84 float8[],
+    champs_supplementaires TEXT[]
 );
 
 DROP SEQUENCE IF EXISTS identifiant_lot_seq;
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS agents;
 CREATE TABLE IF NOT EXISTS agents (
     identifiant_agent SERIAL PRIMARY KEY,
     est_superviseur BOOLEAN NOT NULL,
-    quotite DECIMAL NOT NULL,
+    quotite float8 NOT NULL,
     identifiant_superviseur INTEGER,
     identifiant_delegue INTEGER,
     nom_utilisateur VARCHAR(64) UNIQUE NOT NULL,
