@@ -8,6 +8,7 @@ from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from utils.singleton import Singleton
+from utils.progress_bar import printProgressBar
 
 
 class BANClient(metaclass=Singleton):
@@ -101,7 +102,9 @@ class BANClient(metaclass=Singleton):
                     else:
                         fiches_a_traiter[index].code_res = "TH"
                     DAOFicheAdresse().modifier_fiche_adresse(fiches_a_traiter[index])
-                    print(str(round(index * 100 / len(fiches_a_traiter), 1)) + " % terminé", end="\r")
+                    if verbose:
+                        printProgressBar(index, len(fiches_a_traiter),
+                                         prefix='Progression :', suffix='terminé', length=50)
             if verbose:
                 print("Traitement du lot terminé avec succès !")
             res = True

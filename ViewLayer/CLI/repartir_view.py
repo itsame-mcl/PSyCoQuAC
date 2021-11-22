@@ -59,7 +59,8 @@ class RepartirView(AbstractView):
                     choix_validation = prompt(prompt_validation)
                     if choix_validation['choix'] == "V":
                         continuer = False
-                        succes = AffectationService().appliquer_repartition(lot_selectionne, proposition_repartition)
+                        succes = AffectationService().appliquer_repartition(lot_selectionne,
+                                                                            proposition_repartition, True)
                         if not succes:
                             print("Une erreur est survenue dans l'application de la répartition.")
                     elif choix_validation['choix'] == "M":
