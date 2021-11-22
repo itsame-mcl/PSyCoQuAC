@@ -1,5 +1,4 @@
 import os
-import dotenv
 import DataLayer.DAO.sqlite_connexion as slcx
 import DataLayer.DAO.sqlite_fiche_adresse as slfa
 import DataLayer.DAO.sqlite_modele as slmo
@@ -11,8 +10,7 @@ class InterfaceFactory:
 
     @staticmethod
     def get_interface(type_dao: str):
-        dotenv.load_dotenv(override=True)
-        if os.environ["ENGINE"] == "SQLite":
+        if os.environ["PSYCOQUAC_ENGINE"] == "SQLite":
             if type_dao == "Connexion":
                 return slcx.SQLiteConnexion()
             elif type_dao == "FicheAdresse":
@@ -23,7 +21,7 @@ class InterfaceFactory:
                 return slag.SQLiteAgent()
             else:
                 raise NotImplementedError
-        elif os.environ["ENGINE"] == "PostgreSQL":
+        elif os.environ["PSYCOQUAC_ENGINE"] == "PostgreSQL":
             if type_dao == "Connexion":
                 return pgcx.PGConnexion()
             else:
