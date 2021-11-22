@@ -57,6 +57,8 @@ class DAOAgent(metaclass=Singleton):
 
     def creer_agent(self, infos_agent: Agent, nom_utilisateur: str, mot_de_passe: str) -> bool:
         data = infos_agent.as_dict()
+        if data['est_superviseur'] and data['identifiant_superviseur'] is None:
+            data['identifiant_superviseur'] = self.__interface.recuperer_dernier_id_agent() + 1
         data["nom_utilisateur"] = nom_utilisateur
         data["mot_de_passe"] = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe)
         return self.__interface.creer_agent(data)

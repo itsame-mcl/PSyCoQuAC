@@ -7,11 +7,9 @@ class PGConnexion(InterfaceConnexion):
 
     def ouvrir_connexion(self, host, port, database, user, password):
         try:
-            connexion = pg.connect(host=host,
-                                   port=port,
-                                   database=database,
-                                   user=user,
-                                   password=password,
+            connexion_string = "host=" + str(host) + " port=" + str(port) + " dbname=" + str(database) +\
+                               " user=" + str(user) + " password=" + str(password)
+            connexion = pg.connect(conninfo=connexion_string,
                                    row_factory=dict_row,
                                    autocommit=True)
             return connexion
