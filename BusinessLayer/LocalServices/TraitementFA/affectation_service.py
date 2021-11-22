@@ -1,4 +1,5 @@
 from random import sample
+from math import floor
 from typing import Dict, List, Tuple
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
@@ -46,6 +47,19 @@ class AffectationService(metaclass=Singleton):
                     # Si un agent est déjà très surchargé, on ne lui affecte pas de nouvelle charge
                     base_charge -= charge_par_agent[str(agent)]['actuelle']
                 base_quotite -= charge_par_agent[str(agent)]['quotite']
+        # Vérification de la bonne affectation de toutes les fiches
+        reprise_affectee = sum([repart_agent['reprise'] for repart_agent in proposition_de_repartition.values()])
+        diff_reprise = reprise_lot - reprise_affectee
+        if diff_reprise > 0:
+            # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
+            agents_a_charger = id_agents[-diff_reprise:]
+            for agent in agents_a_charger:
+                proposition_de_repartition[str(agent)]['reprise'] += 1
+        elif diff_reprise < 0:
+            # Si des fiches ont été affectées en trop, on décharge à partir du début
+            agents_a_decharger = id_agents[:diff_reprise]
+            for agent in agents_a_decharger:
+                proposition_de_repartition[str(agent)]['reprise'] -= 1
         if controle_lot > 0:
             # Si des fiches sont éligibles au contrôle
             quotite_restante = 0
@@ -62,7 +76,8 @@ class AffectationService(metaclass=Singleton):
                         capacite_restante = charge_par_agent[str(agent)]['quotite'] - \
                                             charge_par_agent[str(agent)]['actuelle'] - \
                                             proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
-                        fiches_a_controler = round(capacite_restante / poids_controle)
+                        fiches_a_controler = floor(
+                            capacite_restante / poids_controle)  # floor permet de ne pas dépasser la quotité
                         if fiches_a_controler > 0:
                             proposition_de_repartition[str(agent)]['controle'] = fiches_a_controler
                 else:
@@ -83,11 +98,25 @@ class AffectationService(metaclass=Singleton):
                             base_charge -= charge_par_agent[str(agent)]['actuelle'] + \
                                            proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
                         base_quotite -= charge_par_agent[str(agent)]['quotite']
+                    # Vérification de la bonne affectation de toutes les fiches
+                    controle_affecte = sum(
+                        [repart_agent['controle'] for repart_agent in proposition_de_repartition.values()])
+                    diff_controle = controle_lot - controle_affecte
+                    if diff_controle > 0:
+                        # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
+                        agents_a_charger = id_agents[-diff_controle:]
+                        for agent in agents_a_charger:
+                            proposition_de_repartition[str(agent)]['controle'] += 1
+                    elif diff_controle < 0:
+                        # Si des fiches ont été affectées en trop, on décharge à partir du début
+                        agents_a_decharger = id_agents[:diff_controle]
+                        for agent in agents_a_decharger:
+                            proposition_de_repartition[str(agent)]['controle'] -= 1
         # A la fin du calcul, on retourne la répartition proposée
         return proposition_de_repartition
 
     @staticmethod
-    def echantilloner_fiches(lot_fiches: List[FicheAdresse], taille_echantillon: int) ->\
+    def echantilloner_fiches(lot_fiches: List[FicheAdresse], taille_echantillon: int) -> \
             Tuple[List[FicheAdresse], List[FicheAdresse]]:
         echantillon_tc = sample(lot_fiches, taille_echantillon)
         for fiche in lot_fiches:
@@ -95,7 +124,7 @@ class AffectationService(metaclass=Singleton):
                 fiche.code_res = "TC"
             else:
                 fiche.code_res = "VA"
-        return [fiche for fiche in lot_fiches if fiche.code_res == "TC"],\
+        return [fiche for fiche in lot_fiches if fiche.code_res == "TC"], \
                [fiche for fiche in lot_fiches if fiche.code_res == "VA"]
 
     def appliquer_repartition(self, id_lot: int, repartition: Dict) -> bool:
