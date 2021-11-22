@@ -79,14 +79,14 @@ class BANClient(metaclass=Singleton):
                         "result_housenumber", "result_name", "result_postcode", "result_city", "latitude", "longitude",
                         "result_score"]}, files={'data': file})
             if verbose:
-                print("Réponse de l'API reçue, analyse des résultats...")
+                print("Réponse de l'API reçue, analyse et enregistrement des résultats...")
             with open("answer.csv", "wb") as reponse:
                 reponse.write(response.content)
             with open("answer.csv", "r") as reponse:
                 reader = csv.DictReader(reponse, delimiter=",")
                 for index, data in zip(range(len(fiches_a_traiter)), reader):
                     if data["result_housenumber"] == "" and data["result_name"] == "" and data[
-                      "result_postcode"] == "" and data["result_city"] == "":
+                         "result_postcode"] == "" and data["result_city"] == "":
                         pass
                     else:
                         adresse_api = Adresse(data["result_housenumber"], data["result_name"], data["result_postcode"],
@@ -101,6 +101,7 @@ class BANClient(metaclass=Singleton):
                     else:
                         fiches_a_traiter[index].code_res = "TH"
                     DAOFicheAdresse().modifier_fiche_adresse(fiches_a_traiter[index])
+                    print(str(round(index * 100 / len(fiches_a_traiter), 1)) + " % terminé", end="\r")
             if verbose:
                 print("Traitement du lot terminé avec succès !")
             res = True
