@@ -13,13 +13,13 @@ class PGAgent(InterfaceAgent):
         if id_superviseur > 0:
             params = (id_superviseur,)
             if not agents_delegues:
-                request = "SELECT * FROM agents WHERE identifiant_superviseur =(%s)"
+                request = "SELECT * FROM agents WHERE identifiant_superviseur =(%s) ORDER BY identifiant_agent"
             else:
                 request = """SELECT * FROM agents
-                WHERE identifiant_superviseur =(%s) AND identifiant_delegue IS NOT NULL"""
+                WHERE identifiant_superviseur =(%s) AND identifiant_delegue IS NOT NULL ORDER BY identifiant_agent"""
         else:
             params = ()
-            request = "SELECT * FROM agents"
+            request = "SELECT * FROM agents ORDER BY identifiant_agent"
         with DBConnexion().connexion.cursor() as curseur:
             rows = curseur.execute(request, params).fetchall()
         return rows

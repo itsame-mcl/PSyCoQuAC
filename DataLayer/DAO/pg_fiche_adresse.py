@@ -1,4 +1,5 @@
 from typing import List
+from psycopg.rows import tuple_row
 from DataLayer.DAO.db_connexion import DBConnexion
 from DataLayer.DAO.interface_fiche_adresse import InterfaceFicheAdresse
 
@@ -7,43 +8,47 @@ class PGFicheAdresse(InterfaceFicheAdresse):
     @staticmethod
     def __pg_to_dao(data: dict) -> dict:
         data["coordonnees_wgs84"] = tuple([str(coord) for coord in (data["coordonnees_wgs84"])])
-        sup_as_dict = {}
-        for index in range(0, len(data["champs_supplementaires"]), 2):
-            sup_as_dict[data["champs_supplementaires"][index]] = data["champs_supplementaires"][index+1]
-        data["champs_supplementaires"] = sup_as_dict
+        if data["champs_supplementaires"] is not None:
+            sup_as_dict = {}
+            for index in range(0, len(data["champs_supplementaires"]), 2):
+                sup_as_dict[data["champs_supplementaires"][index]] = data["champs_supplementaires"][index+1]
+            data["champs_supplementaires"] = sup_as_dict
         return data
 
     @staticmethod
     def __dao_to_pg(data: dict) -> dict:
         data["coordonnees_wgs84"] = [float(coord) for coord in (data["coordonnees_wgs84"])]
-        sup_as_list = []
-        for k, v in data["champs_supplementaires"].items():
-            sup_as_list.extend([str(k), str(v)])
-        data["champs_supplementaires"] = sup_as_list
+        if data["champs_supplementaires"] is not None:
+            sup_as_list = []
+            for k, v in data["champs_supplementaires"].items():
+                sup_as_list.extend([str(k), str(v)])
+            data["champs_supplementaires"] = sup_as_list
         return data
 
     def recuperer_fiche_adresse(self, identifiant: int) -> dict:
         with DBConnexion().connexion.cursor() as curseur:
             row = curseur.execute("SELECT * FROM fa WHERE identifiant_fa=(%s)", (identifiant,)).fetchone()
-        data = dict(zip(row.keys(), row))
-        data = self.__pg_to_dao(data)
+        data = self.__pg_to_dao(row)
         return data
 
     def recuperer_liste_fiches_adresse(self, id_agent: int, id_lot: int) -> List[dict]:
         if id_agent > 0 > id_lot:
-            request = "SELECT * FROM fa WHERE identifiant_pot=%(id_agent)s"
+            params = (id_agent,)
+            request = "SELECT * FROM fa WHERE identifiant_pot=(%s) ORDER BY identifiant_fa"
         elif id_agent < 0 < id_lot:
-            request = "SELECT * FROM fa WHERE identifiant_lot=%(id_lot)s"
+            params = (id_lot,)
+            request = "SELECT * FROM fa WHERE identifiant_lot=(%s) ORDER BY identifiant_fa"
         elif id_agent > 0 and id_lot > 0:
-            request = "SELECT * FROM fa WHERE identifiant_pot=%(id_agent)s AND identifiant_lot=%(id_lot)s"
+            params = (id_agent, id_lot)
+            request = "SELECT * FROM fa WHERE identifiant_pot=(%s) AND identifiant_lot=(%s) ORDER BY identifiant_fa"
         else:
-            request = "SELECT * FROM fa"
+            params = ()
+            request = "SELECT * FROM fa ORDER BY identifiant_fa"
         with DBConnexion().connexion.cursor() as curseur:
-            rows = curseur.execute(request, {"id_agent": id_agent, "id_lot": id_lot}).fetchall()
+            rows = curseur.execute(request, params).fetchall()
         answer = list()
         for row in rows:
-            data = dict(zip(row.keys(), row))
-            data = self.__pg_to_dao(data)
+            data = self.__pg_to_dao(row)
             answer.append(data)
         return answer
 
@@ -105,7 +110,7 @@ class PGFicheAdresse(InterfaceFicheAdresse):
 
     def obtenir_statistiques(self, criteria: list) -> List[tuple]:
         request = self._obtenir_statistiques_request_helper(criteria)
-        with DBConnexion().connexion.cursor() as curseur:
+        with DBConnexion().connexion.cursor(row_factory=tuple_row) as curseur:
             rows = curseur.execute(request).fetchall()
         answer = list()
         for row in rows:
@@ -133,7 +138,7 @@ class PGFicheAdresse(InterfaceFicheAdresse):
     def incrementer_id_lot(self) -> bool:
         try:
             with DBConnexion().connexion.cursor() as curseur:
-                curseur.execute("SELECT nextval(identifiant_lot_seq)")
+                curseur.execute("SELECT nextval('identifiant_lot_seq')")
             return True
         except Exception as e:
             print(e)

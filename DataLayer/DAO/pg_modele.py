@@ -9,11 +9,12 @@ class PGModele(InterfaceModele):
         data["position_champ_voie"] = tuple(data["position_champ_voie"])
         data["position_champ_code_postal"] = tuple(data["position_champ_code_postal"])
         data["position_champ_ville"] = tuple(data["position_champ_ville"])
-        sup_as_dict = {}
-        for index in range(0, len(data["position_champs_supplementaires"]), 2):
-            sup_as_dict[data["position_champs_supplementaires"][index]] =\
-                data["position_champs_supplementaires"][index+1]
-        data["position_champs_supplementaires"] = sup_as_dict
+        if data["position_champs_supplementaires"] is not None:
+            sup_as_dict = {}
+            for index in range(0, len(data["position_champs_supplementaires"]), 2):
+                sup_as_dict[data["position_champs_supplementaires"][index]] =\
+                    int(data["position_champs_supplementaires"][index+1])
+            data["position_champs_supplementaires"] = sup_as_dict
         return data
 
     @staticmethod
@@ -22,22 +23,23 @@ class PGModele(InterfaceModele):
         data["position_champ_voie"] = list(data["position_champ_voie"])
         data["position_champ_code_postal"] = list(data["position_champ_code_postal"])
         data["position_champ_ville"] = list(data["position_champ_ville"])
-        sup_as_list = []
-        for k, v in data["position_champs_supplementaires"].items():
-            sup_as_list.extend([str(k), str(v)])
-        data["position_champs_supplementaires"] = sup_as_list
+        if data["position_champs_supplementaires"] is not None:
+            sup_as_list = []
+            for k, v in data["position_champs_supplementaires"].items():
+                sup_as_list.extend([str(k), str(v)])
+            data["position_champs_supplementaires"] = sup_as_list
         return data
 
     def recuperer_modele(self, identifiant: int) -> dict:
         with DBConnexion().connexion.cursor() as curseur:
             row = curseur.execute("SELECT * FROM modeles WHERE identifiant_modele=(%s)", (identifiant,)).fetchone()
-        data = dict(zip(row.keys(), row))
-        data = self.__pg_to_dao(data)
+        data = self.__pg_to_dao(row)
         return data
 
     def recuperer_regex(self) -> dict:
         with DBConnexion().connexion.cursor() as curseur:
-            rows = curseur.execute("SELECT identifiant_modele, regex_nom_fichier FROM modeles").fetchall()
+            rows = curseur.execute("""SELECT identifiant_modele, regex_nom_fichier
+            FROM modeles ORDER BY identifiant_modele""").fetchall()
         answer = dict()
         for row in rows:
             answer[row["identifiant_modele"]] = row["regex_nom_fichier"]
