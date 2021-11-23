@@ -15,7 +15,6 @@ class ImportationService(metaclass=Singleton):
         handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
         id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
         liste_fa = handler.import_from_file(chemin_fichier, id_superviseur * -1, id_lot, modele)
-        res = True
         for fa in liste_fa:
             if fa.adresse_initiale.voie is not None and (
                     fa.adresse_initiale.cp is not None or fa.adresse_finale.ville is not None):
