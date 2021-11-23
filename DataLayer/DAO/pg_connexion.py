@@ -18,4 +18,5 @@ class PGConnexion(InterfaceConnexion):
             return None
 
     def fermer_connexion(self, connexion):
-        connexion.close()
+        if connexion is not None:
+            connexion.close()

@@ -12,6 +12,7 @@ import os
 class SetupView(AbstractView):
     def __init__(self) -> None:
         self.__first_try = True
+        self.__choix_installation = None
         self.__questions = [{'type': 'list', 'name': 'nouvelle_installation', 'message': 'Que souhaitez-vous faire ?',
                              'choices': ["Créer une nouvelle installation PSyCoQuAC",
                                          "Se connecter à une installation PSyCoQuAC existante"],
@@ -28,9 +29,9 @@ class SetupView(AbstractView):
                             {'type': 'input', 'name': 'database', 'message': 'Quel est le nom de la base de données ?',
                              'when': lambda ans: ans['engine'] == 'PostgreSQL'},
                             {'type': 'input', 'name': 'user', 'message': "Quel est le nom d'utilisateur permettant de "
-                                                                         "se connecter à la base de données (il doit "
+                                                                         "se connecter à la base de données\n(il doit "
                                                                          "posséder les privilèges CREATE, SELECT, "
-                                                                         "INSERT, UPSATE et DELETE) ?",
+                                                                         "INSERT, UPDATE et DELETE) ?",
                              'when': lambda ans: ans['engine'] == 'PostgreSQL'},
                             {'type': 'password', 'name': 'password', 'message': 'Quel est le mot de passe '
                                                                                 'de connexion à la base de données ?',
@@ -49,6 +50,8 @@ class SetupView(AbstractView):
         connexion_ok = False
         while not connexion_ok:
             answers = prompt(self.__questions)
+            if self.__first_try:
+                self.__choix_installation = answers['nouvelle_installation']
             Path(".env").touch(exist_ok=True)
             dotenv_file = dotenv.find_dotenv()
             dotenv.load_dotenv(dotenv_file, override=True)
@@ -65,17 +68,18 @@ class SetupView(AbstractView):
             os.environ["PSYCOQUAC_PASSWORD"] = str(answers.get('password', ""))
             dotenv.set_key(dotenv_file, "PSYCOQUAC_PASSWORD", str(answers.get('password', "")))
             try:
-                DBConnexion().connexion
+                DBConnexion().connexion.cursor().close()
                 connexion_ok = True
             except ConnectionError:
                 print("Impossible d'établir la connexion à la base de données. Veuillez resaisir les paramètres.")
                 self.__first_try = False
                 connexion_ok = False
+                DBConnexion.clear()
                 try:
                     Path(".env").unlink()
                 except FileNotFoundError:
                     pass
-        if answers['nouvelle_installation']:
+        if self.__choix_installation:
             prompt_confirm = [{'type': 'confirm', 'name': 'confirmer', 'message': "Confirmez-vous le lancement d'une "
                                                                                   "nouvelle installation ?\nTOUTES LES "
                                                                                   "INFORMATIONS RELATIVES A UNE "
