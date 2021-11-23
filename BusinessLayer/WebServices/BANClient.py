@@ -1,14 +1,12 @@
-from typing import Tuple
+from typing import Tuple, List
 from time import time_ns, sleep
 import requests
 import csv
 import os
 
-from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from utils.singleton import Singleton
-from utils.progress_bar import printProgressBar
 
 
 class BANClient(metaclass=Singleton):
@@ -54,14 +52,8 @@ class BANClient(metaclass=Singleton):
         return score, fiche_a_traiter
 
     @staticmethod
-    def geocodage_par_lot(id_lot: int, seuil_score: float = 0.8, verbose=False) -> bool:
-        if verbose:
-            print("Chargement du lot à traiter...")
-        lot = DAOFicheAdresse().recuperer_lot(id_lot)
-        fiches_a_traiter = list()
-        for fiche in lot:
-            if fiche.code_res == "TA":
-                fiches_a_traiter.append(fiche)
+    def geocodage_par_lot(fiches_a_traiter: List[FicheAdresse], seuil_score: float = 0.8,
+                          verbose=False) -> List[FicheAdresse]:
         try:
             if verbose:
                 print("Préparation de la requête API...")
@@ -80,7 +72,7 @@ class BANClient(metaclass=Singleton):
                         "result_housenumber", "result_name", "result_postcode", "result_city", "latitude", "longitude",
                         "result_score"]}, files={'data': file})
             if verbose:
-                print("Réponse de l'API reçue, analyse et enregistrement des résultats...")
+                print("Réponse de l'API reçue, analyse des résultats...")
             with open("answer.csv", "wb") as reponse:
                 reponse.write(response.content)
             with open("answer.csv", "r") as reponse:
@@ -101,20 +93,15 @@ class BANClient(metaclass=Singleton):
                         fiches_a_traiter[index].code_res = "TR"
                     else:
                         fiches_a_traiter[index].code_res = "TH"
-                    DAOFicheAdresse().modifier_fiche_adresse(fiches_a_traiter[index])
-                    if verbose:
-                        printProgressBar(index, len(fiches_a_traiter),
-                                         prefix='Progression :', suffix='terminé', length=50)
             if verbose:
-                print("Traitement du lot terminé avec succès !")
-            res = True
+                print("Analyse des résultats terminée !")
         except Exception:
             if verbose:
-                print("Des erreurs sont survenues dans le traitement du lot.")
-            res = False
+                print("Des erreurs sont survenues dans le traitement de la requête API.")
+            fiches_a_traiter = None
         finally:
             if os.path.exists("search.csv"):
                 os.remove("search.csv")
             if os.path.exists("answer.csv"):
                 os.remove("answer.csv")
-        return res
+        return fiches_a_traiter

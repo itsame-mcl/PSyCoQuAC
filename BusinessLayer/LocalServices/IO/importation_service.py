@@ -1,8 +1,9 @@
 from BusinessLayer.BusinessObjects.modele import Modele
 from utils.singleton import Singleton
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
+from BusinessLayer.WebServices.BANClient import BANClient
 import BusinessLayer.LocalServices.IO.factory_handler as factory
-
+from utils.progress_bar import printProgressBar
 from typing import Tuple
 import pathlib
 
@@ -24,3 +25,28 @@ class ImportationService(metaclass=Singleton):
         res = DAOFicheAdresse().creer_multiple_fiche_adresse(liste_fa)
         DAOFicheAdresse().incrementer_id_lot()
         return id_lot, res
+
+    @staticmethod
+    def traiter_lot_api(id_lot: int, verbose=False):
+        if verbose:
+            print("Chargement du lot à traiter...")
+        lot = DAOFicheAdresse().recuperer_lot(id_lot)
+        fiches_a_traiter = list()
+        for fiche in lot:
+            if fiche.code_res == "TA":
+                fiches_a_traiter.append(fiche)
+        fiches_traitees = BANClient().geocodage_par_lot(fiches_a_traiter, verbose=True)
+        index = 0
+        res = True
+        if verbose:
+            print("Enregistrement des résultats du traitement...")
+        for fiche in fiches_traitees:
+            new_res = DAOFicheAdresse().modifier_fiche_adresse(fiche)
+            res = res * new_res
+            if verbose:
+                index += 1
+                printProgressBar(index, len(fiches_traitees),
+                                 prefix='Progression :', suffix='terminé', length=50)
+        if verbose:
+            print("Enregistrement terminé !")
+        return res

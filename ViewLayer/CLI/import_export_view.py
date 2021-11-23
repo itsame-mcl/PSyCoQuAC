@@ -3,7 +3,6 @@ from BusinessLayer.LocalServices.IO.importation_service import ImportationServic
 from BusinessLayer.LocalServices.IO.exportation_service import ExportationService
 from BusinessLayer.LocalServices.TraitementFA.modele_service import ModeleService
 from BusinessLayer.LocalServices.Gestion.statistique_service import StatistiqueService
-from BusinessLayer.WebServices.BANClient import BANClient
 from ViewLayer.CLI.nouveau_modele_view import NouveauModeleView
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
@@ -50,7 +49,7 @@ class ImportExportView(AbstractView):
     def __traitement_api(self, id_lot):
         answers_api = prompt(self.__appel_api)
         if str.upper(answers_api['choix'][0]) == 'O':
-            BANClient().geocodage_par_lot(id_lot, verbose=True)
+            ImportationService().traiter_lot_api(id_lot, verbose=True)
 
     def make_choice(self):
         answers = prompt(self.__questions)
