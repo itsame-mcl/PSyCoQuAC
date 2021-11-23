@@ -1,5 +1,4 @@
-psycopg~=3.0.4
-psycopg-binary~=3.0.4
+psycopg[binary]~=3.0.4
 requests~=2.26.0
 PyInquirer==1.0.3
 prompt_toolkit==1.0.14
