@@ -5,6 +5,14 @@ class Correspondance:
     def __init__(self, position_numero: Union[int, Tuple[int]], position_voie: Union[int, Tuple[int]],
                  position_cp: Union[int, Tuple[int]], position_ville: Union[int, Tuple[int]],
                  positions_supplementaires: dict = None):
+        """
+
+        :param position_numero:
+        :param position_voie:
+        :param position_cp:
+        :param position_ville:
+        :param positions_supplementaires:
+        """
         if isinstance(position_numero, int):
             self._position_numero = (position_numero,)
         elif isinstance(position_numero, tuple):

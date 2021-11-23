@@ -7,6 +7,19 @@ class FicheAdresse:
                  adresse_finale: Adresse = None, date_importation: date = date.today(),
                  date_modification: date = date.today(), coords_wgs84: dict = None,
                  champs_supplementaires: dict = None, code_res: str = "TI"):
+        """
+
+        :param fiche_id:
+        :param agent_id:
+        :param lot_id:
+        :param adresse_initiale:
+        :param adresse_finale:
+        :param date_importation:
+        :param date_modification:
+        :param coords_wgs84:
+        :param champs_supplementaires:
+        :param code_res:
+        """
         self._fiche_id = fiche_id
         self._agent_id = agent_id
         self._lot_id = lot_id
@@ -76,6 +89,10 @@ class FicheAdresse:
 
     @code_res.setter
     def code_res(self, value):
+        """
+
+        :param value:
+        """
         if self._code_res == "TI":
             if value in ["TA", "DI"]:
                 self._code_res = value
@@ -149,6 +166,11 @@ class FicheAdresse:
         self._date_modification = date.today()
 
     def as_dict(self, expand: bool = False):
+        """
+
+        :param expand:
+        :return:
+        """
         data = dict()
         data["identifiant_fa"] = self.fiche_id
         data["identifiant_pot"] = self.agent_id

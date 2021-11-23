@@ -4,6 +4,13 @@ from BusinessLayer.BusinessObjects.correspondance import Correspondance
 class Modele:
     def __init__(self, nom_modele: str, regex_nom_fichier: str,
                  correspondances: Correspondance, identifiant: int = None):
+        """
+
+        :param nom_modele:
+        :param regex_nom_fichier:
+        :param correspondances:
+        :param identifiant:
+        """
         self._identifiant = identifiant
         self._nom_modele = nom_modele
         self._regex = regex_nom_fichier

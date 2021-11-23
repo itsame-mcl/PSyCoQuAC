@@ -8,6 +8,14 @@ import csv
 
 class CSVHandler(AbstractHandler):
     def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
+        """
+
+        :param path:
+        :param id_superviseur:
+        :param id_lot:
+        :param model:
+        :return:
+        """
         with open(path, 'r') as file:
             reader = csv.reader(file, delimiter=';')
             liste_fa = []
@@ -26,6 +34,11 @@ class CSVHandler(AbstractHandler):
         return liste_fa
 
     def export_to_file(self, lot: List[FicheAdresse], path: str):
+        """
+
+        :param lot:
+        :param path:
+        """
         with open(path, 'w') as file:
             writer = csv.DictWriter(file, lot[0].as_dict(True).keys())
             writer.writeheader()

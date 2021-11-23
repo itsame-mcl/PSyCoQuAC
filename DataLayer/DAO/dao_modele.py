@@ -8,25 +8,53 @@ class DAOModele(metaclass=Singleton):
         self.__interface = factory.InterfaceFactory.get_interface("Modele")
 
     def recuperer_modele(self, identifiant: int) -> Modele:
+        """
+
+        :param identifiant:
+        :return:
+        """
         data = self.__interface.recuperer_modele(identifiant)
         return Modele.from_dict(data)
 
     def recuperer_regex(self) -> dict:
+        """
+
+        :return:
+        """
         data = self.__interface.recuperer_regex()
         return data
 
     def creer_modele(self, modele: Modele) -> bool:
+        """
+
+        :param modele:
+        :return:
+        """
         res = self.__interface.creer_modele(modele.as_dict())
         return res
 
     def modifier_modele(self, modele: Modele) -> bool:
+        """
+
+        :param modele:
+        :return:
+        """
         res = self.__interface.modifier_modele(modele.as_dict())
         return res
 
     def supprimer_modele(self, identifiant: int) -> bool:
+        """
+
+        :param identifiant:
+        :return:
+        """
         res = self.__interface.supprimer_modele(identifiant)
         return res
 
     def recuperer_dernier_id_modele(self) -> int:
+        """
+
+        :return:
+        """
         value = self.__interface.recuperer_dernier_id_modele()
         return value

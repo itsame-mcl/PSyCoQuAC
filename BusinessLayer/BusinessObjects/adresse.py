@@ -1,5 +1,12 @@
 class Adresse:
     def __init__(self, numero, voie, cp, ville):
+        """
+
+        :param numero:
+        :param voie:
+        :param cp:
+        :param ville:
+        """
         self._numero = str(numero)
         self._voie = str(voie)
         self._cp = str(cp)

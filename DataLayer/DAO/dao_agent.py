@@ -14,16 +14,31 @@ class DAOAgent(metaclass=Singleton):
 
     @staticmethod
     def __saler_hasher_mdp(nom_utilisateur: str, mot_de_passe_en_clair: str) -> str:
+        """
+
+        :param nom_utilisateur:
+        :param mot_de_passe_en_clair:
+        :return:
+        """
         pwd = sha512()
         pwd.update(nom_utilisateur.encode("utf-8"))
         pwd.update(mot_de_passe_en_clair.encode("utf-8"))
         return pwd.hexdigest()
 
     def recuperer_agent(self, id_agent: int) -> Agent:
+        """
+
+        :param id_agent:
+        :return:
+        """
         data = self.__interface.recuperer_agent(id_agent)
         return agent_factory.AgentFactory.from_dict(data)
 
     def recuperer_liste_superviseurs(self) -> List[Superviseur]:
+        """
+
+        :return:
+        """
         data = self.__interface.recuperer_liste_agents(0)
         liste = list()
         for row in data:
@@ -32,6 +47,11 @@ class DAOAgent(metaclass=Singleton):
         return liste
 
     def recuperer_equipe(self, id_superviseur: int) -> List[Agent]:
+        """
+
+        :param id_superviseur:
+        :return:
+        """
         data = self.__interface.recuperer_liste_agents(id_superviseur)
         equipe = list()
         for row in data:
@@ -39,6 +59,11 @@ class DAOAgent(metaclass=Singleton):
         return equipe
 
     def recuperer_liste_delegues(self, id_superviseur: int) -> List[Gestionnaire]:
+        """
+
+        :param id_superviseur:
+        :return:
+        """
         data = self.__interface.recuperer_liste_agents(id_superviseur, True)
         equipe = list()
         for row in data:
@@ -47,15 +72,39 @@ class DAOAgent(metaclass=Singleton):
         return equipe
 
     def deleguer_agent(self, id_agent: int, id_delegue: int) -> bool:
+        """
+
+        :param id_agent:
+        :param id_delegue:
+        :return:
+        """
         return self.__interface.deleguer_agent(id_agent, id_delegue)
 
     def retroceder_agent(self, id_agent: int) -> bool:
+        """
+
+        :param id_agent:
+        :return:
+        """
         return self.__interface.retroceder_agent(id_agent)
 
     def transferer_agent(self, id_agent: int, id_nouveau_superviseur: int) -> bool:
+        """
+
+        :param id_agent:
+        :param id_nouveau_superviseur:
+        :return:
+        """
         return self.__interface.transferer_agent(id_agent, id_nouveau_superviseur)
 
     def creer_agent(self, infos_agent: Agent, nom_utilisateur: str, mot_de_passe: str) -> bool:
+        """
+
+        :param infos_agent:
+        :param nom_utilisateur:
+        :param mot_de_passe:
+        :return:
+        """
         data = infos_agent.as_dict()
         if data['est_superviseur'] and data['identifiant_superviseur'] is None:
             data['identifiant_superviseur'] = self.__interface.recuperer_dernier_id_agent() + 1
@@ -64,15 +113,36 @@ class DAOAgent(metaclass=Singleton):
         return self.__interface.creer_agent(data)
 
     def modifier_agent(self, agent_a_modifier: Agent) -> bool:
+        """
+
+        :param agent_a_modifier:
+        :return:
+        """
         return self.__interface.modifier_agent(agent_a_modifier.as_dict())
 
     def supprimer_agent(self, id_agent: int) -> bool:
+        """
+
+        :param id_agent:
+        :return:
+        """
         return self.__interface.supprimer_agent(id_agent)
 
     def promouvoir_agent(self, agent_a_promouvoir: int) -> bool:
+        """
+
+        :param agent_a_promouvoir:
+        :return:
+        """
         return self.__interface.promouvoir_agent(agent_a_promouvoir)
 
     def connexion_agent(self, nom_utilisateur: str, mot_de_passe: str) -> Agent:
+        """
+
+        :param nom_utilisateur:
+        :param mot_de_passe:
+        :return:
+        """
         mot_de_passe_sale_hashe = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe)
         data = self.__interface.connexion_agent(nom_utilisateur, mot_de_passe_sale_hashe)
         if data is not None:
@@ -82,23 +152,56 @@ class DAOAgent(metaclass=Singleton):
             raise ConnectionRefusedError
 
     def modifier_identifiants(self, id_agent: int, nom_utilisateur: str, mot_de_passe_en_clair: str) -> bool:
+        """
+
+        :param id_agent:
+        :param nom_utilisateur:
+        :param mot_de_passe_en_clair:
+        :return:
+        """
         mdp_sale_hashe = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe_en_clair)
         res = self.__interface.modifier_identifiants(id_agent, nom_utilisateur, mdp_sale_hashe)
         return res
 
     def verifier_identifiants(self, id_agent: int, nom_utilisateur: str, mot_de_passe_en_clair: str) -> bool:
+        """
+
+        :param id_agent:
+        :param nom_utilisateur:
+        :param mot_de_passe_en_clair:
+        :return:
+        """
         mdp_sale_hashe = self.__saler_hasher_mdp(nom_utilisateur, mot_de_passe_en_clair)
         res = self.__interface.verifier_identifiants(id_agent, nom_utilisateur, mdp_sale_hashe)
         return res
 
     def recuperer_quotite(self, id_agent: int) -> float:
+        """
+
+        :param id_agent:
+        :return:
+        """
         return self.__interface.recuperer_quotite(id_agent)
 
     def recuperer_nom_utilisateur(self, id_agent: int) -> str:
+        """
+
+        :param id_agent:
+        :return:
+        """
         return self.__interface.recuperer_nom_utilisateur(id_agent)
 
     def recuperer_dernier_id_agent(self) -> int:
+        """
+
+        :return:
+        """
         return self.__interface.recuperer_dernier_id_agent()
 
     def recuperer_id_superviseur(self, id_agent: int) -> int:
+        """
+
+        :param id_agent:
+        :return:
+        """
         return self.__interface.recuperer_id_superviseur(id_agent)

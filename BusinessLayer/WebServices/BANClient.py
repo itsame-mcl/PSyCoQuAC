@@ -16,6 +16,12 @@ class BANClient(metaclass=Singleton):
 
     @staticmethod
     def __json_to_fa(json_data, fiche):
+        """
+
+        :param json_data:
+        :param fiche:
+        :return:
+        """
         coordonnees_gps = json_data["geometry"]["coordinates"]
         fiche.coords_wgs84 = tuple(coordonnees_gps)
         adresse_api = Adresse(json_data["properties"].setdefault("housenumber", ""),
@@ -26,6 +32,11 @@ class BANClient(metaclass=Singleton):
         return fiche
 
     def geocodage_par_fiche(self, fiche_a_traiter: FicheAdresse) -> Tuple[float, FicheAdresse]:
+        """
+
+        :param fiche_a_traiter:
+        :return:
+        """
         adresse = str(fiche_a_traiter.adresse_finale).replace(" ", "+")
         if time_ns() - self.__lastcall < self.__wait_ns:
             sleep((time_ns() - self.__lastcall) / 1000000000)
@@ -37,6 +48,11 @@ class BANClient(metaclass=Singleton):
         return score, fiche_a_traiter
 
     def reverse_par_fiche(self, fiche_a_traiter: FicheAdresse) -> Tuple[float, FicheAdresse]:
+        """
+
+        :param fiche_a_traiter:
+        :return:
+        """
         if len(fiche_a_traiter.coords_wgs84) == 0:
             raise ValueError('La fiche adresse ne possède pas de coordonnées GPS')
         coordonnees_gps = fiche_a_traiter.coords_wgs84
@@ -54,6 +70,13 @@ class BANClient(metaclass=Singleton):
     @staticmethod
     def geocodage_par_lot(fiches_a_traiter: List[FicheAdresse], seuil_score: float = 0.8,
                           verbose=False) -> List[FicheAdresse]:
+        """
+
+        :param fiches_a_traiter:
+        :param seuil_score:
+        :param verbose:
+        :return:
+        """
         try:
             if verbose:
                 print("Préparation de la requête API...")

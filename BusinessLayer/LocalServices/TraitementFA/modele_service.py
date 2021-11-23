@@ -12,6 +12,11 @@ import re
 class ModeleService(metaclass=Singleton):
     @staticmethod
     def identifier_modele(chemin_fichier) -> Modele:
+        """
+
+        :param chemin_fichier:
+        :return:
+        """
         path = pathlib.Path(chemin_fichier)
         nom_fichier = path.name
         id_modele = 0
@@ -29,6 +34,17 @@ class ModeleService(metaclass=Singleton):
     @staticmethod
     def creer_modele(nom: str, regex: str, positions_numero: List[int], positions_voie: List[int],
                      positions_cp: List[int], positions_ville: List[int], positions_sup: Dict) -> bool:
+        """
+
+        :param nom:
+        :param regex:
+        :param positions_numero:
+        :param positions_voie:
+        :param positions_cp:
+        :param positions_ville:
+        :param positions_sup:
+        :return:
+        """
         correspondances = Correspondance(tuple(positions_numero), tuple(positions_voie),
                                          tuple(positions_cp), tuple(positions_ville), positions_sup)
         modele = Modele(nom, regex, correspondances)

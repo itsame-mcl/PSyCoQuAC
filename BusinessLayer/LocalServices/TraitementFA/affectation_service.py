@@ -12,6 +12,14 @@ class AffectationService(metaclass=Singleton):
     @staticmethod
     def proposer_repartition(id_lot: int, id_agents: List[int],
                              poids_controle: float = 0.01, poids_reprise: float = 0.01):
+        """
+
+        :param id_lot:
+        :param id_agents:
+        :param poids_controle:
+        :param poids_reprise:
+        :return:
+        """
         # Calcul de la capacité de travail de chaque agent et de l'ensemble de l'équipe sélectionnée
         charge_par_agent = {}
         proposition_de_repartition = {}
@@ -119,6 +127,12 @@ class AffectationService(metaclass=Singleton):
     @staticmethod
     def echantilloner_fiches(lot_fiches: List[FicheAdresse], taille_echantillon: int) -> \
             Tuple[List[FicheAdresse], List[FicheAdresse]]:
+        """
+
+        :param lot_fiches:
+        :param taille_echantillon:
+        :return:
+        """
         echantillon_tc = sample(lot_fiches, taille_echantillon)
         for fiche in lot_fiches:
             if fiche in echantillon_tc:
@@ -129,6 +143,13 @@ class AffectationService(metaclass=Singleton):
                [fiche for fiche in lot_fiches if fiche.code_res == "VA"]
 
     def appliquer_repartition(self, id_lot: int, repartition: Dict, verbose:bool = False) -> bool:
+        """
+
+        :param id_lot:
+        :param repartition:
+        :param verbose:
+        :return:
+        """
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
         taille_echantillon_controle = sum([item['controle'] for item in repartition.values()])
         lot_a_echantillonner = [fiche for fiche in lot if fiche.code_res == "TH"]

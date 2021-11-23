@@ -11,6 +11,13 @@ import pathlib
 class ImportationService(metaclass=Singleton):
     @staticmethod
     def importer_lot(id_superviseur: int, chemin_fichier: str, modele: Modele) -> Tuple[int, bool]:
+        """
+
+        :param id_superviseur:
+        :param chemin_fichier:
+        :param modele:
+        :return:
+        """
         path = pathlib.Path(chemin_fichier)
         handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
         id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
@@ -27,6 +34,12 @@ class ImportationService(metaclass=Singleton):
 
     @staticmethod
     def traiter_lot_api(id_lot: int, verbose=False):
+        """
+
+        :param id_lot:
+        :param verbose:
+        :return:
+        """
         if verbose:
             print("Chargement du lot à traiter...")
         lot = DAOFicheAdresse().recuperer_lot(id_lot)

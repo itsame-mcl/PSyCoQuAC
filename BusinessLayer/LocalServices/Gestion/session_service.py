@@ -5,6 +5,12 @@ from utils.singleton import Singleton
 class SessionService(metaclass=Singleton):
     @staticmethod
     def ouvrir_session(nom_utilisateur, mot_de_passe):
+        """
+
+        :param nom_utilisateur:
+        :param mot_de_passe:
+        :return:
+        """
         try:
             agent = DAOAgent().connexion_agent(nom_utilisateur, mot_de_passe)
         except ConnectionRefusedError:
@@ -12,4 +18,4 @@ class SessionService(metaclass=Singleton):
         return agent
 
     def fermer_session(self):
-        raise NotImplemented
+        raise NotImplementedError

@@ -7,15 +7,31 @@ from typing import List
 class ControleRepriseService(metaclass=Singleton):
     @staticmethod
     def consulter_fiche(id_fiche: int) -> FicheAdresse:
+        """
+
+        :param id_fiche:
+        :return:
+        """
         return DAOFicheAdresse().recuperer_fiche_adresse(id_fiche)
 
     @staticmethod
     def modifier_fiche(fiche_modifiee: FicheAdresse) -> bool:
+        """
+
+        :param fiche_modifiee:
+        :return:
+        """
         res = DAOFicheAdresse().modifier_fiche_adresse(fiche_modifiee)
         return res
 
     @staticmethod
     def validation_fiche(fiche: FicheAdresse, validation: bool) -> bool:
+        """
+
+        :param fiche:
+        :param validation:
+        :return:
+        """
         if fiche.code_res == "TC":
             if validation:
                 fiche.code_res = "VC"
@@ -33,10 +49,22 @@ class ControleRepriseService(metaclass=Singleton):
 
     @staticmethod
     def consulter_pot(id_agent: int) -> List[FicheAdresse]:
+        """
+
+        :param id_agent:
+        :return:
+        """
         return DAOFicheAdresse().recuperer_pot(id_agent)
 
     @staticmethod
     def consulter_pot_controle_reprise(id_agent: int, controle=True, reprise=True) -> List[FicheAdresse]:
+        """
+
+        :param id_agent:
+        :param controle:
+        :param reprise:
+        :return:
+        """
         pot = DAOFicheAdresse().recuperer_pot(id_agent)
         pot_cr = list()
         for fiche in pot:

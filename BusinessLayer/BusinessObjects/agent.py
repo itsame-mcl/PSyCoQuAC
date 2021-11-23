@@ -3,6 +3,13 @@ from abc import ABC, abstractmethod
 
 class Agent(ABC):
     def __init__(self, prenom: str, nom: str, quotite: float, agent_id: int = None):
+        """
+
+        :param prenom:
+        :param nom:
+        :param quotite:
+        :param agent_id:
+        """
         self._agent_id = agent_id
         self._prenom = prenom
         self._nom = nom
