@@ -1,10 +1,15 @@
 from ViewLayer.CLI.start_view import StartView
+from ViewLayer.CLI.setup_view import SetupView
+from os import path
 import dotenv
 
 
 if __name__ == '__main__':
-    dotenv.load_dotenv(override=True)
-    vue_actuelle = StartView()
+    if path.exists(".env"):
+        dotenv.load_dotenv(override=True)
+        vue_actuelle = StartView()
+    else:
+        vue_actuelle = SetupView()
     while vue_actuelle:
         with open('assets/bordure.txt', 'r') as border:
             print(border.read())

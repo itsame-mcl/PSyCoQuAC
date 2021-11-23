@@ -10,7 +10,8 @@ class SQLiteConnexion(InterfaceConnexion):
             connexion.row_factory = sqlite3.Row
             return connexion
         except Exception as e:
-            raise e
+            print(e)
+            return None
 
     def fermer_connexion(self, connexion):
         connexion.close()

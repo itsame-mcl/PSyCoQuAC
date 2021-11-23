@@ -5,12 +5,13 @@ from ViewLayer.CLI.session import Session
 
 
 class NouvelUtilisateurView(AbstractView):
-    def __init__(self) -> None:
+    def __init__(self, on_setup=False) -> None:
+        self.__on_setup = on_setup
         self.__questions = [{'type': 'input', 'name': 'prenom', 'message': 'Prénom :'},
                             {'type': 'input', 'name': 'nom', 'message': 'Nom :'},
                             {'type': 'list', 'name': 'est_superviseur', 'message': 'Rôle :',
                              'choices': ["Gestionnaire", "Superviseur"], 'default': 'Gestionnaire',
-                             'filter': lambda val: self.__role_filter(val)},
+                             'filter': lambda val: self.__role_filter(val), 'when': lambda val: not on_setup},
                             {'type': 'input', 'name': 'quotite', 'message': 'Quotité de travail :',
                              'filter': lambda val: float(val)},
                             {'type': 'input', 'name': 'nom_utilisateur', 'message': "Nom d'utilisateur :"},
@@ -24,6 +25,8 @@ class NouvelUtilisateurView(AbstractView):
 
     def make_choice(self):
         answers = prompt(self.__questions)
+        if self.__on_setup:
+            answers["est_superviseur"] = True
         if not (answers["est_superviseur"]):
             succes = AgentService().creer_agent(answers['est_superviseur'], answers['quotite'],
                                                 answers['nom_utilisateur'], answers['mot_de_passe'],
