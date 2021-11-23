@@ -1,5 +1,6 @@
 from PyInquirer import prompt
-from DataLayer.DAO.db_connexion import DBConnexion
+from DataLayer.DAO.db_connexion import DBConnexion  # Entorse à la séparation des couches, pour éviter de surcharger
+#                                                       l'architecture d'un service d'installation
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
 import ViewLayer.CLI.menu as mp
@@ -20,7 +21,8 @@ class SetupView(AbstractView):
                             {'type': 'list', 'name': 'engine', 'message': 'Quel est le moteur de '
                                                                           'base de données à utiliser ?',
                              'choices': ["PostgreSQL", "SQLite"], 'default': 'PostgreSQL'},
-                            {'type': 'input', 'name': 'host', 'message': 'Quel est le chemin de la base de données ?'},
+                            {'type': 'input', 'name': 'host', 'message': "Quel est le chemin/l'hôte "
+                                                                         "de la base de données ?"},
                             {'type': 'input', 'name': 'port', 'message': 'Quel est le port de connexion ?',
                              'when': lambda ans: ans['engine'] == 'PostgreSQL'},
                             {'type': 'input', 'name': 'database', 'message': 'Quel est le nom de la base de données ?',
@@ -35,7 +37,8 @@ class SetupView(AbstractView):
                              'when': lambda ans: ans['engine'] == 'PostgreSQL'},
                             ]
 
-    def __install_filter(self, val) -> bool:
+    @staticmethod
+    def __install_filter(val) -> bool:
         if val == "Créer une nouvelle installation PSyCoQuAC":
             return True
         elif val == "Se connecter à une installation PSyCoQuAC existante":
@@ -74,11 +77,12 @@ class SetupView(AbstractView):
                     pass
         if answers['nouvelle_installation']:
             prompt_confirm = [{'type': 'confirm', 'name': 'confirmer', 'message': "Confirmez-vous le lancement d'une "
-                                                                             "nouvelle installation ?\nTOUTES LES "
-                                                                             "INFORMATIONS RELATIVES A UNE "
-                                                                             "INSTALLATION PRECEDENTE DANS LA MEME "
-                                                                             "BASE SERONT PERDUES !",
-                          'default': False}]
+                                                                                  "nouvelle installation ?\nTOUTES LES "
+                                                                                  "INFORMATIONS RELATIVES A UNE "
+                                                                                  "INSTALLATION PRECEDENTE DANS LA "
+                                                                                  "MEME "
+                                                                                  "BASE SERONT PERDUES !",
+                               'default': False}]
             confirm = prompt(prompt_confirm)
             if confirm['confirmer']:
                 curseur = DBConnexion().connexion.cursor()

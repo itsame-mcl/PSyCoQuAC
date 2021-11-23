@@ -1,12 +1,13 @@
 from ViewLayer.CLI.start_view import StartView
 from ViewLayer.CLI.setup_view import SetupView
-from os import path
+from pathlib import Path
 import dotenv
 
 
 if __name__ == '__main__':
-    if path.exists(".env"):
-        dotenv.load_dotenv(override=True)
+    if Path(".env").is_file():
+        dotenv_file = dotenv.find_dotenv()
+        dotenv.load_dotenv(dotenv_file, override=True)
         vue_actuelle = StartView()
     else:
         vue_actuelle = SetupView()
