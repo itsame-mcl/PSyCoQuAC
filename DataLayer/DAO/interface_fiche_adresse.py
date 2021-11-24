@@ -25,7 +25,7 @@ class InterfaceFicheAdresse(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def modifier_agent_fiches_adresse(self, id_agent : int, id_fas : List[int]) -> bool:
+    def modifier_agent_fiches_adresse(self, id_agent: int, id_fas: List[int]) -> bool:
         raise NotImplementedError
 
     @abstractmethod
@@ -36,7 +36,8 @@ class InterfaceFicheAdresse(ABC):
     def obtenir_statistiques(self, champs: list) -> List[tuple]:
         raise NotImplementedError
 
-    def _obtenir_statistiques_request_helper(self, criteria: list) -> str:
+    @staticmethod
+    def _obtenir_statistiques_request_helper(criteria: list) -> str:
         fields = list()
         filters = list()
         if criteria[0]:
