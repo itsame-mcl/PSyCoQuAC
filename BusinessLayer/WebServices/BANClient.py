@@ -107,7 +107,7 @@ class BANClient(metaclass=Singleton):
             answer_binary.write(response.content)
             answer_binary.seek(0)
             answer_string = io.StringIO()
-            answer_string.write(answer_binary.read().decode())
+            answer_string.write(answer_binary.read().decode("utf-8"))
             answer_binary.close()
             answer_string.seek(0)
             reader = csv.DictReader(answer_string, delimiter=",")

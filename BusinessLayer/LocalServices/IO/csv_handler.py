@@ -3,6 +3,7 @@ from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.modele import Modele
 from typing import List
+import chardet
 import csv
 
 
@@ -16,7 +17,11 @@ class CSVHandler(AbstractHandler):
         :param model:
         :return:
         """
-        with open(path, 'r') as file:
+        # Première ouverture du fichier pour détecter le type d'encodage
+        raw = open(path, "rb").read()
+        res = chardet.detect(raw)
+        # Ouverture du fichier pour importation
+        with open(path, 'r', encoding=res['encoding']) as file:
             reader = csv.reader(file, delimiter=';')
             liste_fa = []
             next(reader)

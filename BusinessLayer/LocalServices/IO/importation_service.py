@@ -83,7 +83,7 @@ class ImportationService(metaclass=Singleton):
         for fiche in lot:
             if fiche.code_res == "TA":
                 fiches_a_traiter.append(fiche)
-        fiches_traitees = BANClient().geocodage_par_lot(fiches_a_traiter, verbose=True)
+        fiches_traitees = BANClient().geocodage_par_lot(fiches_a_traiter, verbose=verbose)
         index = 0
         res = True
         if verbose:

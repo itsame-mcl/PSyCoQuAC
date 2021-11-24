@@ -3,3 +3,4 @@ requests~=2.26.0
 PyInquirer==1.0.3
 prompt_toolkit==1.0.14
 python-dotenv~=0.19.1
+chardet~=4.0.0
