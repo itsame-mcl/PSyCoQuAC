@@ -9,6 +9,7 @@ class StatistiqueService(metaclass=Singleton):
         """
 
         :return:
+        renvoie le nombre de fiches adresse dans le pot de chaque agent
         """
         res = DAOFicheAdresse().obtenir_statistiques(par_pot=True)
         return res
@@ -18,6 +19,7 @@ class StatistiqueService(metaclass=Singleton):
         """
 
         :return:
+        renvoie le nombre de fiches adresse dans chaque lot qui a été importé
         """
         res = DAOFicheAdresse().obtenir_statistiques(par_lot=True)
         return res
@@ -27,7 +29,9 @@ class StatistiqueService(metaclass=Singleton):
         """
 
         :param id_superviseur:
+        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître la liste de lots à traiter par l'API
         :return:
+        renvoie la liste des lots du superviseur étant à traiter par l'API
         """
         lots = list()
         res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
@@ -41,7 +45,9 @@ class StatistiqueService(metaclass=Singleton):
         """
 
         :param id_superviseur:
+        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître la liste de lots à affecter
         :return:
+        renvoie la liste des lots du superviseur étant à affecter
         """
         lots = list()
         res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur)
@@ -58,6 +64,7 @@ class StatistiqueService(metaclass=Singleton):
         """
 
         :return:
+        renvoie le nombre de fiches adresse par code résultat
         """
         res = DAOFicheAdresse().obtenir_statistiques(par_code_resultat=True)
         return res

@@ -8,8 +8,11 @@ class SessionService(metaclass=Singleton):
         """
 
         :param nom_utilisateur:
+        le nom d'utilisateur de l'agent cherchant à ouvrir sa session
         :param mot_de_passe:
+        le mot de passe de l'agent cherchant à ouvrir sa session
         :return:
+        renvoie un Business Object Agent dont le nom d'utilisateur et le mot de passe ont été passés en paramètres de la méthode
         """
         try:
             agent = DAOAgent().connexion_agent(nom_utilisateur, mot_de_passe)
