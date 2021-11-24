@@ -8,10 +8,15 @@ class Correspondance:
         """
 
         :param position_numero:
+        la position dans le fichier de la colonne contenant le numéro des adresses dans le fichier
         :param position_voie:
+        la position dans le fichier de la colonne contenant le type de voie (rue, impasse, avenue, boulevard) des adresses dans le fichier
         :param position_cp:
+        la position dans le fichier de la colonne contenant le code postal des adresses dans le fichier
         :param position_ville:
+        la position dans le fichier de la colonne contenant le nom de la ville des adresses
         :param positions_supplementaires:
+        la position dans le fichier de la (ou les) colonne(s) contenant une information supplémentaire sur les adresses
         """
         if isinstance(position_numero, int):
             self._position_numero = (position_numero,)

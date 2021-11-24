@@ -8,7 +8,9 @@ class AgentFactory:
         """
 
         :param data:
+        un dictionnaire de données correspondant aux informations sur l'agent que l'on va créer
         :return:
+        renvoie un objet de type agent
         """
         if data["est_superviseur"]:
             agent = Superviseur(data["prenom"], data["nom"], data["quotite"], data["identifiant_agent"])

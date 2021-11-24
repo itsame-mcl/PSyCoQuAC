@@ -7,9 +7,13 @@ class Modele:
         """
 
         :param nom_modele:
+        le nom du modèle
         :param regex_nom_fichier:
+        l'expression régulière présente dans le nom du fichier ayant créé le modèle, afin de détecter les autres fichiers suivant ce modèle
         :param correspondances:
+        les positions des colonnes dans le modèle correspondant aux informations des adresses (le numéro, le type de voie, le code postal, la ville)
         :param identifiant:
+        l'identifiant du modèle dans la base de données Modeles
         """
         self._identifiant = identifiant
         self._nom_modele = nom_modele

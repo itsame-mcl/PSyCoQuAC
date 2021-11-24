@@ -16,13 +16,17 @@ class FicheAdresse:
         :param lot_id:
         l'identifiant du lot de la fiche adresse, c'est-à-dire l'identifiant du fichier contenant l'ensemble des fiches adresse qui ont été importées en même temps
         :param adresse_initiale:
-        l'adresse
+        l'adresse contenue dans la fiche avant la géolocalisation par l'API
         :param adresse_finale:
+        l'adresse contenue dans la fiche après la géolocalisation par l'API
         :param date_importation:
         la date d'importation de la fiche adresse dans l'application
         :param date_modification:
+        la date de la dernière modification de la fiche adresse
         :param coords_wgs84:
+        les coordonnées de l'adresse de la fiche selon le système géodésique WSG84 (coordonnées GPS)
         :param champs_supplementaires:
+        une (ou plusieurs) information(s) supplémentaire(s) sur l'adresse de la fiche
         :param code_res:
         le code résultat de la fiche adresse, donnant son état :
             TF = une fiche adresse à filtrer par le service d'importation  
@@ -108,6 +112,7 @@ class FicheAdresse:
         """
 
         :param value:
+        le nouveau code résultat de la fiche adresse
         """
         if self._code_res == "TF":
             if value in ["TA", "DF"]:
@@ -185,7 +190,9 @@ class FicheAdresse:
         """
 
         :param expand:
+        un booléen valant True si la fiche adresse contient plusieurs champs supplémentaires
         :return:
+        renvoie un dictionnaire contenant les informations de la fiche adresse
         """
         data = dict()
         data["identifiant_fa"] = self.fiche_id

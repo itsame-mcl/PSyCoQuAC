@@ -6,9 +6,13 @@ class Agent(ABC):
         """
 
         :param prenom:
+        le prénom de l'agent
         :param nom:
+        le nom de l'agent
         :param quotite:
+        la quotité de travail de l'agent
         :param agent_id:
+        l'identifiant, dans la base de données Agents, de l'agent
         """
         self._agent_id = agent_id
         self._prenom = prenom
@@ -45,6 +49,11 @@ class Agent(ABC):
 
     @abstractmethod
     def as_dict(self) -> dict:
+        """
+
+        :return:
+        renvoie un dictionnaire contenant les informations de l'agent
+        """
         data = dict()
         data["identifiant_agent"] = self._agent_id
         data["quotite"] = self._quotite

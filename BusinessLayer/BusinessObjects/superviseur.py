@@ -6,9 +6,13 @@ class Superviseur(Agent):
         """
 
         :param prenom:
+        le prénom du superviseur
         :param nom:
+        le nom du superviseur
         :param quotite:
+        la quotité de travail du superviseur
         :param agent_id:
+        l'identifiant, dans la base de données Agents, du superviseur
         """
         super().__init__(prenom, nom, quotite, agent_id)
 
@@ -16,6 +20,7 @@ class Superviseur(Agent):
         """
 
         :return:
+        renvoie un dictionnaire contenant les informations du superviseur
         """
         data = super().as_dict()
         data["identifiant_superviseur"] = self._agent_id

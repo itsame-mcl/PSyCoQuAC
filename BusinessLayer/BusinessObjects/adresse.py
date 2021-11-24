@@ -3,9 +3,13 @@ class Adresse:
         """
 
         :param numero:
+        le numéro de l'adresse
         :param voie:
+        le type de voie (rue, impasse, avenue, boulevard) de l'adresse
         :param cp:
+        le code postal de l'adresse
         :param ville:
+        le nom de la ville de l'adresse
         """
         self._numero = str(numero)
         self._voie = str(voie)
