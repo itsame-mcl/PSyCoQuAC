@@ -14,7 +14,8 @@ class ExportationService(metaclass=Singleton):
         :param id_lot:
         :param chemin_fichier:
         """
-        path = pathlib.Path(chemin_fichier)
+        path = pathlib.Path(chemin_fichier).resolve()
+        path.touch(exist_ok=True)
         handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
         handler.export_to_file(lot, chemin_fichier)
