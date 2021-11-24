@@ -10,7 +10,74 @@ from utils.progress_bar import printProgressBar
 
 class AffectationService(metaclass=Singleton):
     @staticmethod
-    def proposer_repartition(id_lot: int, id_agents: List[int],
+    def __repartir_selon_quotites(valeur_cible: int, repartition: dict, charge: dict,
+                                  type_fiche: str, poids_reprise: float, poids_controle: float) -> dict:
+        """
+
+        :param valeur_cible:
+        :param repartition:
+        :param charge:
+        :param type_fiche:
+        :param poids_reprise:
+        :param poids_controle:
+        :return:
+        """
+        if type_fiche == 'reprise':
+            poids_cible = poids_reprise
+        elif type_fiche == 'controle':
+            poids_cible = poids_controle
+        else:
+            raise ValueError
+        # On détermine la valeur initiale de la quotité et de la charge déjà affectée
+        base_quotite = sum([charge[agent]['quotite'] for agent in list(charge.keys())])
+        charge_initiale = sum([charge[agent]['actuelle'] for agent in list(charge.keys())]) + \
+                          sum([repartition[agent]['controle'] * poids_controle for agent in list(charge.keys())]) + \
+                          sum([repartition[agent]['reprise'] * poids_reprise for agent in list(charge.keys())])
+        # Puis, on calcule la charge représentée par le nouveau travail pour obtenir la base de charge totale
+        nouvelle_charge = valeur_cible * poids_cible
+        base_charge = charge_initiale + nouvelle_charge
+        for agent in list(charge.keys()):
+            # Pour chaque agent, on cherche à faire en sorte que sa part de la charge totale soit égale à sa part
+            # de la quotité totale
+            part_quotite = charge[agent]['quotite'] / base_quotite
+            part_charge = part_quotite * base_charge
+            charge_actuelle = charge[str(agent)]['actuelle'] + repartition[agent]['controle'] * poids_controle + \
+                              repartition[agent]['reprise'] * poids_reprise
+            if part_charge >= charge_actuelle:
+                # Si l'agent est en capacité de recevoir une partie de la charge, on la convertit en affectation
+                nouvelle_charge_agent = part_charge - charge_actuelle
+                base_charge -= part_charge
+                repartition[agent][type_fiche] = round(nouvelle_charge_agent / poids_cible)
+            else:
+                # Si un agent est déjà très surchargé, on ne lui affecte pas de nouvelle charge
+                base_charge -= charge_actuelle
+            base_quotite -= charge[agent]['quotite']
+        return repartition
+
+    @staticmethod
+    def __corriger_arrondis(valeur_cible: int, repartition: dict, type_fiche: str) -> dict:
+        """
+
+        :param valeur_cible:
+        :param repartition:
+        :param type_fiche:
+        :return:
+        """
+        valeur_affectee = sum([repart_agent[type_fiche] for repart_agent in repartition.values()])
+        difference = valeur_cible - valeur_affectee
+        if difference > 0:
+            # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
+            agents_a_charger = list(repartition.keys())[-difference:]
+            for agent in agents_a_charger:
+                repartition[agent][type_fiche] += 1
+        elif difference < 0:
+            # Si des fiches ont été affectées en trop, on décharge à partir du début
+            agents_a_decharger = list(repartition.keys())[:difference]
+            for agent in agents_a_decharger:
+                repartition[agent][type_fiche] -= 1
+        return repartition
+
+    def proposer_repartition(self, id_lot: int, id_agents: List[int],
                              poids_controle: float = 0.01, poids_reprise: float = 0.01):
         """
 
@@ -20,66 +87,38 @@ class AffectationService(metaclass=Singleton):
         :param poids_reprise:
         :return:
         """
-        # Calcul de la capacité de travail de chaque agent et de l'ensemble de l'équipe sélectionnée
         charge_par_agent = {}
         proposition_de_repartition = {}
-        charge_actuelle_totale = 0
-        quotite_totale = 0
+        # Récupération des informations sur la charge actuelle et la quotité des agents sélectionnés
         for agent in id_agents:
             charge_de_l_agent = {}
             controle = DAOFicheAdresse().obtenir_statistiques(filtre_pot=agent, filtre_code_resultat="TC")[0][0]
             reprise = DAOFicheAdresse().obtenir_statistiques(filtre_pot=agent, filtre_code_resultat="TR")[0][0]
             charge_de_l_agent['actuelle'] = controle * poids_controle + reprise * poids_reprise
-            charge_actuelle_totale += charge_de_l_agent['actuelle']
             charge_de_l_agent['quotite'] = DAOAgent().recuperer_quotite(agent)
-            quotite_totale += charge_de_l_agent['quotite']
             charge_par_agent[str(agent)] = charge_de_l_agent
             proposition_de_repartition[str(agent)] = {'reprise': 0, 'controle': 0}
         # Calcul de la charge de travail représentée par le lot
         controle_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TH")[0][0]
-        charge_controle_lot = controle_lot * poids_controle
         reprise_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TR")[0][0]
-        charge_reprise_lot = reprise_lot * poids_reprise
         # Elaboration de la proposition de répartition
         if reprise_lot > 0:
-            base_quotite = quotite_totale
-            base_charge = charge_actuelle_totale + charge_reprise_lot
-            # On commence par répartir le travail obligatoire de reprise en proportion de la quotité des agents
-            for agent in id_agents:
-                part_quotite = charge_par_agent[str(agent)]['quotite'] / base_quotite
-                part_charge = part_quotite * base_charge
-                if part_charge >= charge_par_agent[str(agent)]['actuelle']:
-                    nouvelle_charge = part_charge - charge_par_agent[str(agent)]['actuelle']
-                    base_charge -= part_charge
-                    proposition_de_repartition[str(agent)]['reprise'] = round(nouvelle_charge / poids_reprise)
-                else:
-                    # Si un agent est déjà très surchargé, on ne lui affecte pas de nouvelle charge
-                    base_charge -= charge_par_agent[str(agent)]['actuelle']
-                base_quotite -= charge_par_agent[str(agent)]['quotite']
-        # Vérification de la bonne affectation de toutes les fiches
-        reprise_affectee = sum([repart_agent['reprise'] for repart_agent in proposition_de_repartition.values()])
-        diff_reprise = reprise_lot - reprise_affectee
-        if diff_reprise > 0:
-            # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
-            agents_a_charger = id_agents[-diff_reprise:]
-            for agent in agents_a_charger:
-                proposition_de_repartition[str(agent)]['reprise'] += 1
-        elif diff_reprise < 0:
-            # Si des fiches ont été affectées en trop, on décharge à partir du début
-            agents_a_decharger = id_agents[:diff_reprise]
-            for agent in agents_a_decharger:
-                proposition_de_repartition[str(agent)]['reprise'] -= 1
+            # Calcul d'une répartition proportionnelle à la quotité des fiches
+            proposition_de_repartition = self.__repartir_selon_quotites(reprise_lot, proposition_de_repartition,
+                                                                        charge_par_agent, 'reprise', poids_reprise,
+                                                                        poids_controle)
+            # Vérification de la bonne affectation de toutes les fiches
+            proposition_de_repartition = self.__corriger_arrondis(reprise_lot, proposition_de_repartition, 'reprise')
         if controle_lot > 0:
-            # Si des fiches sont éligibles au contrôle
-            quotite_restante = 0
-            for agent in id_agents:
-                quotite_restante += max(charge_par_agent[str(agent)]['quotite'] -
+            # Si des fiches sont éligibles au contrôle, calcul de la quotité restante disponible
+            quotite_restante = sum([max(charge_par_agent[str(agent)]['quotite'] -
                                         charge_par_agent[str(agent)]['actuelle'] -
                                         proposition_de_repartition[str(agent)]['reprise'] * poids_reprise, 0)
+                                    for agent in id_agents])
             if quotite_restante > 0:
-                # Et si il reste de la charge disponible après affectation des fiches en reprise
-                fiches_controlables = round(quotite_restante / poids_controle)
-                if controle_lot > fiches_controlables:
+                # Si il reste de la charge disponible après affectation des fiches en reprise
+                capacite_controle = round(quotite_restante / poids_controle)
+                if controle_lot > capacite_controle:
                     # Si il y'a plus de fiches à contrôler que de fiches contrôlables, on sature les quotités
                     for agent in id_agents:
                         capacite_restante = charge_par_agent[str(agent)]['quotite'] - \
@@ -91,36 +130,14 @@ class AffectationService(metaclass=Singleton):
                             proposition_de_repartition[str(agent)]['controle'] = fiches_a_controler
                 else:
                     # Si toutes les fiches peuvent être contrôlées, on répartit selon la quotité
-                    base_quotite = quotite_totale
-                    base_charge = charge_actuelle_totale + charge_reprise_lot + charge_controle_lot
-                    for agent in id_agents:
-                        part_quotite = charge_par_agent[str(agent)]['quotite'] / base_quotite
-                        part_charge = part_quotite * base_charge
-                        if part_charge >= (charge_par_agent[str(agent)]['actuelle'] +
-                                           proposition_de_repartition[str(agent)]['reprise'] * poids_reprise):
-                            nouvelle_charge = part_charge - charge_par_agent[str(agent)]['actuelle'] - \
-                                              proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
-                            base_charge -= part_charge
-                            proposition_de_repartition[str(agent)]['controle'] = round(nouvelle_charge / poids_controle)
-                        else:
-                            # Si un agent est déjà très surchargé, on ne lui affecte pas de nouvelle charge
-                            base_charge -= charge_par_agent[str(agent)]['actuelle'] + \
-                                           proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
-                        base_quotite -= charge_par_agent[str(agent)]['quotite']
+                    proposition_de_repartition = self.__repartir_selon_quotites(controle_lot,
+                                                                                proposition_de_repartition,
+                                                                                charge_par_agent, 'controle',
+                                                                                poids_reprise,
+                                                                                poids_controle)
                     # Vérification de la bonne affectation de toutes les fiches
-                    controle_affecte = sum(
-                        [repart_agent['controle'] for repart_agent in proposition_de_repartition.values()])
-                    diff_controle = controle_lot - controle_affecte
-                    if diff_controle > 0:
-                        # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
-                        agents_a_charger = id_agents[-diff_controle:]
-                        for agent in agents_a_charger:
-                            proposition_de_repartition[str(agent)]['controle'] += 1
-                    elif diff_controle < 0:
-                        # Si des fiches ont été affectées en trop, on décharge à partir du début
-                        agents_a_decharger = id_agents[:diff_controle]
-                        for agent in agents_a_decharger:
-                            proposition_de_repartition[str(agent)]['controle'] -= 1
+                    proposition_de_repartition = self.__corriger_arrondis(controle_lot, proposition_de_repartition,
+                                                                          'controle')
         # A la fin du calcul, on retourne la répartition proposée
         return proposition_de_repartition
 
@@ -142,7 +159,7 @@ class AffectationService(metaclass=Singleton):
         return [fiche for fiche in lot_fiches if fiche.code_res == "TC"], \
                [fiche for fiche in lot_fiches if fiche.code_res == "VA"]
 
-    def appliquer_repartition(self, id_lot: int, repartition: Dict, verbose:bool = False) -> bool:
+    def appliquer_repartition(self, id_lot: int, repartition: Dict, verbose: bool = False) -> bool:
         """
 
         :param id_lot:
