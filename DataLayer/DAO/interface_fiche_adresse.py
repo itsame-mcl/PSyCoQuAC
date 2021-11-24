@@ -51,7 +51,7 @@ class InterfaceFicheAdresse(ABC):
         if criteria[4] is not None:
             filters.append('identifiant_lot=' + str(int(criteria[4])))
         if criteria[5] is not None:
-            if criteria[5] in ["TI", "TA", "TH", "TC", "TR", "DI", "ER", "VA", "VC", "VR"]:  # sécurité anti_injection
+            if criteria[5] in ["TF", "TA", "TH", "TC", "TR", "EF", "ER", "VA", "VC", "VR"]:  # sécurité anti_injection
                 filters.append('code_resultat=' + '"' + criteria[5] + '"')
         request = "SELECT " + str(fields).strip('[]').replace("'", "") + " FROM fa"
         if len(filters) > 0:

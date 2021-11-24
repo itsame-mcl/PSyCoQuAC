@@ -27,7 +27,7 @@ class ImportationService(metaclass=Singleton):
                     fa.adresse_initiale.cp is not None or fa.adresse_finale.ville is not None):
                 fa.code_res = "TA"
             else:
-                fa.code_res = "DI"
+                fa.code_res = "EF"
         res = DAOFicheAdresse().creer_multiple_fiche_adresse(liste_fa)
         DAOFicheAdresse().incrementer_id_lot()
         return id_lot, res

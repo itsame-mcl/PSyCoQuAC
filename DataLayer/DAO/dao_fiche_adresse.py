@@ -101,7 +101,7 @@ class DAOFicheAdresse(metaclass=Singleton):
             :param filtre_code_resultat:
             :return:
             """
-            if filtre_code_resultat is not None and filtre_code_resultat not in ["TI", "TA", "TH", "TC", "TR", "DI",
+            if filtre_code_resultat is not None and filtre_code_resultat not in ["TF", "TA", "TH", "TC", "TR", "EF",
                                                                                     "ER", "VA", "VC", "VR"]:
                 raise ValueError("Impossible de filtrer sur un code résultat illégal.")
             res = self.__interface.obtenir_statistiques([par_pot, par_lot, par_code_resultat,
