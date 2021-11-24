@@ -8,10 +8,6 @@ class StartView(AbstractView):
         self.__questions = [{'type': 'list','name': 'choix','message': 'Que voulez-vous faire ?',
                             'choices': ['C) Se connecter', "Q) Quitter l'application"]}]
 
-    def display_info(self):
-        with open('assets/banniere.txt', 'r', encoding = "utf-8") as asset:
-            print(asset.read())
-
     def make_choice(self):
         answers = prompt(self.__questions)
         if 'q' in str.lower(answers['choix']):
