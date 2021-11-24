@@ -56,7 +56,8 @@ class ImportationService(metaclass=Singleton):
         """
 
         :param id_superviseur:
-        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître la liste de lots à traiter par l'API
+        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître
+        la liste de lots à traiter par l'API
         :return:
         renvoie la liste des lots du superviseur étant à traiter par l'API
         """
