@@ -43,13 +43,13 @@ CREATE TABLE IF NOT EXISTS modeles (
     position_champs_supplementaires TEXT
 );
 
+DELETE FROM sqlite_sequence WHERE name='lots';
 INSERT INTO sqlite_sequence(name, seq)
 VALUES
     ('fa',0),
     ('agents',0),
     ('modeles',0),
-    ('lots',NULL);
-UPDATE sqlite_sequence SET seq=0 WHERE name='lots';
+    ('lots',0);
 
 INSERT INTO modeles(nom_modele, regex_nom_fichier, position_champ_numero,
                     position_champ_voie, position_champ_code_postal,
