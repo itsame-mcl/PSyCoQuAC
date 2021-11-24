@@ -1,3 +1,4 @@
+from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.modele import Modele
 from utils.singleton import Singleton
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
@@ -10,12 +11,30 @@ import pathlib
 
 class ImportationService(metaclass=Singleton):
     @staticmethod
-    def importer_lot(id_superviseur: int, chemin_fichier: str, modele: Modele) -> Tuple[int, bool]:
+    def _filtre_fiche_importation(fiche: FicheAdresse) -> bool:
+        """
+
+        :param fiche:
+        :return:
+        """
+        num = fiche.adresse_initiale.numero
+        voie = fiche.adresse_initiale.voie
+        cp = fiche.adresse_initiale.cp
+        ville = fiche.adresse_initiale.ville
+        if (num is None or num in ["", " "]) and (voie is None or voie in ["", " "]):
+            return False
+        if (cp is None or cp in ["", " "]) and (ville is None or ville in ["", " "]):
+            return False
+        return True
+
+    def importer_lot(self, id_superviseur: int, chemin_fichier: str, modele: Modele,
+                     filtrer: bool = True) -> Tuple[int, bool]:
         """
 
         :param id_superviseur:
         :param chemin_fichier:
         :param modele:
+        :param filtrer:
         :return:
         """
         path = pathlib.Path(chemin_fichier)
@@ -23,10 +42,10 @@ class ImportationService(metaclass=Singleton):
         id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
         liste_fa = handler.import_from_file(chemin_fichier, id_superviseur * -1, id_lot, modele)
         for fa in liste_fa:
-            if fa.adresse_initiale.voie is not None and (
-                    fa.adresse_initiale.cp is not None or fa.adresse_finale.ville is not None):
+            if not filtrer or self._filtre_fiche_importation(fa):
                 fa.code_res = "TA"
             else:
+                fa.agent_id = id_superviseur
                 fa.code_res = "EF"
         res = DAOFicheAdresse().creer_multiple_fiche_adresse(liste_fa)
         DAOFicheAdresse().incrementer_id_lot()
