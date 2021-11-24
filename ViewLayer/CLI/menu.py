@@ -1,7 +1,7 @@
 from PyInquirer import prompt
+from BusinessLayer.LocalServices.Gestion.session_service import SessionService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.consulter_pot_agent import ConsulterPotView
-from ViewLayer.CLI.deconnexion_view import DeconnexionView
 from ViewLayer.CLI.gestion_equipe_view import GestionEquipeView
 from ViewLayer.CLI.import_export_view import ImportExportView
 from ViewLayer.CLI.modifier_agent_view import ModifierAgentView
@@ -40,7 +40,8 @@ class MenuPrincipalView(AbstractView):
             elif str.upper(answers['choix'][0]) == "M":
                 return ModifierAgentView()
             elif str.upper(answers['choix'][0]) == "Q":
-                return DeconnexionView()
+                SessionService().fermer_session()
+                return MenuPrincipalView()
             elif str.upper(answers['choix'][0]) == "G":
                 return GestionEquipeView()
             elif str.upper(answers['choix'][0]) == "I":

@@ -1,4 +1,5 @@
 from DataLayer.DAO.dao_agent import DAOAgent
+from ViewLayer.CLI.session import Session
 from utils.singleton import Singleton
 
 
@@ -21,4 +22,7 @@ class SessionService(metaclass=Singleton):
         return agent
 
     def fermer_session(self):
-        raise NotImplementedError
+        """
+        Permet de fermer la session actuellement ouverte
+        """
+        Session.clear()
