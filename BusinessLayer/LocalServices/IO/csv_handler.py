@@ -3,25 +3,23 @@ from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.modele import Modele
 from typing import List
-import chardet
 import csv
 
 
 class CSVHandler(AbstractHandler):
-    def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
+    def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele,
+                         encoding: str = 'utf-8') -> List[FicheAdresse]:
         """
 
         :param path:
         :param id_superviseur:
         :param id_lot:
         :param model:
+        :param encoding:
         :return:
         """
-        # Première ouverture du fichier pour détecter le type d'encodage
-        raw = open(path, "rb").read()
-        res = chardet.detect(raw)
         # Ouverture du fichier pour importation
-        with open(path, 'r', encoding=res['encoding']) as file:
+        with open(path, 'r', encoding=encoding) as file:
             reader = csv.reader(file, delimiter=';')
             liste_fa = []
             next(reader)

@@ -7,6 +7,7 @@ import BusinessLayer.LocalServices.IO.factory_handler as factory
 from utils.progress_bar import printProgressBar
 from typing import Tuple
 import pathlib
+import chardet
 
 
 class ImportationService(metaclass=Singleton):
@@ -31,6 +32,7 @@ class ImportationService(metaclass=Singleton):
                      filtrer: bool = True) -> Tuple[int, bool]:
         """
 
+        :return:
         :param id_superviseur:
         :param chemin_fichier:
         :param modele:
@@ -39,8 +41,11 @@ class ImportationService(metaclass=Singleton):
         """
         path = pathlib.Path(chemin_fichier)
         handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
+        # Première ouverture du fichier pour détecter le type d'encodage
+        raw = open(path, "rb").read()
+        res = chardet.detect(raw)
         id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
-        liste_fa = handler.import_from_file(chemin_fichier, id_superviseur * -1, id_lot, modele)
+        liste_fa = handler.import_from_file(chemin_fichier, id_superviseur * -1, id_lot, modele, res['encoding'])
         for fa in liste_fa:
             if not filtrer or self._filtre_fiche_importation(fa):
                 fa.code_res = "TA"
