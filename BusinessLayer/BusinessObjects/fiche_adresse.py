@@ -114,7 +114,7 @@ class FicheAdresse:
                 self._code_res = value
                 self._date_modification = date.today()
             else:
-                raise ValueError("La transition depuis l'état TI ne peut se faire que vers l'état TA ou l'état DI.")
+                raise ValueError("La transition depuis l'état TF ne peut se faire que vers l'état TA ou l'état DF.")
         elif self._code_res == "TA":
             if value in ["TH", "TR"]:
                 self._code_res = value
