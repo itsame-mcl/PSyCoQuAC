@@ -10,22 +10,38 @@ class FicheAdresse:
         """
 
         :param fiche_id:
+        l'identifiant, dans la base de données FA, de la fiche adresse
         :param agent_id:
+        l'identifiant, dans la base de données Agents, de l'agent en charge de la fiche adresse
         :param lot_id:
+        l'identifiant du lot de la fiche adresse, c'est-à-dire l'identifiant du fichier contenant l'ensemble des fiches adresse qui ont été importées en même temps
         :param adresse_initiale:
+        l'adresse
         :param adresse_finale:
         :param date_importation:
+        la date d'importation de la fiche adresse dans l'application
         :param date_modification:
         :param coords_wgs84:
         :param champs_supplementaires:
         :param code_res:
+        le code résultat de la fiche adresse, donnant son état :
+            TF = une fiche adresse à filtrer par le service d'importation  
+            TA = une fiche adresse à traiter par l'API
+            TH = une fiche adresse traitée par l'API à échantilloner
+            TC = une fiche adresse à contrôler
+            TR = une fiche adresse à reprendre
+            DF = une fiche adresse considérée comme impossible à géolocaliser par l'API, selon le service d'importation
+            ER = une fiche échec reprise (une fiche adresse dont les problèmes empêchant la géolocalisation n'ont pu être résolus )
+            VA = une fiche adresse géolocalisée par l'API et n'ayant pas été échantilonnée
+            VC = une fiche adresse dont le contrôle a confirmé que la géolocaliser était correcte
+            VR = une fiche adresse dont la reprise à permis de la géolocaliser correctement
         """
         self._fiche_id = fiche_id
         self._agent_id = agent_id
         self._lot_id = lot_id
         self._date_importation = date_importation
         self._date_modification = date_modification
-        if code_res in ["TI", "TA", "TH", "TC", "TR", "DI", "ER", "VA", "VC", "VR"]:
+        if code_res in ["TF", "TA", "TH", "TC", "TR", "DF", "ER", "VA", "VC", "VR"]:
             self._code_res = code_res
         else:
             raise ValueError("Impossible d'initialiser un objet FicheAdresse avec un code résultat illégal.")
@@ -93,8 +109,8 @@ class FicheAdresse:
 
         :param value:
         """
-        if self._code_res == "TI":
-            if value in ["TA", "DI"]:
+        if self._code_res == "TF":
+            if value in ["TA", "DF"]:
                 self._code_res = value
                 self._date_modification = date.today()
             else:
@@ -123,8 +139,8 @@ class FicheAdresse:
                 self._date_modification = date.today()
             else:
                 raise ValueError("La transition depuis l'état TR ne peut se faire que vers l'état VR ou l'état ER.")
-        elif self._code_res == "DI":
-            raise ValueError("L'état DI est un état final.")
+        elif self._code_res == "DF":
+            raise ValueError("L'état DF est un état final.")
         elif self._code_res == "ER":
             raise ValueError("L'état ER est un état final.")
         elif self._code_res == "VA":
