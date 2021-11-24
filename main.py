@@ -17,7 +17,7 @@ if __name__ == '__main__':
         print(asset.read())
     bordure_path = (base_path / "./assets/bordure.txt").resolve()
     while vue_actuelle:
-        with open(bordure_path, 'r') as border:
+        with open(bordure_path, 'r', encoding="utf-8") as border:
             print(border.read())
             vue_actuelle.display_info()
             vue_actuelle = vue_actuelle.make_choice()

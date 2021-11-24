@@ -94,9 +94,9 @@ class SetupView(AbstractView):
                 script_path = (self.__base_path / script_file).resolve()
                 curseur = DBConnexion().connexion.cursor()
                 if answers['engine'] == "PostgreSQL":
-                    curseur.execute(open(script_path, "r").read())
+                    curseur.execute(open(script_path, "r", encoding="utf-8").read())
                 elif answers['engine'] == "SQLite":
-                    curseur.executescript(open(script_path, "r").read())
+                    curseur.executescript(open(script_path, "r", encoding="utf-8").read())
                     DBConnexion().connexion.commit()
                 curseur.close()
                 print("Configuration de la base de données terminée. Création du premier superviseur :")
