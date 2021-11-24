@@ -103,6 +103,7 @@ class BANClient(metaclass=Singleton):
                 print("Réponse de l'API reçue, analyse des résultats...")
             query_binary.close()
             answer_binary = io.BytesIO()
+            answer_binary.encoding = "utf-8"
             answer_binary.write(response.content)
             answer_binary.seek(0)
             answer_string = io.StringIO()
