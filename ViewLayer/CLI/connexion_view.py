@@ -15,7 +15,8 @@ class ConnexionView(AbstractView):
         answers = prompt(self.__questions)
         agent = SessionService().ouvrir_session(answers['nom_utilisateur'],answers['mot_de_passe'])
         if not (isinstance(agent, Agent)):
-            print("Ah ah ah... Vous n'avez pas dis le mot magique !")
+            #Ah ah ah... Vous n'avez pas dis le mot magique !
+            print("Nom d'utilisateur ou mot de passe incorrect. Veuillez réessayer.")
             return ConnexionView()
         else:
             Session().agent = agent
