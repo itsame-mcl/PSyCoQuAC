@@ -52,6 +52,22 @@ class ImportationService(metaclass=Singleton):
         return id_lot, res
 
     @staticmethod
+    def lots_a_traiter_api(id_superviseur: int):
+        """
+
+        :param id_superviseur:
+        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître la liste de lots à traiter par l'API
+        :return:
+        renvoie la liste des lots du superviseur étant à traiter par l'API
+        """
+        lots = list()
+        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
+                                                     filtre_code_resultat="TA")
+        for ligne in res:
+            lots.append(ligne[0])
+        return lots
+
+    @staticmethod
     def traiter_lot_api(id_lot: int, verbose=False):
         """
 

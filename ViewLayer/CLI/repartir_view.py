@@ -2,14 +2,13 @@ from BusinessLayer.LocalServices.Gestion.agent_service import AgentService
 from ViewLayer.CLI.abstract_view import AbstractView
 from ViewLayer.CLI.session import Session
 from BusinessLayer.LocalServices.TraitementFA.affectation_service import AffectationService
-from BusinessLayer.LocalServices.Gestion.statistique_service import StatistiqueService
 import ViewLayer.CLI.menu as mp
 from PyInquirer import prompt
 
 
 class RepartirView(AbstractView):
     def __init__(self) -> None:
-        self.__liste_lots = StatistiqueService().lots_a_affecter(Session().agent.agent_id)
+        self.__liste_lots = AffectationService().lots_a_affecter(Session().agent.agent_id)
 
     @staticmethod
     def __prompt_agents() -> list:

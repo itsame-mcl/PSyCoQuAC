@@ -196,3 +196,23 @@ class AffectationService(metaclass=Singleton):
                 progression += 1
                 printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
         return res
+
+    @staticmethod
+    def lots_a_affecter(id_superviseur: int):
+        """
+
+        :param id_superviseur:
+        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître
+        la liste de lots à affecter
+        :return:
+        renvoie la liste des lots du superviseur étant à affecter
+        """
+        lots = list()
+        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur)
+        for ligne in res:
+            lots.append(ligne[0])
+        rem = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
+                                                     filtre_code_resultat="TA")
+        for ligne in rem:
+            lots.remove(ligne[0])
+        return lots
