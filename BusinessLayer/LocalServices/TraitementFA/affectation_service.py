@@ -65,16 +65,19 @@ class AffectationService(metaclass=Singleton):
         """
         valeur_affectee = sum([repart_agent[type_fiche] for repart_agent in repartition.values()])
         difference = valeur_cible - valeur_affectee
-        if difference > 0:
-            # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
-            agents_a_charger = list(repartition.keys())[-difference:]
-            for agent in agents_a_charger:
-                repartition[agent][type_fiche] += 1
-        elif difference < 0:
-            # Si des fiches ont été affectées en trop, on décharge à partir du début
-            agents_a_decharger = list(repartition.keys())[:-difference]
-            for agent in agents_a_decharger:
-                repartition[agent][type_fiche] -= 1
+        while difference != 0:
+            if difference > 0:
+                # Si des fiches sont encore à affecter en raison des arrondis, on charge à partir de la fin
+                agents_a_charger = list(repartition.keys())[-difference:]
+                for agent in agents_a_charger:
+                    repartition[agent][type_fiche] += 1
+                    difference -= 1
+            elif difference < 0:
+                # Si des fiches ont été affectées en trop, on décharge à partir du début
+                agents_a_decharger = list(repartition.keys())[:-difference]
+                for agent in agents_a_decharger:
+                    repartition[agent][type_fiche] -= 1
+                    difference += 1
         return repartition
 
     def proposer_repartition(self, id_lot: int, id_agents: List[int],
