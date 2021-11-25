@@ -507,7 +507,7 @@ abstract DataLayer.DAO.InterfaceFicheAdresse {
     {abstract} +bool modifier_agent_fiches_adresse(int, List[int])
     {abstract} +bool supprimer_fiche_adresse(int)
     {abstract} +List[tuple] obtenir_statistiques(list)
-    {static} #str obtenir_statistiques_request_helper(list)
+    {static} -str obtenir_statistiques_request_helper(list)
     {abstract} +int recuperer_dernier_id_fa()
     {abstract} +int recuperer_dernier_id_lot()
     {abstract} +bool incrementer_id_lot()
