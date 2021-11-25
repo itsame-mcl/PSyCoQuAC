@@ -4,6 +4,7 @@ from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.modele import Modele
 from typing import List
 import csv
+import sys
 
 
 class CSVHandler(AbstractHandler):
@@ -53,7 +54,7 @@ class CSVHandler(AbstractHandler):
         :param path:
         le chemin, sur la machine de l'utilisateur, où ce dernier souhaite placer le lot exporté
         """
-        with open(path, 'w', encoding='utf-8', newline='') as file:
+        with open(path, 'w', encoding=sys.getdefaultencoding(), newline='') as file:
             writer = csv.DictWriter(file, lot[0].as_dict(True).keys())
             writer.writeheader()
             for fiche in lot:
