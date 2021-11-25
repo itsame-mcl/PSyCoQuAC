@@ -18,9 +18,10 @@ class DBConnexion(metaclass=Singleton):
     @property
     def connexion(self):
         """
-        return the opened connection.
+        Cette méthode permet de retourner la connexion ouverte.
 
-        :return: the opened connection.
+        :return:
+        renvoie la connexion ouverte
         """
         return self.__connexion
 

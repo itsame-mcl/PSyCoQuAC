@@ -14,7 +14,7 @@ class AgentService(metaclass=Singleton):
                     mot_de_passe: str, prenom: str, nom: str, id_superviseur: int = None) -> bool:
         """
         Cette méthode permet de créer un agent dans la base de données Agents,
-        dont les paramètres sont les arguments de cette fonction.
+        dont les informations sont les arguments de cette fonction.
 
         :param est_superviseur:
         un booléen valant True si l'agent créé est un superviseur, et False si c'est un gestionnaire
@@ -174,7 +174,7 @@ class AgentService(metaclass=Singleton):
         Cette méthode permet de récupérer la liste des superviseurs enregistrés dans l'application PSyCoQuAC.
 
         :return:
-        renvoie la liste des superviseurs enregistrés dans l'application
+        renvoie la liste des superviseurs présents dans la base de données Agents de l'application PsyCoQuAC
         """
         return DAOAgent().recuperer_liste_superviseurs()
 
