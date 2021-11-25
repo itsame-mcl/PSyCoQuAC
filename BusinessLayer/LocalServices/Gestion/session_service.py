@@ -23,7 +23,8 @@ class SessionService(metaclass=Singleton):
             agent = None
         return agent
 
-    def fermer_session(self):
+    @staticmethod
+    def fermer_session():
         """
         cette méthode permet de fermer la session utilisateur actuellement ouverte.
         """
