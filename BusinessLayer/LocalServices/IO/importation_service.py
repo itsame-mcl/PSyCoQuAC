@@ -33,13 +33,19 @@ class ImportationService(metaclass=Singleton):
     def importer_lot(self, id_superviseur: int, chemin_fichier: str, modele: Modele,
                      filtrer: bool = True) -> Tuple[int, bool]:
         """
+        Cette méthode permet d'importer un fichier dans l'application PSyCoQuAC,
+        en se basant sur un modèle pré-existant afin de faciliter l'importation.
 
-        :return:
         :param id_superviseur:
+        l'identifiant, dans la base de données Agents, du superviseur qui importe le fichier
         :param chemin_fichier:
+        le chemin, sur la machine de l'utilisateur, du fichier à importer
         :param modele:
+        le modèle de fichier correspondant au fichier à importer
         :param filtrer:
+        un booléen valant True si la fiche adresse dans le lot importé peut être traitée par l'API
         :return:
+        renvoie la liste de fiches adresse contenues dans le fichier importé
         """
         path = pathlib.Path(chemin_fichier)
         try:
@@ -66,6 +72,8 @@ class ImportationService(metaclass=Singleton):
     @staticmethod
     def lots_a_traiter_api(id_superviseur: int):
         """
+        Cette méthode permet de récupérer les lots (c'est-à-dire les listes de fiches adresse) à traiter par l'API,
+        parmi les lots du superviseur dont on renseigne l'identifiant de la base de données Agents.
 
         :param id_superviseur:
         l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître
@@ -83,10 +91,15 @@ class ImportationService(metaclass=Singleton):
     @staticmethod
     def traiter_lot_api(id_lot: int, verbose=False):
         """
+        Cette méthode permet de traiter un lot (c'est-à-dire une liste de fiches adresse),
+        dont on renseigne l'identifiant de la base de données FA, par l'API.
 
         :param id_lot:
+        l'identifiant de lot, dans la base de données FA, des fiches adresse à traiter par l'API 
         :param verbose:
+        un booléen valant True si le traitement de la fiche adresse par l'API prend du temps
         :return:
+        renvoie un booléen valant True si le lot a été correctement traité par l'API
         """
         if verbose:
             print("Chargement du lot à traiter...")

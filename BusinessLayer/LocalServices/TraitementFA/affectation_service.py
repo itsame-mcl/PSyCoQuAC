@@ -13,6 +13,8 @@ class AffectationService(metaclass=Singleton):
     def __repartir_selon_quotites(valeur_cible: int, repartition: dict, charge: dict,
                                   type_fiche: str, poids_reprise: float, poids_controle: float) -> dict:
         """
+        Cette méthode permet de répartir les fiches adresse à contrôler/reprendre entre les agents,
+        en fonction de la quotité de travail et du pot de ces derniers.
 
         :param valeur_cible:
         :param repartition:
@@ -83,9 +85,13 @@ class AffectationService(metaclass=Singleton):
     def proposer_repartition(self, id_lot: int, id_agents: List[int],
                              poids_controle: float = 0.01, poids_reprise: float = 0.01):
         """
+        Cette méthode permet de proposer une répartition des fiches adresse à contrôler/à reprendre
+        entre une liste d'agents dont on renseigne les identifiants de la base de données Agents.
 
         :param id_lot:
+        l'identifiant de lot, dans la base de données FA, des fiches adresse à répartir
         :param id_agents:
+        la liste des identifiants, dans la base de données Agents, des agents entre lesquels la répartition des fiches adresse est effectuée 
         :param poids_controle:
         :param poids_reprise:
         :return:

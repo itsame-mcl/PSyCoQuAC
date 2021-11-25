@@ -17,10 +17,15 @@ class BANClient(metaclass=Singleton):
     @staticmethod
     def __json_to_fa(json_data, fiche):
         """
+        Cette méthode permet de transférer les coordonnées WGS-84 d'un fichier JSON dans une fiche adresse,
+        qui récupère également l'adresse que l'API Base Adresse Nationale trouve à partir des informations contenues dans le JSON. 
 
         :param json_data:
+        le fichier JSON contenant les coodonnées WGS-84, ainsi que les informations permettant à l'API de géolocaliser une adresse
         :param fiche:
+        le Businnes Object FicheAdresse qui récupère les coordonnées WGS-84 et l'adresse géolocalisée par l'API
         :return:
+        renvoie la fiche adresse, enrichie des coordonnées WGS-84 et de l'adresse géolocalisée par l'API
         """
         coordonnees_gps = json_data["geometry"]["coordinates"]
         fiche.coords_wgs84 = tuple(coordonnees_gps)
@@ -33,9 +38,12 @@ class BANClient(metaclass=Singleton):
 
     def geocodage_par_fiche(self, fiche_a_traiter: FicheAdresse) -> Tuple[float, FicheAdresse]:
         """
+        Cette méthdoe permet de géolocaliser une fiche adresse avec l'API Base Adresse Nationale.
 
         :param fiche_a_traiter:
+        le Business Object FicheAdresse que l'oon cherche à géolocaliser
         :return:
+        renvoie un tuple contenant le score renvoyé par l'API et la fiche adresse
         """
         adresse = str(fiche_a_traiter.adresse_finale).replace(" ", "+")
         if time_ns() - self.__lastcall < self.__wait_ns:
@@ -49,9 +57,16 @@ class BANClient(metaclass=Singleton):
 
     def reverse_par_fiche(self, fiche_a_traiter: FicheAdresse) -> Tuple[float, FicheAdresse]:
         """
+        Cette méthode permet d'envoyer une fiche adresse à l'API Base Adresse Nationale,
+        afin que cette dernière retrouve une adresse à partir des coordonnées GPS de la fiche adresse,
+        et renvoie le score de cette adresse.
+        Cette méthode permet de vérifier, en renversant la méthode de l'API,
+        que la fiche adresse passée en argument a été correctement géolocalisée. 
 
         :param fiche_a_traiter:
+        le Business Object FicheAdresse dont on cherche à déterminer le score
         :return:
+        renvoie un tuple contenant le score renvoyé par l'API et la fiche adresse
         """
         if len(fiche_a_traiter.coords_wgs84) == 0:
             raise ValueError('La fiche adresse ne possède pas de coordonnées GPS')
@@ -71,11 +86,16 @@ class BANClient(metaclass=Singleton):
     def geocodage_par_lot(fiches_a_traiter: List[FicheAdresse], seuil_score: float = 0.8,
                           verbose=False) -> List[FicheAdresse]:
         """
+        Cette méthode permet de géolocaliser un lot (c'est-à-dire une liste de fiches adresse) comme un ensemble.
 
         :param fiches_a_traiter:
+        la liste de fiches adresse que l'on souhaite géolocaliser
         :param seuil_score:
+        la valeur seuil du score renvoyé par l'API, au-dessous duquel l'adresse renvoyée par l'API est rejetée
         :param verbose:
+        un booléen valant True si le géocodage du lot prend du temps
         :return:
+        renvoie la liste de fiches adresse, contenant l'adresse géolocalisée par l'API
         """
         try:
             if verbose:
