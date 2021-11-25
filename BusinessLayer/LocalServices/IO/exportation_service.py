@@ -12,6 +12,7 @@ class ExportationService(metaclass=Singleton):
         """
 
         :param id_lot:
+        
         :param chemin_fichier:
         """
         path = pathlib.Path(chemin_fichier)
