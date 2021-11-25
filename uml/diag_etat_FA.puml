@@ -7,23 +7,23 @@ state ctr <<choice>>
 state rep <<choice>>
 
 [*] -> imp : importation
-imp -> TA : exploitable
-imp --> DI : inexploitable
+imp -> TA : [exploitable]
+imp --> DF : [inexploitable]
 TA -> api : traitement API
-api -> TH : réussite
+api -> TH : [réussite]
 TH -> ech : échantillonnage
-api --> TR : échec
-ech --> VA : non
-ech --> TC : oui
+api --> TR : [échec]
+ech --> VA : [non]
+ech --> TC : [oui]
 TC -> ctr : contrôle
-ctr -> VC : correct
-ctr --> TR : incorrect
+ctr -> VC : [correct]
+ctr --> TR : [incorrect]
 TR -> rep : reprise
-rep --> VR : réussite
-rep -> ER : échec
+rep --> VR : [réussite]
+rep -> ER : [échec]
 VA --> [*]
-VC --> [*]
 VR --> [*]
 ER --> [*]
-DI --> [*]
+VC --> [*]
+DF --> [*]
 @enduml
