@@ -7,6 +7,8 @@ class SessionService(metaclass=Singleton):
     @staticmethod
     def ouvrir_session(nom_utilisateur, mot_de_passe):
         """
+        Cette méthode permet à un utilisateur de se connecter à l'application PSyCoQuAC,
+        en renseignant son nom d'utilisateur et son mot de passe.
 
         :param nom_utilisateur:
         le nom d'utilisateur de l'agent cherchant à ouvrir sa session
@@ -23,6 +25,6 @@ class SessionService(metaclass=Singleton):
 
     def fermer_session(self):
         """
-        Permet de fermer la session actuellement ouverte
+        cette méthode permet de fermer la session utilisateur actuellement ouverte.
         """
         Session.clear()

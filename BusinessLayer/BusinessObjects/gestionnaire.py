@@ -29,6 +29,8 @@ class Gestionnaire(Agent):
 
     def as_dict(self) -> dict:
         """
+        Cette méthode transforme le gestionnaire en dictionnaire,
+        dont les valeurs sont les paramètres du gestionnaire.
 
         :return:
         renvoie un dictionnaire contenant les informations du gestionnaire

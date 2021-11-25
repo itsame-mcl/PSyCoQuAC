@@ -112,6 +112,8 @@ class FicheAdresse:
     @code_res.setter
     def code_res(self, value):
         """
+        Cette méthode permet de modifier la valeur du code résultat de la fiche adresse,
+        en vérifiant que le changement demandé est licite.
 
         :param value:
         le nouveau code résultat de la fiche adresse
@@ -190,6 +192,8 @@ class FicheAdresse:
 
     def as_dict(self, expand: bool = False):
         """
+        Cette méthode transforme la fiche adresse en dictionnaire,
+        dont les valeurs sont les paramètres de la fiche adresse.
 
         :param expand:
         un booléen valant True si la fiche adresse contient plusieurs champs supplémentaires

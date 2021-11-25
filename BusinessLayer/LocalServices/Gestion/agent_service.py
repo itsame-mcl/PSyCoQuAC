@@ -13,6 +13,8 @@ class AgentService(metaclass=Singleton):
     def creer_agent(est_superviseur: bool, quotite: float, nom_utilisateur: str,
                     mot_de_passe: str, prenom: str, nom: str, id_superviseur: int = None) -> bool:
         """
+        Cette méthode permet de créer un agent dans la base de données Agents,
+        dont les paramètres sont les arguments de cette fonction.
 
         :param est_superviseur:
         un booléen valant True si l'agent créé est un superviseur, et False si c'est un gestionnaire
@@ -40,6 +42,7 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def modifier_agent(agent_a_modifier: Agent) -> bool:
         """
+        Cette méthode permet de modifier les informations d'un agent dans la base de données Agents.
 
         :param agent_a_modifier:
         l'agent dont on souhaite modifier les informations
@@ -52,6 +55,7 @@ class AgentService(metaclass=Singleton):
     def reinitialiser_identifiants(id_agent: int, nouveau_mot_de_passe_en_clair: str,
                                    nouveau_nom_utilisateur: str = None) -> bool:
         """
+        Cette méthode permet de réinitialiser les identifiants permettant à un agent de se connecter à l'application PSyCoQuAC.
 
         :param id_agent:
         le nouvel identifiant de l'agent dans la base de données Agents
@@ -73,6 +77,7 @@ class AgentService(metaclass=Singleton):
                              nouveau_nom_utilisateur: str = None,
                              nouveau_mot_de_passe_en_clair: str = None) -> bool:
         """
+        Cette méthode permet de changer les identifiants permettant à un agent de se connecter à l'application PSyCoQuAC. 
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent
@@ -101,6 +106,8 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def supprimer_agent(agent_a_supprimer: int) -> bool:
         """
+        Cette méthode permet de supprimer un agent de la base de données Agents, et donc de l'application PSyCoQuAC.
+        En supprimant cet agent, les fiches adresse de son pot (si ce dernier n'est pas vide) sont redonnées à son superviseur.
 
         :param agent_a_supprimer:
         l'identifiant, dans la base de données Agents, de l'agent à supprimer
@@ -125,6 +132,8 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def recuperer_id_superviseur(id_agent: int) -> int:
         """
+        Cette méthode permet de récupérer l'identifiant, dans la base de données Agents, du superviseur 
+        de l'agent dont on renseigne l'identifiant de la base de données Agents.
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent dont on cherche à récupérer l'identifiant du superviseur
@@ -136,6 +145,8 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def recuperer_equipe(id_superviseur: int) -> List[Agent]:
         """
+        Cette méthode permet de récupérer la liste des agents qui compose l'équipe du superviseur
+        dont on renseigne l'identifiant de la base de données Agents.
 
         :param id_superviseur:
         l'identifiant, dans la base de données Agents, du superviseur dont on cherche à récupérer l'équipe
@@ -147,17 +158,20 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def recuperer_liste_delegues(id_superviseur: int) -> List[Gestionnaire]:
         """
+        Cette méthode permet de récupérer la liste des agents de l'équipe du superviseur dont on renseigne l'identifiant de la base de données Agents,
+        qui ont été délégués depuis une autre équipe.
 
         :param id_superviseur:
         l'identifiant, dans la base de données Agents, du superviseur de l'équipe dans laquelle on cherche les agents délégués
         :return:
-        renvoie la liste des gestionnaires délégués présents dans l'équipe
+        renvoie la liste des agents délégués présents dans l'équipe
         """
         return DAOAgent().recuperer_liste_delegues(id_superviseur)
 
     @staticmethod
     def recuperer_liste_superviseurs() -> List[Superviseur]:
         """
+        Cette méthode permet de récupérer la liste des superviseurs enregistrés dans l'application PSyCoQuAC.
 
         :return:
         renvoie la liste des superviseurs enregistrés dans l'application
@@ -167,6 +181,8 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def promouvoir_agent(id_agent: int) -> bool:
         """
+        Cette méthode permet de promouvoir l'agent dont on renseigne l'identifiant de la base de données Agents,
+        c'est-à-dire de transformer un gestionnaire en superviseur. 
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent que l'on souhaite promouvoir
@@ -178,6 +194,9 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def deleguer_agent(id_agent: int, id_delegue: int) -> bool:
         """
+        Cette méthode permet de déléguer l'agent dont on renseigne l'identifiant de la base de données Agents,
+        dans l'équipe du superviseur dont on renseigne l'identifiant de la base de données Agents,
+        de manière temporaire.
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent que l'on souhaite déléguer dans une autre équipe
@@ -191,6 +210,9 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def transferer_agent(id_agent: int, id_nouveau_superviseur: int) -> bool:
         """
+        Cette méthode permet de transférer l'agent dont on renseigne l'identifiant de la base de données Agents,
+        dans l'équipe du superviseur dont on renseigne l'identifiant de la base de données Agents,
+        de manière définitive.
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent que l'on souhaite transférer dans une autre équipe
@@ -204,6 +226,8 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def retroceder_agent(id_agent: int) -> bool:
         """
+        Cette méthode permet de placer l'agent, dont on renseigne l'identifiant de la base de données Agents,
+        dans son équipe d'origine.
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent que l'on souhaite rétrocéder à son superviseur initial
@@ -215,6 +239,8 @@ class AgentService(metaclass=Singleton):
     @staticmethod
     def recuperer_agent(id_agent: int) -> Agent:
         """
+        Cette méthode permet de récupérer le Business Object Agent
+        correspondant à l'identifiant de la base de données Agents que l'on renseigne.
 
         :param id_agent:
         l'identifiant, dans la base de données Agents, de l'agent que l'on souhaite récupérer
