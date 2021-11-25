@@ -11,5 +11,6 @@ class AbstractHandler(ABC):
                          model: Modele, encoding: str = 'utf-8') -> List[FicheAdresse]:
         raise NotImplementedError
 
+    @abstractmethod
     def export_to_file(self, fiches: List[FicheAdresse], path: str) -> bool:
         raise NotImplementedError
