@@ -50,6 +50,7 @@ class Agent(ABC):
     @abstractmethod
     def as_dict(self) -> dict:
         """
+        Cette méthode transforme l'agent en dictionnaire, dont les valeurs sont les paramètres de l'agent.
 
         :return:
         renvoie un dictionnaire contenant les informations de l'agent
