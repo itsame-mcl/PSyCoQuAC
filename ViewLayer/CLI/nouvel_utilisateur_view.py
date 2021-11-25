@@ -17,7 +17,8 @@ class NouvelUtilisateurView(AbstractView):
                             {'type': 'input', 'name': 'nom_utilisateur', 'message': "Nom d'utilisateur :"},
                             {'type': 'password', 'name': 'mot_de_passe', 'message': 'Mot de passe :'}]
 
-    def __role_filter(self, val) -> bool:
+    @staticmethod
+    def __role_filter(val) -> bool:
         if val == "Gestionnaire":
             return False
         elif val == "Superviseur":
@@ -30,7 +31,7 @@ class NouvelUtilisateurView(AbstractView):
         if not (answers["est_superviseur"]):
             succes = AgentService().creer_agent(answers['est_superviseur'], answers['quotite'],
                                                 answers['nom_utilisateur'], answers['mot_de_passe'],
-                                            answers['prenom'], answers['nom'], Session().agent.agent_id)
+                                                answers['prenom'], answers['nom'], Session().agent.agent_id)
         else:
             succes = AgentService().creer_agent(answers['est_superviseur'], answers['quotite'],
                                                 answers['nom_utilisateur'], answers['mot_de_passe'],
