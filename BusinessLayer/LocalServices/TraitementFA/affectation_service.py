@@ -72,7 +72,7 @@ class AffectationService(metaclass=Singleton):
                 repartition[agent][type_fiche] += 1
         elif difference < 0:
             # Si des fiches ont été affectées en trop, on décharge à partir du début
-            agents_a_decharger = list(repartition.keys())[:difference]
+            agents_a_decharger = list(repartition.keys())[:-difference]
             for agent in agents_a_decharger:
                 repartition[agent][type_fiche] -= 1
         return repartition
