@@ -7,7 +7,8 @@ import csv
 
 
 class CSVHandler(AbstractHandler):
-    def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele) -> List[FicheAdresse]:
+    def import_from_file(self, path, id_superviseur: int, id_lot: int, model: Modele,
+                         encoding: str = 'utf-8') -> List[FicheAdresse]:
         """
 
         :param path:
@@ -15,9 +16,11 @@ class CSVHandler(AbstractHandler):
         :param id_superviseur:
         :param id_lot:
         :param model:
+        :param encoding:
         :return:
         """
-        with open(path, 'r') as file:
+        # Ouverture du fichier pour importation
+        with open(path, 'r', encoding=encoding) as file:
             reader = csv.reader(file, delimiter=';')
             liste_fa = []
             next(reader)
@@ -40,7 +43,7 @@ class CSVHandler(AbstractHandler):
         :param lot:
         :param path:
         """
-        with open(path, 'w') as file:
+        with open(path, 'w', encoding='utf-8', newline='') as file:
             writer = csv.DictWriter(file, lot[0].as_dict(True).keys())
             writer.writeheader()
             for fiche in lot:

@@ -2,7 +2,7 @@ from typing import Tuple, List
 from time import time_ns, sleep
 import requests
 import csv
-import os
+import io
 
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
@@ -80,51 +80,58 @@ class BANClient(metaclass=Singleton):
         try:
             if verbose:
                 print("Préparation de la requête API...")
-            with open("search.csv", "w") as file:
-                writer = csv.writer(file)
-                writer.writerow(["id", "adresse", "postcode", "city"])
-                for fiche in fiches_a_traiter:
-                    writer.writerow(
-                        [str(fiche.fiche_id), str(fiche.adresse_finale.numero) + " " + str(fiche.adresse_finale.voie),
-                         str(fiche.adresse_finale.cp), str(fiche.adresse_finale.ville)])
+            query_string = io.StringIO()
+            writer = csv.writer(query_string)
+            writer.writerow(["id", "adresse", "postcode", "city"])
+            for fiche in fiches_a_traiter:
+                writer.writerow(
+                    [str(fiche.fiche_id), str(fiche.adresse_finale.numero) + " " + str(fiche.adresse_finale.voie),
+                     str(fiche.adresse_finale.cp), str(fiche.adresse_finale.ville)])
+            query_string.seek(0)
+            query_binary = io.BytesIO()
+            query_binary.encoding = "utf-8"
+            query_binary.write(query_string.read().encode('utf-8'))
+            query_string.close()
+            query_binary.seek(0)
             if verbose:
                 print("Envoi de la requête à l'API...")
-            with open("search.csv", "r") as file:
-                response = requests.post(url="https://api-adresse.data.gouv.fr/search/csv/", data={
-                    'columns': ["adresse", "city"], 'postcode': "postcode", 'result_columns': [
-                        "result_housenumber", "result_name", "result_postcode", "result_city", "latitude", "longitude",
-                        "result_score"]}, files={'data': file})
+            response = requests.post(url="https://api-adresse.data.gouv.fr/search/csv/", data={
+                'columns': ["adresse", "city"], 'postcode': "postcode", 'result_columns': [
+                    "result_housenumber", "result_name", "result_postcode", "result_city", "latitude", "longitude",
+                    "result_score"]}, files={'data': query_binary.read()})
             if verbose:
                 print("Réponse de l'API reçue, analyse des résultats...")
-            with open("answer.csv", "wb") as reponse:
-                reponse.write(response.content)
-            with open("answer.csv", "r") as reponse:
-                reader = csv.DictReader(reponse, delimiter=",")
-                for index, data in zip(range(len(fiches_a_traiter)), reader):
-                    if data["result_housenumber"] == "" and data["result_name"] == "" and data[
-                         "result_postcode"] == "" and data["result_city"] == "":
-                        pass
-                    else:
-                        adresse_api = Adresse(data["result_housenumber"], data["result_name"], data["result_postcode"],
-                                              data["result_city"])
-                        fiches_a_traiter[index].adresse_finale = adresse_api
-                    if data["longitude"] == "" or data["latitude"] == "":
-                        fiches_a_traiter[index].coords_wgs84 = tuple()
-                    else:
-                        fiches_a_traiter[index].coords_wgs84 = (data["longitude"], data["latitude"])
-                    if data["result_score"] == "" or float(data["result_score"]) < seuil_score:
-                        fiches_a_traiter[index].code_res = "TR"
-                    else:
-                        fiches_a_traiter[index].code_res = "TH"
+            query_binary.close()
+            answer_binary = io.BytesIO()
+            answer_binary.encoding = "utf-8"
+            answer_binary.write(response.content)
+            answer_binary.seek(0)
+            answer_string = io.StringIO()
+            answer_string.write(answer_binary.read().decode("utf-8"))
+            answer_binary.close()
+            answer_string.seek(0)
+            reader = csv.DictReader(answer_string, delimiter=",")
+            for index, data in zip(range(len(fiches_a_traiter)), reader):
+                if data["result_housenumber"] == "" and data["result_name"] == "" and data[
+                     "result_postcode"] == "" and data["result_city"] == "":
+                    pass
+                else:
+                    adresse_api = Adresse(data["result_housenumber"], data["result_name"], data["result_postcode"],
+                                          data["result_city"])
+                    fiches_a_traiter[index].adresse_finale = adresse_api
+                if data["longitude"] == "" or data["latitude"] == "":
+                    fiches_a_traiter[index].coords_wgs84 = tuple()
+                else:
+                    fiches_a_traiter[index].coords_wgs84 = (data["longitude"], data["latitude"])
+                if data["result_score"] == "" or float(data["result_score"]) < seuil_score:
+                    fiches_a_traiter[index].code_res = "TR"
+                else:
+                    fiches_a_traiter[index].code_res = "TH"
+            answer_string.close()
             if verbose:
                 print("Analyse des résultats terminée !")
         except Exception:
             if verbose:
                 print("Des erreurs sont survenues dans le traitement de la requête API.")
             fiches_a_traiter = None
-        finally:
-            if os.path.exists("search.csv"):
-                os.remove("search.csv")
-            if os.path.exists("answer.csv"):
-                os.remove("answer.csv")
         return fiches_a_traiter

@@ -6,3 +6,5 @@ class HandlerFactory:
     def get_handler_from_ext(ext):
         if ext == ".csv":
             return CSVHandler()
+        else:
+            raise AttributeError

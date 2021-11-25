@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS modeles (
     position_champs_supplementaires TEXT
 );
 
+DELETE FROM sqlite_sequence WHERE name='lots';
 INSERT INTO sqlite_sequence(name, seq)
 VALUES
     ('fa',0),

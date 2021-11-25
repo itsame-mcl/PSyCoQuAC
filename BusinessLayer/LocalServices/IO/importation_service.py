@@ -7,6 +7,7 @@ import BusinessLayer.LocalServices.IO.factory_handler as factory
 from utils.progress_bar import printProgressBar
 from typing import Tuple
 import pathlib
+import chardet
 
 
 class ImportationService(metaclass=Singleton):
@@ -33,6 +34,7 @@ class ImportationService(metaclass=Singleton):
                      filtrer: bool = True) -> Tuple[int, bool]:
         """
 
+        :return:
         :param id_superviseur:
         :param chemin_fichier:
         :param modele:
@@ -40,18 +42,43 @@ class ImportationService(metaclass=Singleton):
         :return:
         """
         path = pathlib.Path(chemin_fichier)
-        handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
-        id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
-        liste_fa = handler.import_from_file(chemin_fichier, id_superviseur * -1, id_lot, modele)
-        for fa in liste_fa:
-            if not filtrer or self._filtre_fiche_importation(fa):
-                fa.code_res = "TA"
-            else:
-                fa.agent_id = id_superviseur
-                fa.code_res = "EF"
-        res = DAOFicheAdresse().creer_multiple_fiche_adresse(liste_fa)
-        DAOFicheAdresse().incrementer_id_lot()
+        try:
+            handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
+            # Première ouverture du fichier pour détecter le type d'encodage
+            raw = open(path, "rb").read()
+            res = chardet.detect(raw)
+            id_lot = DAOFicheAdresse().recuperer_dernier_id_lot() + 1
+            liste_fa = handler.import_from_file(chemin_fichier, id_superviseur * -1, id_lot, modele, res['encoding'])
+            for fa in liste_fa:
+                if not filtrer or self._filtre_fiche_importation(fa):
+                    fa.code_res = "TA"
+                else:
+                    fa.agent_id = id_superviseur
+                    fa.code_res = "EF"
+            res = DAOFicheAdresse().creer_multiple_fiche_adresse(liste_fa)
+            DAOFicheAdresse().incrementer_id_lot()
+        except AttributeError:
+            print("Fichiers " + str(path.suffix)[1:] + " non supportés.")
+            id_lot = None
+            res = False
         return id_lot, res
+
+    @staticmethod
+    def lots_a_traiter_api(id_superviseur: int):
+        """
+
+        :param id_superviseur:
+        l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître
+        la liste de lots à traiter par l'API
+        :return:
+        renvoie la liste des lots du superviseur étant à traiter par l'API
+        """
+        lots = list()
+        res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
+                                                     filtre_code_resultat="TA")
+        for ligne in res:
+            lots.append(ligne[0])
+        return lots
 
     @staticmethod
     def traiter_lot_api(id_lot: int, verbose=False):
@@ -68,7 +95,7 @@ class ImportationService(metaclass=Singleton):
         for fiche in lot:
             if fiche.code_res == "TA":
                 fiches_a_traiter.append(fiche)
-        fiches_traitees = BANClient().geocodage_par_lot(fiches_a_traiter, verbose=True)
+        fiches_traitees = BANClient().geocodage_par_lot(fiches_a_traiter, verbose=verbose)
         index = 0
         res = True
         if verbose:

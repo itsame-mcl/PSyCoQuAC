@@ -10,7 +10,8 @@ import os
 
 
 class SetupView(AbstractView):
-    def __init__(self) -> None:
+    def __init__(self, base_path) -> None:
+        self.__base_path = base_path
         self.__first_try = True
         self.__choix_installation = None
         self.__questions = [{'type': 'list', 'name': 'nouvelle_installation', 'message': 'Que souhaitez-vous faire ?',
@@ -52,8 +53,8 @@ class SetupView(AbstractView):
             answers = prompt(self.__questions)
             if self.__first_try:
                 self.__choix_installation = answers['nouvelle_installation']
-            Path(".env").touch(exist_ok=True)
-            dotenv_file = dotenv.find_dotenv()
+            Path(self.__base_path / "./.env").touch(exist_ok=True)
+            dotenv_file = (self.__base_path / "./.env").resolve()
             dotenv.load_dotenv(dotenv_file, override=True)
             os.environ["PSYCOQUAC_ENGINE"] = str(answers.get('engine', ""))
             dotenv.set_key(dotenv_file, "PSYCOQUAC_ENGINE", str(answers.get('engine', "")))
@@ -76,7 +77,7 @@ class SetupView(AbstractView):
                 connexion_ok = False
                 DBConnexion.clear()
                 try:
-                    Path(".env").unlink()
+                    Path(self.__base_path / "./.env").unlink()
                 except FileNotFoundError:
                     pass
         if self.__choix_installation:
@@ -89,11 +90,13 @@ class SetupView(AbstractView):
                                'default': False}]
             confirm = prompt(prompt_confirm)
             if confirm['confirmer']:
+                script_file = "./sql/" + str.lower(answers['engine']) + ".sql"
+                script_path = (self.__base_path / script_file).resolve()
                 curseur = DBConnexion().connexion.cursor()
                 if answers['engine'] == "PostgreSQL":
-                    curseur.execute(open("sql/postgresql.sql", "r").read())
+                    curseur.execute(open(script_path, "r", encoding="utf-8").read())
                 elif answers['engine'] == "SQLite":
-                    curseur.executescript(open("sql/sqlite.sql", "r").read())
+                    curseur.executescript(open(script_path, "r", encoding="utf-8").read())
                     DBConnexion().connexion.commit()
                 curseur.close()
                 print("Configuration de la base de données terminée. Création du premier superviseur :")
@@ -109,4 +112,4 @@ class SetupView(AbstractView):
         if succes:
             return mp.MenuPrincipalView()
         else:
-            return SetupView()
+            return SetupView(self.__base_path)

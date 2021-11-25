@@ -57,7 +57,7 @@ class ImportExportView(AbstractView):
             self.__importation()
             return ImportExportView()
         elif str.upper(answers['choix'][0]) == 'A':
-            liste_lots = StatistiqueService().lots_a_traiter_api(Session().agent.agent_id)
+            liste_lots = ImportationService().lots_a_traiter_api(Session().agent.agent_id)
             if len(liste_lots) > 0:
                 choices = list()
                 for lot in liste_lots:

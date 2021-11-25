@@ -51,3 +51,10 @@ class Adresse:
     def __str__(self):
         res = str(self.numero) + " " + str(self.voie) + " " + str(self.cp) + " " + str(self.ville)
         return res
+
+    def __eq__(self, other):
+        res = self.numero == other.numero
+        res *= self.voie == other.voie
+        res *= self.cp == other.cp
+        res *= self.ville == other.ville
+        return res
