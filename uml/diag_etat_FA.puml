@@ -1,4 +1,4 @@
-@startuml
+@startuml "uml_etat"
 hide empty description
 state imp <<choice>>
 state api <<choice>>
@@ -8,7 +8,7 @@ state rep <<choice>>
 
 [*] -> imp : importation
 imp -> TA : [exploitable]
-imp --> DF : [inexploitable]
+imp --> EF : [inexploitable]
 TA -> api : traitement API
 api -> TH : [réussite]
 TH -> ech : échantillonnage
@@ -25,5 +25,5 @@ VC --> [*]
 VA --> [*]
 VR --> [*]
 ER --> [*]
-DF --> [*]
+EF --> [*]
 @enduml
