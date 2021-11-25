@@ -16,7 +16,9 @@ class ImportationService(metaclass=Singleton):
         """
 
         :param fiche:
+        la fiche adresse à filtrer lors de l'importation
         :return:
+        renvoie un booléen valant True si la fiche adresse est géolocalisable par l'API
         """
         num = fiche.adresse_initiale.numero
         voie = fiche.adresse_initiale.voie

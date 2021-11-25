@@ -12,6 +12,7 @@ class CSVHandler(AbstractHandler):
         """
 
         :param path:
+        le chemin du fichier sur l'odinateur 
         :param id_superviseur:
         :param id_lot:
         :param model:
