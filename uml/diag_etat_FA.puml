@@ -1,4 +1,4 @@
-@startuml "uml_etat"
+@startuml
 hide empty description
 state imp <<choice>>
 state api <<choice>>
@@ -16,14 +16,14 @@ api --> TR : [échec]
 ech --> VA : [non]
 ech --> TC : [oui]
 TC -> ctr : contrôle
-ctr -> VC : [correct]
 ctr --> TR : [incorrect]
 TR -> rep : reprise
 rep --> VR : [réussite]
 rep -> ER : [échec]
+ctr -> VC : [correct]
+VC --> [*]
 VA --> [*]
 VR --> [*]
 ER --> [*]
-VC --> [*]
 DF --> [*]
 @enduml
