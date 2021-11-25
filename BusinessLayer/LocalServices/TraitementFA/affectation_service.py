@@ -16,13 +16,13 @@ class AffectationService(metaclass=Singleton):
         Cette méthode permet de répartir les fiches adresse à contrôler/reprendre entre les agents,
         en fonction de la quotité de travail et du pot de ces derniers.
 
-        :param valeur_cible:
-        :param repartition:
-        :param charge:
-        :param type_fiche:
-        :param poids_reprise:
-        :param poids_controle:
-        :return:
+        :param valeur_cible: nombre de fiches à répartir
+        :param repartition: état actuel de la proposition de répartition
+        :param charge: information sur la charge actuelle/totale des agents
+        :param type_fiche: type de fiches à répartir
+        :param poids_reprise: poids de charge d'une fiche à reprendre
+        :param poids_controle: poids de charge d'une fiche à contrôler
+        :return: proposition de répartition intégrant les fiches à répartir de manière équitable
         """
         if type_fiche == 'reprise':
             poids_cible = poids_reprise
@@ -59,11 +59,12 @@ class AffectationService(metaclass=Singleton):
     @staticmethod
     def __corriger_arrondis(valeur_cible: int, repartition: dict, type_fiche: str) -> dict:
         """
-
-        :param valeur_cible:
-        :param repartition:
-        :param type_fiche:
-        :return:
+        Cette méthode permet de corriger les erreurs d'arrondis pouvant survenir lors de la répartition
+        proportionnelle.
+        :param valeur_cible: nombre correct de fiches à avoir dans la répartition
+        :param repartition: état actuel de la répartition
+        :param type_fiche: type de fiches dont la répartition est à corriger
+        :return: version corrigée des erreurs d'arrondis de la proposition de répartition
         """
         valeur_affectee = sum([repart_agent[type_fiche] for repart_agent in repartition.values()])
         difference = valeur_cible - valeur_affectee
@@ -88,13 +89,13 @@ class AffectationService(metaclass=Singleton):
         Cette méthode permet de proposer une répartition des fiches adresse à contrôler/à reprendre
         entre une liste d'agents dont on renseigne les identifiants de la base de données Agents.
 
-        :param id_lot:
+        :param id_lot: identifiant du lot sur lequel proposer la répartition
         l'identifiant de lot, dans la base de données FA, des fiches adresse à répartir
         :param id_agents:
         la liste des identifiants, dans la base de données Agents, des agents entre lesquels la répartition des fiches adresse est effectuée 
-        :param poids_controle:
-        :param poids_reprise:
-        :return:
+        :param poids_controle: poids, en points de quotité, d'une fiche en contrôle
+        :param poids_reprise: poids, en points de quotité, d'une fiche en reprise
+        :return: proposition de répartition équitable
         """
         charge_par_agent = {}
         proposition_de_repartition = {}
@@ -154,10 +155,10 @@ class AffectationService(metaclass=Singleton):
     def echantilloner_fiches(lot_fiches: List[FicheAdresse], taille_echantillon: int) -> \
             Tuple[List[FicheAdresse], List[FicheAdresse]]:
         """
-
-        :param lot_fiches:
-        :param taille_echantillon:
-        :return:
+        Tire un échantillon aléatoire de fiches, marque celles tirées comme étant à contrôler et valide les autres
+        :param lot_fiches: liste de fiches servant de base d'échantilonnage
+        :param taille_echantillon: taille de l'échantillon à tirer
+        :return: un tuple composé d'une première liste de fiches échantillonnées, puis d'une liste de fiches validées
         """
         echantillon_tc = sample(lot_fiches, taille_echantillon)
         for fiche in lot_fiches:
@@ -170,11 +171,11 @@ class AffectationService(metaclass=Singleton):
 
     def appliquer_repartition(self, id_lot: int, repartition: Dict, verbose: bool = False) -> bool:
         """
-
-        :param id_lot:
-        :param repartition:
-        :param verbose:
-        :return:
+        Applique une répartition de fiches à un lot
+        :param id_lot: lot sur lequel appliquer la répartition
+        :param repartition: informations de répartition des fiches entre les agents
+        :param verbose: indique si l'opération doit produire un affichage écran
+        :return: un boolean à True si l'opération s'est bien passée et à False sinon
         """
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
         taille_echantillon_controle = sum([item['controle'] for item in repartition.values()])
@@ -209,7 +210,7 @@ class AffectationService(metaclass=Singleton):
     @staticmethod
     def lots_a_affecter(id_superviseur: int):
         """
-
+        Retourne la liste des lots à affecter pour un superviseur donné.
         :param id_superviseur:
         l'identifiant, dans la base de données Agents, du superviseur dont on souhaite connaître
         la liste de lots à affecter
