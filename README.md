@@ -55,8 +55,14 @@ VALUES (1, 1.0, nom_utilisateur, mot_de_passe, prenom, nom);
 
 Dans ce cas, vous devrez notamment vous assurer d'enregistrer dans mot_de_passe une chaîne salée avec nom_utilisateur en préfixe et hashée avec l'algorithme SHA-512.
 
+### Documentation et Tests unitaires
+
+Pour une meilleure compréhension du code source de l'application, une documentation technique est proposée au moyen de docstrings dans le code des classes relatives aux activités métier et de traitement de données. Des tests unitaires sont également en cours d'implémentation, et concernent actuellement le service d'affectation du travail (AffectationService) et quelques objets métier. 
+
 ## English
 *Voir [ci-dessus](#français) pour la version française*
+
+### Installation
 
 #### From binaries
 To install PSyCoQuAC from its binaries, simply download the distribution compatible with your system, then unpack it and run the executable in the PSyCoQuAC folder:
@@ -103,6 +109,10 @@ VALUES (1, 1.0, username, password, first_name, last_name);
 ```
 
 In this case, you will have to make sure to record as password a salted string with username as prefix and hashed with the SHA-512 algorithm.
+
+### Documentation and Unit Tests
+
+For a better understanding of the source code of the application, technical documentation is provided by means of docstrings in the code of the classes related to business activities and data processing. Unit tests are also being implemented, and currently concern the work assignment service (AffectationService) and some business objects.
 
 ```
                               ,-'   ,"",
