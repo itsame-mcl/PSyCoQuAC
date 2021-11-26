@@ -56,7 +56,7 @@ VALUES (1, 1.0, nom_utilisateur, mot_de_passe, prenom, nom);
 Dans ce cas, vous devrez notamment vous assurer d'enregistrer dans mot_de_passe une chaîne salée avec nom_utilisateur en préfixe et hashée avec l'algorithme SHA-512.
 
 ## English
-*Voir [ci-dessus](#français) pour la version française*
+*Voir [ci-dessus](#franais) pour la version française*
 
 #### From binaries
 To install PSyCoQuAC from its binaries, simply download the distribution compatible with your system, then unpack it and run the executable in the PSyCoQuAC folder:
