@@ -31,6 +31,7 @@ activate StringIO
 StringIO <-- BytesIO : write(decode='utf-8')
 deactivate BytesIO
 Client <-- StringIO : DictReader(answer)
+deactivate StringIO
 loop pour chaque ligne de la réponse
     activate FA
     Client -> FA : adresse_finale(réponse API)
@@ -42,17 +43,19 @@ loop pour chaque ligne de la réponse
     end
     Client <-- FA : FicheAdresse modifiée
     deactivate FA
-    Client -> DAO : mise_a_jour_fa(FicheAdresse)
+end
+deactivate StringIO
+Importation <- Client : List[FicheAdresse]
+deactivate Client
+loop pour chaque objet FicheAdresse
+Importation -> DAO : mise_a_jour_fa(FicheAdresse)
     activate DAO
     DAO -> SQL : UPDATE FA
     activate SQL
     DAO <-- SQL : OK
     deactivate SQL
-    Client <-- DAO : bool True
+    Importation <-- DAO : bool True
     deactivate DAO
 end
-deactivate StringIO
-Importation <- Client : List[FicheAdresse]
-deactivate Client
 deactivate Importation
 @enduml
