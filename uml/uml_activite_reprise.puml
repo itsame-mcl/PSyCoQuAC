@@ -2,10 +2,10 @@
 start
 :Chargement de la fiche à reprendre;
 while (Corrections à appliquer ?) is ([oui])
-    if (Choix de l'utilisateur ?) then (adresse)
+    if (Choix de l'utilisateur ?) then ([adresse])
         :Correction de l'adresse;
         :Recherche API;
-    else (géocodage)
+    else ([géocodage])
         :Saisie manuelle de la géolocalisation;
         :Recherche inverse API;
     endif

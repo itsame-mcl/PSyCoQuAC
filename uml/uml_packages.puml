@@ -1,8 +1,8 @@
-@startuml "packages"
+@startuml "uml_packages"
 skinparam componentStyle rectangle
 
 folder ViewLayer {
-    package UI {
+    package CLI {
     }
 }
 folder BusinessLayer {
@@ -17,6 +17,8 @@ folder DataLayer {
     package DAO {
     }
     database PostgreSQL {
+    }
+    database SQLite {
     }
 }
 @enduml
