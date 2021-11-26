@@ -20,7 +20,6 @@ class ExportationService(metaclass=Singleton):
         path = pathlib.Path(chemin_fichier).resolve()
         try:
             handler = factory.HandlerFactory.get_handler_from_ext(path.suffix)
-            path.touch(exist_ok=True)
             lot = DAOFicheAdresse().recuperer_lot(id_lot)
             handler.export_to_file(lot, chemin_fichier)
         except AttributeError:
