@@ -1,0 +1,54 @@
+@startuml "uml_activite_repartition"
+skinparam ConditionEndStyle hline
+start
+group Sélection
+:Chargement de la liste des agents;
+:Affichage de la liste des agents;
+end group
+repeat :Sélection des agents par le superviseur;
+    group Répartition
+    :Calcul de la quotité et de la charge actuelle
+    individuelle et totale des agents;
+    :Calcul de la charge totale après répartition
+    des fiches à reprendre;
+    repeat :Sélection d'un agent;
+        :Calcul de la part de charge d'un agent
+        en fonction de sa part de quotité;
+        if (Part de charge > Charge actuelle ?) then ([oui])
+        :Affectation de fiches en reprise
+        pour égaliser la charge totale à la
+        part de charge;
+        else ([non])
+        endif
+        :Réajustement des totaux de charge
+        et de quotité;
+    repeat while (Dernier agent atteint ?) is ([non]) not ([oui])
+    :Calcul de la quotité restant disponible;
+    if (Quotité encore disponible ?) then ([oui])
+        :Conversion de la quotité restante
+        en capacité de traitement en contrôle;
+        if (Capacité de traitement > Nombre de fiches contrôle ?) then ([oui])
+            :Répartition proportionnelle à la
+            quotité restante des fiches
+            à contrôler;
+        else ([non])
+            :Saturation des quotités avec
+            des fiches à contrôler;
+        endif
+    else ([non])
+    endif
+    :Génération de la proposition de répartition;
+    end group
+repeat while (Proposition validée par le superviseur ?) is ([non]) not ([oui])
+group Affectation
+if (Fiches affectées en contrôle ?) then ([oui])
+    :Echantillonnage de la liste des
+    fiches traitées par l'API;
+    :Validation des fiches non échantilonnées;
+else ([non])
+endif
+:Application de la répartition
+dans le pot des agents;
+end group
+stop
+@enduml
