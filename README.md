@@ -36,7 +36,7 @@ Il vous permettra de configurer une nouvelle installation ou de vous connecter �
 Vous pouvez également créér manuellement un fichier de configuration pour paramétrer l'application. Pour cela, vous devez créér un fichier ".env" à l'emplacement de l'exécutable ou du fichier main.py (touch .env), et le documenter de la manière suivante :
 
 ```
-PSYCOQUAC_ENGINE='PostGreSQL ou SQLite'
+PSYCOQUAC_ENGINE='PostgreSQL ou SQLite'
 PSYCOQUAC_HOST='chemin/nom d'hôte de la base de données'
 PSYCOQUAC_PORT='port de connexion à la base de données, vide pour SQLite'
 PSYCOQUAC_DATABASE='nom de la base de données, vide pour SQLite'
@@ -56,7 +56,7 @@ VALUES (1, 1.0, nom_utilisateur, mot_de_passe, prenom, nom);
 Dans ce cas, vous devrez notamment vous assurer d'enregistrer dans mot_de_passe une chaîne salée avec nom_utilisateur en préfixe et hashée avec l'algorithme SHA-512.
 
 ## English
-*Voir [ci-dessus](#francais) pour la version française*
+*Voir [ci-dessus](#français) pour la version française*
 
 #### From binaries
 To install PSyCoQuAC from its binaries, simply download the distribution compatible with your system, then unpack it and run the executable in the PSyCoQuAC folder:
@@ -85,7 +85,7 @@ It will allow you to set up a new installation or connect to an existing one. PS
 You can also manually create a configuration file to set up the application. To do this, you must create a ".env" file in the location of the executable or main.py file (touch .env), and document it as follows:
 
 ```
-PSYCOQUAC_ENGINE='PostGreSQL or SQLite
+PSYCOQUAC_ENGINE='PostgreSQL or SQLite
 PSYCOQUAC_HOST='path/hostname of the database'
 PSYCOQUAC_PORT='database connection port, empty for SQLite'
 PSYCOQUAC_DATABASE='database name, empty for SQLite'
