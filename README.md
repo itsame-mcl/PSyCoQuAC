@@ -12,7 +12,7 @@ PSycoQuAC est un système collaboratif permettant de traiter des lots d'adresses
 Pour installer PSyCoQuAC depuis ses binaires, il suffit de télécharger la distribution compatible avec votre système, puis de la décompresser et de lancer l'exécutable dans le dossier PSyCoQuAC :
 * PSyCoQuAC.exe pour Windows (10/11) 64 bits (amd64)
 * PSyCoQuAC pour macOS Intel (x86_64)
-* * PSyCoQuAC pour Linux 64 bits (64bit_intel)
+* PSyCoQuAC pour Linux 64 bits (64bit_intel)
 
 #### Via l'interpréteur Python
 Si vous avez une installation fonctionnelle de Python 3.8 ou 3.9 et de pip sur votre système, vous pouvez également l'utiliser pour exécuter PSyCoQuAC depuis les sources :
@@ -69,7 +69,7 @@ Pour une meilleure compréhension du code source de l'application, une documenta
 To install PSyCoQuAC from its binaries, simply download the distribution compatible with your system, then unpack it and run the executable in the PSyCoQuAC folder:
 * PSyCoQuAC.exe for Windows (10/11) 64-bit (amd64)
 * PSyCoQuAC for macOS Intel (x86_64)
-* * PSyCoQuAC for Linux 64-bit (64_bit_intel)
+* PSyCoQuAC for Linux 64-bit (64_bit_intel)
 
 #### Via the Python interpreter
 If you have a working installation of Python 3.8 or 3.9 and pip on your system, you can also use it to run PSyCoQuAC from the sources :
