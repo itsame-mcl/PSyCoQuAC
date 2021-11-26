@@ -17,7 +17,7 @@ Pour installer PSyCoQuAC depuis ses binaires, il suffit de télécharger la dist
 Si vous avez une installation fonctionnelle de Python 3.8 ou 3.9 et de pip sur votre système, vous pouvez également l'utiliser pour exécuter PSyCoQuAC depuis les sources :
 
 ```
-git clone 
+git clone https://github.com/maxence-lagalle/PSyCoQuAC.git
 cd PSyCoQuAC
 pip install -r requirements.txt
 python main.py
@@ -73,7 +73,7 @@ To install PSyCoQuAC from its binaries, simply download the distribution compati
 If you have a working installation of Python 3.8 or 3.9 and pip on your system, you can also use it to run PSyCoQuAC from the sources :
 
 ```
-git clone 
+git clone https://github.com/maxence-lagalle/PSyCoQuAC.git
 cd PSyCoQuAC
 pip install -r requirements.txt
 python main.py
