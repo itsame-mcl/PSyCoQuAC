@@ -33,8 +33,8 @@ class AffectationService(metaclass=Singleton):
         # On détermine la valeur initiale de la quotité et de la charge déjà affectée
         base_quotite = sum([charge[agent]['quotite'] for agent in list(charge.keys())])
         charge_initiale = sum([charge[agent]['actuelle'] for agent in list(charge.keys())]) + \
-                          sum([repartition[agent]['controle'] * poids_controle for agent in list(charge.keys())]) + \
-                          sum([repartition[agent]['reprise'] * poids_reprise for agent in list(charge.keys())])
+            sum([repartition[agent]['controle'] * poids_controle for agent in list(charge.keys())]) + \
+            sum([repartition[agent]['reprise'] * poids_reprise for agent in list(charge.keys())])
         # Puis, on calcule la charge représentée par le nouveau travail pour obtenir la base de charge totale
         nouvelle_charge = valeur_cible * poids_cible
         base_charge = charge_initiale + nouvelle_charge
@@ -44,7 +44,7 @@ class AffectationService(metaclass=Singleton):
             part_quotite = charge[agent]['quotite'] / base_quotite
             part_charge = part_quotite * base_charge
             charge_actuelle = charge[str(agent)]['actuelle'] + repartition[agent]['controle'] * poids_controle + \
-                              repartition[agent]['reprise'] * poids_reprise
+                repartition[agent]['reprise'] * poids_reprise
             if part_charge >= charge_actuelle:
                 # Si l'agent est en capacité de recevoir une partie de la charge, on la convertit en affectation
                 nouvelle_charge_agent = part_charge - charge_actuelle
@@ -84,8 +84,26 @@ class AffectationService(metaclass=Singleton):
         return repartition
 
     @staticmethod
-    def obtenir_charge_actuelle(id_agents: List[int], poids_controle: float = 0.01,
-                                poids_reprise: float = 0.01) -> dict:
+    def __saturer_quotites(repartition: dict, charge: dict, type_fiche: str,
+                           poids_reprise: float, poids_controle: float):
+        if type_fiche == 'reprise':
+            poids_cible = poids_reprise
+        elif type_fiche == 'controle':
+            poids_cible = poids_controle
+        else:
+            raise ValueError
+        for agent in list(repartition.keys()):
+            capacite_restante = charge[str(agent)]['quotite'] - charge[str(agent)]['actuelle'] - \
+                                repartition[str(agent)]['reprise'] * poids_reprise - \
+                                repartition[str(agent)]['controle'] * poids_controle
+            fiches_a_ajouter = floor(capacite_restante / poids_cible)  # floor permet de ne pas dépasser la quotité
+            if fiches_a_ajouter > 0:
+                repartition[str(agent)][type_fiche] = fiches_a_ajouter
+        return repartition
+
+    @staticmethod
+    def obtenir_charge_actuelle(id_agents: List[int], poids_reprise: float = 0.01,
+                                poids_controle: float = 0.01) -> dict:
         charge_actuelle = {str(agent): {'actuelle': 0.0, 'quotite': 0.0} for agent in id_agents}
         # Récupération des informations sur la charge actuelle et la quotité des agents sélectionnés
         for agent in id_agents:
@@ -96,7 +114,7 @@ class AffectationService(metaclass=Singleton):
         return charge_actuelle
 
     def proposer_repartition(self, id_lot: int, id_agents: List[int],
-                             poids_controle: float = 0.01, poids_reprise: float = 0.01):
+                             poids_reprise: float = 0.01, poids_controle: float = 0.01):
         """
         Cette méthode permet de proposer une répartition des fiches adresse à contrôler/à reprendre
         entre une liste d'agents dont on renseigne les identifiants de la base de données Agents.
@@ -104,16 +122,17 @@ class AffectationService(metaclass=Singleton):
         :param id_lot: identifiant du lot sur lequel proposer la répartition
         l'identifiant de lot, dans la base de données FA, des fiches adresse à répartir
         :param id_agents:
-        la liste des identifiants, dans la base de données Agents, des agents entre lesquels la répartition des fiches adresse est effectuée 
+        la liste des identifiants, dans la base de données Agents, des agents entre
+        lesquels la répartition des fiches adresse est effectuée
         :param poids_controle: poids, en points de quotité, d'une fiche en contrôle
         :param poids_reprise: poids, en points de quotité, d'une fiche en reprise
         :return: proposition de répartition équitable
         """
         proposition_de_repartition = {str(agent): {'reprise': 0, 'controle': 0} for agent in id_agents}
-        charge_par_agent = self.obtenir_charge_actuelle(id_agents, poids_controle, poids_reprise)
+        charge_par_agent = self.obtenir_charge_actuelle(id_agents, poids_reprise, poids_controle)
         # Calcul de la charge de travail représentée par le lot
-        controle_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TH")[0][0]
         reprise_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TR")[0][0]
+        controle_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TH")[0][0]
         # Elaboration de la proposition de répartition
         if reprise_lot > 0:
             # Calcul d'une répartition proportionnelle à la quotité des fiches
@@ -133,14 +152,9 @@ class AffectationService(metaclass=Singleton):
                 capacite_controle = round(quotite_restante / poids_controle)
                 if controle_lot > capacite_controle:
                     # Si il y'a plus de fiches à contrôler que de fiches contrôlables, on sature les quotités
-                    for agent in id_agents:
-                        capacite_restante = charge_par_agent[str(agent)]['quotite'] - \
-                                            charge_par_agent[str(agent)]['actuelle'] - \
-                                            proposition_de_repartition[str(agent)]['reprise'] * poids_reprise
-                        fiches_a_controler = floor(
-                            capacite_restante / poids_controle)  # floor permet de ne pas dépasser la quotité
-                        if fiches_a_controler > 0:
-                            proposition_de_repartition[str(agent)]['controle'] = fiches_a_controler
+                    proposition_de_repartition = self.__saturer_quotites(proposition_de_repartition,
+                                                                         charge_par_agent, 'controle',
+                                                                         poids_reprise, poids_controle)
                 else:
                     # Si toutes les fiches peuvent être contrôlées, on répartit selon la quotité
                     proposition_de_repartition = self.__repartir_selon_quotites(controle_lot,

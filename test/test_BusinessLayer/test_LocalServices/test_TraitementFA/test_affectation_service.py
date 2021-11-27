@@ -136,6 +136,20 @@ class TestAffectationService(TestCase):
         self.assertEqual({'1': {'reprise': 33, 'controle': 0}, '2': {'reprise': 33, 'controle': 0},
                           '3': {'reprise': 34, 'controle': 0}}, proposition_grand_manque)
 
+    def test_saturer_quotites(self):
+        # GIVEN
+        repartition_3_agents = {'1': {'reprise': 50, 'controle': 0}, '2': {'reprise': 30, 'controle': 0},
+                          '3': {'reprise': 20, 'controle': 0}}
+        charge_3_agents = {'1': {'actuelle': 0.25, 'quotite': 1.0},
+                           '2': {'actuelle': 0.6666666666666666, 'quotite': 1.0},
+                           '3': {'actuelle': 1.25, 'quotite': 1.0}}
+        # WHEN
+        repartition_saturee = self.service._AffectationService__saturer_quotites(repartition_3_agents,
+                                charge_3_agents, 'controle', 0.01, 0.01)
+        # THEN
+        self.assertEqual({'1': {'reprise': 50, 'controle': 25}, '2': {'reprise': 30, 'controle': 3},
+                          '3': {'reprise': 20, 'controle': 0}}, repartition_saturee)
+
     @mock.patch.dict(os.environ, {"PSYCOQUAC_ENGINE": "PostgreSQL"})
     @mock.patch('DataLayer.DAO.dao_fiche_adresse.DAOFicheAdresse.obtenir_statistiques')
     @mock.patch('DataLayer.DAO.dao_agent.DAOAgent.recuperer_quotite')
@@ -147,6 +161,8 @@ class TestAffectationService(TestCase):
         # WHEN
         charge_actuelle = self.service.obtenir_charge_actuelle(agents)
         # THEN
+        mock_recuperer_quotite.assert_any_call(3)
+        self.assertEqual(6, mock_obtenir_statistiques.call_count)
         self.assertEqual({'1': {'actuelle': 0.2, 'quotite': 0.5}, '2': {'actuelle': 0.8, 'quotite': 1.0},
                           '3': {'actuelle': 1.2, 'quotite': 1.0}}, charge_actuelle)
 
@@ -156,7 +172,7 @@ class TestAffectationService(TestCase):
     def test_proposer_repartition(self, mock_recuperer_quotite, mock_obtenir_statistiques):
         # GIVEN
         mock_recuperer_quotite.side_effect = [1, 1]
-        mock_obtenir_statistiques.side_effect = [[[25]], [[0]], [[50]], [[0]], [[50]], [[75]]]
+        mock_obtenir_statistiques.side_effect = [[[25]], [[0]], [[50]], [[0]], [[75]], [[50]]]
         lot = 5
         agents = [1, 2]
         # WHEN
@@ -237,7 +253,7 @@ class TestAffectationService(TestCase):
         seed(1)
         # WHEN
         resultat = self.service.appliquer_repartition(id_lot, repartition, False)
-        #THEN
+        # THEN
         self.assertTrue(resultat)
         self.assertEqual(5, sum([1 if fiche.code_res == 'TR' else 0 for fiche in lot_sauvegarde]))
         self.assertEqual(3, sum([1 if fiche.code_res == 'TC' else 0 for fiche in lot_sauvegarde]))
@@ -255,7 +271,7 @@ class TestAffectationService(TestCase):
         id_superviseur = 10
         # WHEN
         lots = self.service.lots_a_affecter(id_superviseur)
-        #THEN
+        # THEN
         self.assertEqual([1, 3], lots)
         self.assertEqual(2, mock_obtenir_statistiques.call_count)
         mock_obtenir_statistiques.assert_called_with(par_lot=True, filtre_pot=-id_superviseur,
