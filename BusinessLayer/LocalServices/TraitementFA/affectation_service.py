@@ -83,6 +83,18 @@ class AffectationService(metaclass=Singleton):
                     difference += 1
         return repartition
 
+    @staticmethod
+    def obtenir_charge_actuelle(id_agents: List[int], poids_controle: float = 0.01,
+                                poids_reprise: float = 0.01) -> dict:
+        charge_actuelle = {str(agent): {'actuelle': 0.0, 'quotite': 0.0} for agent in id_agents}
+        # Récupération des informations sur la charge actuelle et la quotité des agents sélectionnés
+        for agent in id_agents:
+            reprise = DAOFicheAdresse().obtenir_statistiques(filtre_pot=agent, filtre_code_resultat="TR")[0][0]
+            controle = DAOFicheAdresse().obtenir_statistiques(filtre_pot=agent, filtre_code_resultat="TC")[0][0]
+            charge_actuelle[str(agent)]['actuelle'] = round(reprise * poids_reprise + controle * poids_controle, 5)
+            charge_actuelle[str(agent)]['quotite'] = DAOAgent().recuperer_quotite(agent)
+        return charge_actuelle
+
     def proposer_repartition(self, id_lot: int, id_agents: List[int],
                              poids_controle: float = 0.01, poids_reprise: float = 0.01):
         """
@@ -97,17 +109,8 @@ class AffectationService(metaclass=Singleton):
         :param poids_reprise: poids, en points de quotité, d'une fiche en reprise
         :return: proposition de répartition équitable
         """
-        charge_par_agent = {}
-        proposition_de_repartition = {}
-        # Récupération des informations sur la charge actuelle et la quotité des agents sélectionnés
-        for agent in id_agents:
-            charge_de_l_agent = {}
-            controle = DAOFicheAdresse().obtenir_statistiques(filtre_pot=agent, filtre_code_resultat="TC")[0][0]
-            reprise = DAOFicheAdresse().obtenir_statistiques(filtre_pot=agent, filtre_code_resultat="TR")[0][0]
-            charge_de_l_agent['actuelle'] = controle * poids_controle + reprise * poids_reprise
-            charge_de_l_agent['quotite'] = DAOAgent().recuperer_quotite(agent)
-            charge_par_agent[str(agent)] = charge_de_l_agent
-            proposition_de_repartition[str(agent)] = {'reprise': 0, 'controle': 0}
+        proposition_de_repartition = {str(agent): {'reprise': 0, 'controle': 0} for agent in id_agents}
+        charge_par_agent = self.obtenir_charge_actuelle(id_agents, poids_controle, poids_reprise)
         # Calcul de la charge de travail représentée par le lot
         controle_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TH")[0][0]
         reprise_lot = DAOFicheAdresse().obtenir_statistiques(filtre_lot=id_lot, filtre_code_resultat="TR")[0][0]

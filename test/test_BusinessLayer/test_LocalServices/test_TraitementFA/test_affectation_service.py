@@ -139,6 +139,20 @@ class TestAffectationService(TestCase):
     @mock.patch.dict(os.environ, {"PSYCOQUAC_ENGINE": "PostgreSQL"})
     @mock.patch('DataLayer.DAO.dao_fiche_adresse.DAOFicheAdresse.obtenir_statistiques')
     @mock.patch('DataLayer.DAO.dao_agent.DAOAgent.recuperer_quotite')
+    def test_obtenir_charge_actuelle(self, mock_recuperer_quotite, mock_obtenir_statistiques):
+        # GIVEN
+        mock_recuperer_quotite.side_effect = [0.5, 1, 1]
+        mock_obtenir_statistiques.side_effect = [[[13]], [[7]], [[50]], [[30]], [[80]], [[40]]]
+        agents = [1, 2, 3]
+        # WHEN
+        charge_actuelle = self.service.obtenir_charge_actuelle(agents)
+        # THEN
+        self.assertEqual({'1': {'actuelle': 0.2, 'quotite': 0.5}, '2': {'actuelle': 0.8, 'quotite': 1.0},
+                          '3': {'actuelle': 1.2, 'quotite': 1.0}}, charge_actuelle)
+
+    @mock.patch.dict(os.environ, {"PSYCOQUAC_ENGINE": "PostgreSQL"})
+    @mock.patch('DataLayer.DAO.dao_fiche_adresse.DAOFicheAdresse.obtenir_statistiques')
+    @mock.patch('DataLayer.DAO.dao_agent.DAOAgent.recuperer_quotite')
     def test_proposer_repartition(self, mock_recuperer_quotite, mock_obtenir_statistiques):
         # GIVEN
         mock_recuperer_quotite.side_effect = [1, 1]
@@ -191,7 +205,7 @@ class TestAffectationService(TestCase):
     @mock.patch.dict(os.environ, {"PSYCOQUAC_ENGINE": "PostgreSQL"})
     @mock.patch('DataLayer.DAO.dao_fiche_adresse.DAOFicheAdresse.recuperer_lot')
     @mock.patch('DataLayer.DAO.dao_fiche_adresse.DAOFicheAdresse.modifier_fiche_adresse')
-    def test_proposer_repartition(self, mock_modifier_fiche_adresse, mock_recuperer_lot):
+    def test_appliquer_repartition(self, mock_modifier_fiche_adresse, mock_recuperer_lot):
         # GIVEN
         fiche_adresse1 = FicheAdresse(1, 1, 1, Adresse(29, "rue de Raymond Poincaré", 93330, "NEUILLY-SUR-MARNE"),
                                       code_res='TR')
