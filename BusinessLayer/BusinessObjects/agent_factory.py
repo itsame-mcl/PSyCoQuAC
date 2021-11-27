@@ -18,5 +18,5 @@ class AgentFactory:
             agent = Superviseur(data["prenom"], data["nom"], data["quotite"], data["identifiant_agent"])
         else:
             agent = Gestionnaire(data["prenom"], data["nom"], data["quotite"],
-                                 data["identifiant_superviseur"], data["identifiant_agent"])
+                                 superviseur_id=data["identifiant_superviseur"], agent_id=data["identifiant_agent"])
         return agent

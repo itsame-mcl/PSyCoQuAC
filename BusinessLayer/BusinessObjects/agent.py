@@ -1,51 +1,13 @@
 from abc import ABC, abstractmethod
+import attr
 
 
+@attr.s
 class Agent(ABC):
-    def __init__(self, prenom: str, nom: str, quotite: float, agent_id: int = None):
-        """
-
-        :param prenom:
-        le prénom de l'agent
-        :param nom:
-        le nom de l'agent
-        :param quotite:
-        la quotité de travail de l'agent
-        :param agent_id:
-        l'identifiant, dans la base de données Agents, de l'agent
-        """
-        self._agent_id = agent_id
-        self._prenom = prenom
-        self._nom = nom
-        self._quotite = quotite
-
-    @property
-    def agent_id(self) -> int:
-        return self._agent_id
-
-    @property
-    def prenom(self) -> str:
-        return self._prenom
-
-    @prenom.setter
-    def prenom(self, value: str):
-        self._prenom = value
-
-    @property
-    def nom(self) -> str:
-        return self._nom
-
-    @nom.setter
-    def nom(self, value: str):
-        self._nom = value
-
-    @property
-    def quotite(self) -> float:
-        return self._quotite
-
-    @quotite.setter
-    def quotite(self, value):
-        self._quotite = value
+    prenom: str = attr.ib(converter=str, on_setattr=attr.setters.convert)
+    nom: str = attr.ib(converter=str, on_setattr=attr.setters.convert)
+    quotite: float = attr.ib(converter=float, on_setattr=attr.setters.convert)
+    agent_id: int = attr.ib(default=None, converter=attr.converters.optional(int), on_setattr=attr.setters.frozen)
 
     @abstractmethod
     def as_dict(self) -> dict:
@@ -56,8 +18,8 @@ class Agent(ABC):
         renvoie un dictionnaire contenant les informations de l'agent
         """
         data = dict()
-        data["identifiant_agent"] = self._agent_id
-        data["quotite"] = self._quotite
-        data["prenom"] = self._prenom
-        data["nom"] = self._nom
+        data["identifiant_agent"] = self.agent_id
+        data["quotite"] = self.quotite
+        data["prenom"] = self.prenom
+        data["nom"] = self.nom
         return data

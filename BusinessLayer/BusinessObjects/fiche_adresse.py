@@ -1,69 +1,73 @@
 from datetime import date
 from BusinessLayer.BusinessObjects.adresse import Adresse
+import attr
 
 
-class FicheAdresse:
-    def __init__(self, fiche_id: int, agent_id: int, lot_id: int, adresse_initiale: Adresse,
-                 adresse_finale: Adresse = None, date_importation: date = date.today(),
-                 date_modification: date = date.today(), coords_wgs84: dict = None,
-                 champs_supplementaires: dict = None, code_res: str = "TF"):
-        """
+def _update_date_modification(instance, attribute, value):
+    instance.date_modification = date.today()
+    return value
 
-        :param fiche_id:
-        l'identifiant, dans la base de données FA, de la fiche adresse
-        :param agent_id:
-        l'identifiant, dans la base de données Agents, de l'agent en charge de la fiche adresse
-        :param lot_id:
-        l'identifiant du lot de la fiche adresse, c'est-à-dire l'identifiant du fichier contenant l'ensemble des fiches
-        adresse qui ont été importées en même temps
-        :param adresse_initiale:
-        l'adresse contenue dans la fiche avant la géolocalisation par l'API
-        :param adresse_finale:
-        l'adresse contenue dans la fiche après la géolocalisation par l'API
-        :param date_importation:
-        la date d'importation de la fiche adresse dans l'application
-        :param date_modification:
-        la date de la dernière modification de la fiche adresse
-        :param coords_wgs84:
-        les coordonnées de l'adresse de la fiche selon le système géodésique WSG84 (coordonnées GPS)
-        :param champs_supplementaires:
-        une (ou plusieurs) information(s) supplémentaire(s) sur l'adresse de la fiche
-        :param code_res:
-        le code résultat de la fiche adresse, donnant son état :
-            TF = une fiche adresse à filtrer par le service d'importation
-            TA = une fiche adresse à traiter par l'API
-            TH = une fiche adresse traitée par l'API à échantilloner
-            TC = une fiche adresse à contrôler
-            TR = une fiche adresse à reprendre
-            EF = une fiche adresse considérée comme impossible à géolocaliser par l'API, selon le service d'importation
-            ER = une fiche échec reprise (une fiche adresse dont les problèmes empêchant la géolocalisation n'ont pu
-            être résolus)
-            VA = une fiche adresse géolocalisée par l'API et n'ayant pas été échantilonnée
-            VC = une fiche adresse dont le contrôle a confirmé que la géolocaliser était correcte
-            VR = une fiche adresse dont la reprise à permis de la géolocaliser correctement
-        """
-        self._fiche_id = fiche_id
-        self._agent_id = agent_id
-        self._lot_id = lot_id
-        self._date_importation = date_importation
-        self._date_modification = date_modification
-        if code_res in ["TF", "TA", "TH", "TC", "TR", "EF", "ER", "VA", "VC", "VR"]:
-            self._code_res = code_res
-        else:
+
+def _validate_code_res(instance, attribute, value):
+    if instance.code_res == "TF":
+        if value not in ["TF", "TA", "EF"]:
+            raise ValueError("La transition depuis l'état TF ne peut se faire que vers l'état TA ou l'état EF.")
+    elif instance.code_res == "TA":
+        if value not in ["TA", "TH", "TR"]:
+            raise ValueError("La transition depuis l'état TA ne peut se faire que vers l'état TH ou l'état TR.")
+    elif instance.code_res == "TH":
+        if value not in ["TH", "TC", "VA"]:
+            raise ValueError("La transition depuis l'état TH ne peut se faire que vers l'état TC ou l'état VA.")
+    elif instance.code_res == "TC":
+        if value not in ["TR", "VC"]:
+            raise ValueError("La transition depuis l'état TC ne peut se faire que vers l'état TR ou l'état VC.")
+    elif instance.code_res == "TR":
+        if value not in ["TR", "VR", "ER"]:
+            raise ValueError("La transition depuis l'état TR ne peut se faire que vers l'état VR ou l'état ER.")
+    elif instance.code_res == "EF":
+        if value != "EF":
+            raise ValueError("L'état EF est un état final.")
+    elif instance.code_res == "ER":
+        if value != "ER":
+            raise ValueError("L'état ER est un état final.")
+    elif instance.code_res == "VA":
+        if value != "VA":
+            raise ValueError("L'état VA est un état final.")
+    elif instance.code_res == "VC":
+        if value != "VC":
+            raise ValueError("L'état VC est un état final.")
+    elif instance.code_res == "VR":
+        if value != "VR":
+            raise ValueError("L'état VR est un état final.")
+    return value
+
+
+@attr.s
+class FicheAdresse(object):
+    fiche_id: int = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(int)),
+                            on_setattr=attr.setters.frozen)
+    agent_id: int = attr.ib(converter=int, on_setattr=_update_date_modification)
+    lot_id: int = attr.ib(converter=int, on_setattr=attr.setters.frozen)
+    adresse_initiale: Adresse = attr.ib(validator=attr.validators.instance_of(Adresse),
+                                        on_setattr=attr.setters.frozen)
+    adresse_finale: Adresse = attr.ib(validator=attr.validators.instance_of(Adresse),
+                                      on_setattr=_update_date_modification)
+    @adresse_finale.default
+    def _default_adresse_finale(self):
+        return self.adresse_initiale
+
+    date_importation: date = attr.ib(default=date.today(), validator=attr.validators.instance_of(date),
+                                     on_setattr=attr.setters.frozen)
+    date_modification: date = attr.ib(default=date.today(), validator=attr.validators.instance_of(date))
+    coords_wgs84: tuple = attr.ib(factory=tuple, validator=attr.validators.instance_of(tuple),
+                                  on_setattr=_update_date_modification)
+    champs_supplementaires: dict = attr.ib(factory=dict, validator=attr.validators.instance_of(dict),
+                                           on_setattr=_update_date_modification)
+    code_res: str = attr.ib(default='TF', on_setattr=[_validate_code_res, _update_date_modification])
+    @code_res.validator
+    def _validator_code_res(self, attribute, value):
+        if value not in ["TF", "TA", "TH", "TC", "TR", "EF", "ER", "VA", "VC", "VR"]:
             raise ValueError("Impossible d'initialiser un objet FicheAdresse avec un code résultat illégal.")
-        self._adresse_initiale = adresse_initiale
-        if adresse_finale is None:
-            self._adresse_finale = adresse_initiale
-        else:
-            self._adresse_finale = adresse_finale
-        if coords_wgs84 is None:
-            self.coords_wgs84 = dict()
-        else:
-            self._coords_wgs84 = coords_wgs84
-        if champs_supplementaires is None:
-            self._champs_supplementaires = dict()
-        else:
-            self._champs_supplementaires = champs_supplementaires
 
     @classmethod
     def from_dict(cls, data):
@@ -75,120 +79,6 @@ class FicheAdresse:
                    adresse_finale, data["date_importation"], data["date_dernier_traitement"],
                    data["coordonnees_wgs84"], data["champs_supplementaires"],
                    data["code_resultat"])
-
-    @property
-    def fiche_id(self):
-        return self._fiche_id
-
-    @property
-    def agent_id(self):
-        return self._agent_id
-
-    @agent_id.setter
-    def agent_id(self, value):
-        self._agent_id = value
-        self._date_modification = date.today()
-
-    @property
-    def lot_id(self):
-        return self._lot_id
-
-    @property
-    def date_importation(self):
-        return self._date_importation
-
-    @property
-    def date_modification(self):
-        return self._date_modification
-
-    @date_modification.setter
-    def date_modification(self, value):
-        self.date_modification = value
-
-    @property
-    def code_res(self):
-        return self._code_res
-
-    @code_res.setter
-    def code_res(self, value):
-        """
-        Cette méthode permet de modifier la valeur du code résultat de la fiche adresse,
-        en vérifiant que le changement demandé est licite.
-
-        :param value:
-        le nouveau code résultat de la fiche adresse
-        """
-        if self._code_res == "TF":
-            if value in ["TA", "EF"]:
-                self._code_res = value
-                self._date_modification = date.today()
-            else:
-                raise ValueError("La transition depuis l'état TF ne peut se faire que vers l'état TA ou l'état EF.")
-        elif self._code_res == "TA":
-            if value in ["TH", "TR"]:
-                self._code_res = value
-                self._date_modification = date.today()
-            else:
-                raise ValueError("La transition depuis l'état TA ne peut se faire que vers l'état TH ou l'état TR.")
-        elif self._code_res == "TH":
-            if value in ["TC", "VA"]:
-                self._code_res = value
-                self._date_modification = date.today()
-            else:
-                raise ValueError("La transition depuis l'état TH ne peut se faire que vers l'état TC ou l'état VA.")
-        elif self._code_res == "TC":
-            if value in ["TR", "VC"]:
-                self._code_res = value
-                self._date_modification = date.today()
-            else:
-                raise ValueError("La transition depuis l'état TC ne peut se faire que vers l'état TR ou l'état VC.")
-        elif self._code_res == "TR":
-            if value in ["VR", "ER"]:
-                self._code_res = value
-                self._date_modification = date.today()
-            else:
-                raise ValueError("La transition depuis l'état TR ne peut se faire que vers l'état VR ou l'état ER.")
-        elif self._code_res == "EF":
-            raise ValueError("L'état EF est un état final.")
-        elif self._code_res == "ER":
-            raise ValueError("L'état ER est un état final.")
-        elif self._code_res == "VA":
-            raise ValueError("L'état VA est un état final.")
-        elif self._code_res == "VC":
-            raise ValueError("L'état VC est un état final.")
-        elif self._code_res == "VR":
-            raise ValueError("L'état VR est un état final.")
-
-    @property
-    def adresse_initiale(self):
-        return self._adresse_initiale
-
-    @property
-    def adresse_finale(self):
-        return self._adresse_finale
-
-    @adresse_finale.setter
-    def adresse_finale(self, value):
-        self._adresse_finale = value
-        self._date_modification = date.today()
-
-    @property
-    def coords_wgs84(self):
-        return self._coords_wgs84
-
-    @coords_wgs84.setter
-    def coords_wgs84(self, value):
-        self._coords_wgs84 = value
-        self._date_modification = date.today()
-
-    @property
-    def champs_supplementaires(self):
-        return self._champs_supplementaires
-
-    @champs_supplementaires.setter
-    def champs_supplementaires(self, value):
-        self._champs_supplementaires = value
-        self._date_modification = date.today()
 
     def as_dict(self, expand: bool = False):
         """

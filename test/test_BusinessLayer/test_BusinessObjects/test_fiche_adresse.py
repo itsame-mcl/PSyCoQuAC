@@ -23,7 +23,7 @@ class TestFicheAdresse(TestCase):
         # THEN
         self.assertEqual("TF", code_resultat)
         self.assertEqual(Adresse(adresse_numero, adresse_voie, adresse_code_postal, adresse_ville), adresse_finale)
-        self.assertEqual({}, coords_wgs84)
+        self.assertEqual((), coords_wgs84)
         self.assertEqual({}, champs_supplementaires)
 
     def test_creer_fiche_depuis_dictionnaire(self):
@@ -32,7 +32,7 @@ class TestFicheAdresse(TestCase):
                    "date_importation": date(2021, 11, 1), "date_dernier_traitement": date(2021, 11, 5),
                    "initial_numero": "59", "initial_voie": "Rue de Verdun", "initial_code_postal": "91230",
                    "initial_ville": "MONTGERON", "final_numero": "59", "final_voie": "Rue de Verdun",
-                   "final_code_postal": "91230", "final_ville": "MONTGERON", "coordonnees_wgs84": {},
+                   "final_code_postal": "91230", "final_ville": "MONTGERON", "coordonnees_wgs84": (),
                    "champs_supplementaires": {'identifiant': 'FA872'}}
         # WHEN
         fiche_adresse = FicheAdresse.from_dict(donnees)
@@ -50,7 +50,7 @@ class TestFicheAdresse(TestCase):
                    "date_importation": date(2021, 11, 1), "date_dernier_traitement": date(2021, 11, 5),
                    "initial_numero": "59", "initial_voie": "Rue de Verdun", "initial_code_postal": "91230",
                    "initial_ville": "MONTGERON", "final_numero": "59", "final_voie": "Rue de Verdun",
-                   "final_code_postal": "91230", "final_ville": "MONTGERON", "coordonnees_wgs84": {},
+                   "final_code_postal": "91230", "final_ville": "MONTGERON", "coordonnees_wgs84": (),
                    "champs_supplementaires": {'identifiant': 'FA872'}}
         # WHEN
         fiche_adresse = FicheAdresse.from_dict(donnees)
