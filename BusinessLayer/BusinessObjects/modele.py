@@ -4,6 +4,18 @@ import attr
 
 @attr.s
 class Modele(object):
+    """
+        :param nom_modele:
+        le nom du modèle
+        :param regex_nom_fichier:
+        l'expression régulière présente dans le nom du fichier ayant créé le modèle, afin de détecter
+        les autres fichiers suivant ce modèle
+        :param scorrespondances:
+        les positions des colonnes dans le modèle correspondant aux informations des adresses
+        (le numéro, le type de voie, le code postal, la ville)
+        :param identifiant:
+        l'identifiant du modèle dans la base de données Modeles
+    """
     nom_modele: str = attr.ib(converter=str, on_setattr=attr.setters.convert)
     regex: str = attr.ib(converter=str, on_setattr=attr.setters.convert)
     correspondances: Correspondance = attr.ib(validator=attr.validators.instance_of(Correspondance))

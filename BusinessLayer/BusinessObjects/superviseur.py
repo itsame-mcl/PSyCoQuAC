@@ -2,6 +2,16 @@ from BusinessLayer.BusinessObjects.agent import Agent
 
 
 class Superviseur(Agent):
+    """
+        :param prenom:
+        le prénom du superviseur
+        :param nom:
+        le nom du superviseur
+        :param quotite:
+        la quotité de travail du superviseur
+        :param agent_id:
+        l'identifiant, dans la base de données Agents, du superviseur
+    """
     def as_dict(self) -> dict:
         """
         Cette méthode transforme le superviseur en dictionnaire,

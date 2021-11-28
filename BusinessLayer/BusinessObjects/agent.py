@@ -4,6 +4,16 @@ import attr
 
 @attr.s
 class Agent(ABC):
+    """
+        :param prenom:
+        le prénom de l'agent
+        :param nom:
+        le nom de l'agent
+        :param quotite:
+        la quotité de travail de l'agent
+        :param agent_id:
+        l'identifiant, dans la base de données Agents, de l'agent
+    """
     prenom: str = attr.ib(converter=str, on_setattr=attr.setters.convert)
     nom: str = attr.ib(converter=str, on_setattr=attr.setters.convert)
     quotite: float = attr.ib(converter=float, on_setattr=attr.setters.convert)
