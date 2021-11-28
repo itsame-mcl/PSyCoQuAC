@@ -9,36 +9,35 @@ def _update_date_modification(instance, attribute, value):
 
 
 def _validate_code_res(instance, attribute, value):
-    if instance.code_res == "TF":
-        if value not in ["TF", "TA", "EF"]:
-            raise ValueError("La transition depuis l'état TF ne peut se faire que vers l'état TA ou l'état EF.")
-    elif instance.code_res == "TA":
-        if value not in ["TA", "TH", "TR"]:
-            raise ValueError("La transition depuis l'état TA ne peut se faire que vers l'état TH ou l'état TR.")
-    elif instance.code_res == "TH":
-        if value not in ["TH", "TC", "VA"]:
-            raise ValueError("La transition depuis l'état TH ne peut se faire que vers l'état TC ou l'état VA.")
-    elif instance.code_res == "TC":
-        if value not in ["TR", "VC"]:
-            raise ValueError("La transition depuis l'état TC ne peut se faire que vers l'état TR ou l'état VC.")
-    elif instance.code_res == "TR":
-        if value not in ["TR", "VR", "ER"]:
-            raise ValueError("La transition depuis l'état TR ne peut se faire que vers l'état VR ou l'état ER.")
-    elif instance.code_res == "EF":
-        if value != "EF":
-            raise ValueError("L'état EF est un état final.")
-    elif instance.code_res == "ER":
-        if value != "ER":
-            raise ValueError("L'état ER est un état final.")
-    elif instance.code_res == "VA":
-        if value != "VA":
-            raise ValueError("L'état VA est un état final.")
-    elif instance.code_res == "VC":
-        if value != "VC":
-            raise ValueError("L'état VC est un état final.")
-    elif instance.code_res == "VR":
-        if value != "VR":
-            raise ValueError("L'état VR est un état final.")
+    if attribute.name == 'code_res':
+        if instance.code_res != value:
+            if instance.code_res == "TF":
+                if value not in ["TA", "EF"]:
+                    raise ValueError("La transition depuis l'état TF ne peut se faire que vers l'état TA ou l'état EF.")
+            elif instance.code_res == "TA":
+                if value not in ["TH", "TR"]:
+                    raise ValueError("La transition depuis l'état TA ne peut se faire que vers l'état TH ou l'état TR.")
+            elif instance.code_res == "TH":
+                if value not in ["TC", "VA"]:
+                    raise ValueError("La transition depuis l'état TH ne peut se faire que vers l'état TC ou l'état VA.")
+            elif instance.code_res == "TC":
+                if value not in ["TR", "VC"]:
+                    raise ValueError("La transition depuis l'état TC ne peut se faire que vers l'état TR ou l'état VC.")
+            elif instance.code_res == "TR":
+                if value not in ["VR", "ER"]:
+                    raise ValueError("La transition depuis l'état TR ne peut se faire que vers l'état VR ou l'état ER.")
+            elif instance.code_res == "EF":
+                raise ValueError("L'état EF est un état final.")
+            elif instance.code_res == "ER":
+                raise ValueError("L'état ER est un état final.")
+            elif instance.code_res == "VA":
+                raise ValueError("L'état VA est un état final.")
+            elif instance.code_res == "VC":
+                raise ValueError("L'état VC est un état final.")
+            elif instance.code_res == "VR":
+                raise ValueError("L'état VR est un état final.")
+    else:
+        raise AttributeError("Ce validateur ne s'applique qu'à l'attribue code_res.")
     return value
 
 

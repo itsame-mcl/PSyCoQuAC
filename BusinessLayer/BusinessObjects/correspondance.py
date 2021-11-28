@@ -1,13 +1,6 @@
-from typing import Union, Tuple
+from typing import Tuple
+from utils.converters import int_to_tuple
 import attr
-
-
-def int_to_tuple(value: Union[int, Tuple[int]]) -> Tuple[int]:
-    if isinstance(value, int):
-        tuple_val = (value,)
-    else:
-        tuple_val = value
-    return tuple_val
 
 
 @attr.s
