@@ -2,7 +2,6 @@ from PyInquirer import prompt
 from DataLayer.DAO.db_connexion import DBConnexion  # Entorse à la séparation des couches, pour éviter de surcharger
 #                                                       l'architecture d'un service d'installation
 from ViewLayer.CLI.abstract_view import AbstractView
-from ViewLayer.CLI.nouvel_utilisateur_view import NouvelUtilisateurView
 import ViewLayer.CLI.menu as mp
 from pathlib import Path
 import dotenv
@@ -99,8 +98,8 @@ class SetupView(AbstractView):
                     curseur.executescript(open(script_path, "r", encoding="utf-8").read())
                     DBConnexion().connexion.commit()
                 curseur.close()
-                print("Configuration de la base de données terminée. Création du premier superviseur :")
-                succes = NouvelUtilisateurView(on_setup=True).make_choice()
+                print("Configuration de la base de données terminée.")
+                succes = True
             else:
                 succes = False
                 try:
