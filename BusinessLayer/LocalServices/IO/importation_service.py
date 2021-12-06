@@ -4,7 +4,6 @@ from utils.singleton import Singleton
 from DataLayer.DAO.dao_fiche_adresse import DAOFicheAdresse
 from BusinessLayer.WebServices.BANClient import BANClient
 import BusinessLayer.LocalServices.IO.factory_handler as factory
-from utils.progress_bar import printProgressBar
 from typing import Tuple
 import pathlib
 import chardet
@@ -114,5 +113,5 @@ class ImportationService(metaclass=Singleton):
             print("Enregistrement des résultats du traitement...")
             res = DAOFicheAdresse().modifier_multiple_fiche_adresse(fiches_traitees)
         if verbose:
-            print("Enregistrement terminé !")
+            print("Traitement du lot terminé !")
         return res
