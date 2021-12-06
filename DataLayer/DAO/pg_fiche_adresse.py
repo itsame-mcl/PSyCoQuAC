@@ -110,18 +110,49 @@ class PGFicheAdresse(InterfaceFicheAdresse):
 
     def modifier_multiple_fiche_adresse(self, data: List[dict]) -> bool:
         data_pg = [self.__dao_to_pg(item) for item in data]
-        update_list = [(data['identifiant_pot'], data['identifiant_lot'], data['code_resultat'],
-                      data['date_dernier_traitement'], data['final_numero'], data['final_voie'],
-                      data['final_code_postal'], data['final_ville'], data['coordonnees_wgs84'],
-                      data['champs_supplementaires'], data['identifiant_fa']) for data in data_pg]
+        copy_list = [[data['identifiant_fa'], data['identifiant_pot'], data['identifiant_lot'], data['code_resultat'],
+                      data['date_importation'], data['date_dernier_traitement'], data['initial_numero'],
+                      data['initial_voie'], data['initial_code_postal'], data['initial_ville'], data['final_numero'],
+                      data['final_voie'], data['final_code_postal'], data['final_ville'], data['coordonnees_wgs84'],
+                      data['champs_supplementaires']] for data in data_pg]
         try:
             with DBConnexion().connexion.cursor() as curseur:
-                curseur.executemany("""
-                UPDATE fa SET identifiant_pot=(%s), identifiant_lot=(%s), code_resultat=(%s),
-                date_dernier_traitement=(%s), final_numero=(%s), final_voie=(%s), final_code_postal=(%s),
-                final_ville=(%s), coordonnees_wgs84=(%s), champs_supplementaires=(%s)
-                WHERE identifiant_fa=(%s)
-                """, update_list)
+                curseur.execute("""
+                    CREATE TABLE IF NOT EXISTS lot_api (
+                    identifiant_fa INTEGER PRIMARY KEY,
+                    identifiant_pot INTEGER NOT NULL,
+                    identifiant_lot INTEGER NOT NULL,
+                    code_resultat CHAR(2) NOT NULL,
+                    date_importation DATE NOT NULL,
+                    date_dernier_traitement DATE NOT NULL,
+                    initial_numero VARCHAR(10),
+                    initial_voie VARCHAR(100),
+                    initial_code_postal VARCHAR(10),
+                    initial_ville VARCHAR(100),
+                    final_numero VARCHAR(10),
+                    final_voie VARCHAR(100),
+                    final_code_postal VARCHAR(10),
+                    final_ville VARCHAR(100),
+                    coordonnees_wgs84 float8[],
+                    champs_supplementaires TEXT[])
+                    """)
+            with DBConnexion().connexion.cursor().copy("""COPY lot_api(identifiant_fa, identifiant_pot, identifiant_lot,
+            code_resultat, date_importation, date_dernier_traitement, initial_numero, initial_voie, initial_code_postal,
+            initial_ville, final_numero, final_voie, final_code_postal, final_ville,
+            coordonnees_wgs84, champs_supplementaires) FROM STDIN""") as curseur:
+                for line in copy_list:
+                    curseur.write_row(line)
+            with DBConnexion().connexion.cursor() as curseur:
+                curseur.execute("""
+                UPDATE fa SET identifiant_pot = api.identifiant_pot, identifiant_lot = api.identifiant_lot,
+                code_resultat = api.code_resultat, date_dernier_traitement = api.date_dernier_traitement,
+                final_numero = api.final_numero, final_voie = api.final_voie, final_code_postal = api.final_code_postal,
+                final_ville = api.final_ville, coordonnees_wgs84 = api.coordonnees_wgs84,
+                champs_supplementaires = api.champs_supplementaires
+                FROM lot_api AS api
+                WHERE fa.identifiant_fa = api.identifiant_fa
+                """)
+                curseur.execute("DROP TABLE IF EXISTS lot_api")
             return True
         except Exception as e:
             print(e)
