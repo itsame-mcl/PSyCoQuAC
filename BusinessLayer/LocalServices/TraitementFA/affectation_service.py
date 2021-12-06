@@ -204,23 +204,31 @@ class AffectationService(metaclass=Singleton):
         if verbose:
             printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
         for id_agent, repartition_agent in repartition.items():
-            fiches_agent = lot_tr[:repartition_agent['reprise']]
-            fiches_agent.extend(lot_tc[:repartition_agent['controle']])
-            for fiche in fiches_agent:
-                fiche.agent_id = int(id_agent)
-                update = DAOFicheAdresse().modifier_fiche_adresse(fiche)
+            fiches_agent_reprise = lot_tr[:repartition_agent['reprise']]
+            if len(fiches_agent_reprise) > 0:
+                ids_reprise = [fiche.fiche_id for fiche in fiches_agent_reprise]
+                update = DAOFicheAdresse().affecter_fiches_adresse(id_agent, "TR", ids_reprise)
                 res = res * update
-                if verbose:
-                    progression += 1
+                if verbose and update:
+                    progression += len(ids_reprise)
+                    printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
+            fiches_agent_controle = (lot_tc[:repartition_agent['controle']])
+            if len(fiches_agent_controle) > 0:
+                ids_controle = [fiche.fiche_id for fiche in fiches_agent_controle]
+                update = DAOFicheAdresse().affecter_fiches_adresse(id_agent, "TC", ids_controle)
+                res = res * update
+                if verbose and update:
+                    progression += len(ids_controle)
                     printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
             lot_tr = lot_tr[repartition_agent['reprise']:]
             lot_tc = lot_tc[repartition_agent['controle']:]
-        for fiche in lot_va:
-            fiche.agent_id = fiche.agent_id * -1
-            update = DAOFicheAdresse().modifier_fiche_adresse(fiche)
+        if len(lot_va) > 0:
+            id_superviseur = lot_va[0].agent_id * -1
+            ids_va = [fiche.fiche_id for fiche in lot_va]
+            update = DAOFicheAdresse().affecter_fiches_adresse(id_superviseur, "VA", ids_va)
             res = res * update
             if verbose:
-                progression += 1
+                progression += len(ids_va)
                 printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
         return res
 

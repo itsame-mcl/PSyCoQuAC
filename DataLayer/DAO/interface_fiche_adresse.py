@@ -25,7 +25,7 @@ class InterfaceFicheAdresse(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def modifier_agent_fiches_adresse(self, id_agent: int, id_fas: List[int]) -> bool:
+    def modifier_agent_fiches_adresse(self, id_agent: int, code_res: str, id_fas: List[int]) -> bool:
         raise NotImplementedError
 
     @abstractmethod

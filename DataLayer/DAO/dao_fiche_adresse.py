@@ -52,19 +52,21 @@ class DAOFicheAdresse(metaclass=Singleton):
             lot.append(FicheAdresse.from_dict(row))
         return lot
 
-    def affecter_fiches_adresse(self, identifiant_agent: int, liste_fiches_id: List[int]):
+    def affecter_fiches_adresse(self, identifiant_agent: int, code_resultat: str, liste_fiches_id: List[int]):
         """
         Cette méthode permet d'affecter à un agent (c'est-à-dire de placer dans le pot de cet agent)
         la liste de fiches adresse dont les identifiants ont été renseignées en argument.
 
         :param identifiant_agent:
         l'identifiant, dans la base de données Agents, de l'agent à qui l'on souhaite affecter des fiches adresse
+        :param code_resultat:
+        le nouveau code résultat à affecter aux fiches concernées
         :param liste_fiches_id:
         la liste des identifiants, dans la base de données FA, des fiches adresse que l'on souhaite affecter
         :return:
         renvoie un booléen valant True si les fiches adresse ont été correctement affectées à l'agent
         """
-        res = self.__interface.modifier_agent_fiches_adresse(identifiant_agent, liste_fiches_id)
+        res = self.__interface.modifier_agent_fiches_adresse(identifiant_agent, code_resultat, liste_fiches_id)
         return res
 
     def creer_fiche_adresse(self, fa: FicheAdresse) -> bool:

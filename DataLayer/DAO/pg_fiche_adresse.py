@@ -108,11 +108,11 @@ class PGFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
-    def modifier_agent_fiches_adresse(self, id_agent: int, id_fas: List[int]) -> bool:
+    def modifier_agent_fiches_adresse(self, id_agent: int, code_res: str, id_fas: List[int]) -> bool:
         try:
             with DBConnexion().connexion.cursor() as curseur:
-                curseur.execute("UPDATE fa SET identifiant_pot=(%s) WHERE identifiant_fa = ANY(%s)",
-                                (id_agent, id_fas))
+                curseur.execute("UPDATE fa SET identifiant_pot=(%s), code_resultat=(%s) WHERE identifiant_fa = ANY(%s)",
+                                (id_agent, code_res, id_fas))
             return True
         except Exception as e:
             print(e)
