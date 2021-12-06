@@ -25,6 +25,10 @@ class InterfaceFicheAdresse(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def modifier_multiple_fiche_adresse(self, data: dict) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
     def modifier_agent_fiches_adresse(self, id_agent: int, code_res: str, id_fas: List[int]) -> bool:
         raise NotImplementedError
 

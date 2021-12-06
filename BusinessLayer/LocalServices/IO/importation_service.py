@@ -109,17 +109,10 @@ class ImportationService(metaclass=Singleton):
             if fiche.code_res == "TA":
                 fiches_a_traiter.append(fiche)
         fiches_traitees = BANClient().geocodage_par_lot(fiches_a_traiter, verbose=verbose)
-        index = 0
         res = True
         if verbose:
             print("Enregistrement des résultats du traitement...")
-        for fiche in fiches_traitees:
-            new_res = DAOFicheAdresse().modifier_fiche_adresse(fiche)
-            res = res * new_res
-            if verbose:
-                index += 1
-                printProgressBar(index, len(fiches_traitees),
-                                 prefix='Progression :', suffix='terminé', length=50)
+            res = DAOFicheAdresse().modifier_multiple_fiche_adresse(fiches_traitees)
         if verbose:
             print("Enregistrement terminé !")
         return res

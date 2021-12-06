@@ -108,6 +108,25 @@ class PGFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
+    def modifier_multiple_fiche_adresse(self, data: List[dict]) -> bool:
+        data_pg = [self.__dao_to_pg(item) for item in data]
+        update_list = [(data['identifiant_pot'], data['identifiant_lot'], data['code_resultat'],
+                      data['date_dernier_traitement'], data['final_numero'], data['final_voie'],
+                      data['final_code_postal'], data['final_ville'], data['coordonnees_wgs84'],
+                      data['champs_supplementaires'], data['identifiant_fa']) for data in data_pg]
+        try:
+            with DBConnexion().connexion.cursor() as curseur:
+                curseur.executemany("""
+                UPDATE fa SET identifiant_pot=(%s), identifiant_lot=(%s), code_resultat=(%s),
+                date_dernier_traitement=(%s), final_numero=(%s), final_voie=(%s), final_code_postal=(%s),
+                final_ville=(%s), coordonnees_wgs84=(%s), champs_supplementaires=(%s)
+                WHERE identifiant_fa=(%s)
+                """, update_list)
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
     def modifier_agent_fiches_adresse(self, id_agent: int, code_res: str, id_fas: List[int]) -> bool:
         try:
             with DBConnexion().connexion.cursor() as curseur:

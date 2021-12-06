@@ -106,6 +106,11 @@ class DAOFicheAdresse(metaclass=Singleton):
         res = self.__interface.modifier_fiche_adresse(fa.as_dict())
         return res
 
+    def modifier_multiple_fiche_adresse(self, liste_fa: List[FicheAdresse]) -> bool:
+        liste_dict = [fa.as_dict() for fa in liste_fa]
+        res = self.__interface.modifier_multiple_fiche_adresse(liste_dict)
+        return res
+
     def supprimer_fiche_adresse(self, identifiant: int) -> bool:
         """
         Cette méthode permet de supprimer une fiche adresse de la base de données FA.

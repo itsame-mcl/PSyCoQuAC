@@ -97,6 +97,13 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
             print(e)
             return False
 
+    def modifier_multiple_fiche_adresse(self, data: dict) -> bool:
+        res = True
+        for line in data:
+            new_res = self.modifier_fiche_adresse(line)
+            res = res * new_res
+        return res
+
     def modifier_agent_fiches_adresse(self, id_agent: int, code_resultat: str, id_fas: List[int]) -> bool:
         request = "UPDATE fa SET identifiant_pot=:id_agent, code_resultat=:code_resultat WHERE identifiant_fa IN ({})".format(
             ','.join(':{}'.format(i) for i in range(len(id_fas))))
