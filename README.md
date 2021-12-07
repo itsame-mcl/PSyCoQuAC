@@ -54,6 +54,12 @@ VALUES (1, 1.0, nom_utilisateur, mot_de_passe, prenom, nom);
 
 Dans ce cas, vous devrez enregistrer dans mot_de_passe une chaîne salée avec nom_utilisateur en préfixe et hashée avec l'algorithme SHA-512.
 
+## Licence
+
+Ce projet est distribué selon les termes de la [Licence Publique de l'Union Européenne v. 1.2](https://eupl.eu/1.2/fr/).
+
+Les données de l'API Base Adresse Nationale sont utilisées dans le respect des conditions de la [Licence Ouverte](https://github.com/etalab/licence-ouverte).
+
 ```
                               ,-'   ,"",
                              / / ,-'.-'
