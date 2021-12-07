@@ -28,7 +28,7 @@ class ControlerView(AbstractView):
                 return res, self.__fiche
             elif str.upper(answers2['choix'][0]) == 'N':
                 res = False
-                return res,self.__fiche
+                return res, self.__fiche
         elif str.upper(answers['choix'][0]) == 'Q':
             return False, self.__fiche
         else:

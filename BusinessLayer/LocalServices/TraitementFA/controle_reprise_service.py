@@ -59,8 +59,6 @@ class ControleRepriseService(metaclass=Singleton):
             else:
                 fiche.code_res = "ER"
         res = DAOFicheAdresse().modifier_fiche_adresse(fiche)
-        if not res:
-            print("La sauvegarde a échoué. Veuillez réessayer ultérieurement.")
         return res
 
     @staticmethod

@@ -68,6 +68,8 @@ class ConsulterPotView(AbstractView):
                         self.__pot.remove(fiche)
                     else:
                         self.__pot[self.__pot.index(fiche)] = nouv_fiche
+                else:
+                    print("La sauvegarde a échoué. Veuillez réessayer ultérieurement.")
                 return self
             elif str.upper(answers['choix'][0]) == "Q":
                 return self.__caller
