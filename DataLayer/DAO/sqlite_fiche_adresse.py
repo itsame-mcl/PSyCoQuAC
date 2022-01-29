@@ -6,7 +6,7 @@ from DataLayer.DAO.interface_fiche_adresse import InterfaceFicheAdresse
 
 
 class SQLiteFicheAdresse(InterfaceFicheAdresse):
-    
+
     @staticmethod
     def __sqlite_to_dao(data: dict) -> dict:
         data["date_importation"] = datetime.fromisoformat(data["date_importation"]).date()

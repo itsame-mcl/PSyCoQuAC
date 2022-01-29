@@ -3,7 +3,7 @@ from DataLayer.DAO.interface_connexion import InterfaceConnexion
 
 
 class SQLiteConnexion(InterfaceConnexion):
-    
+
     def ouvrir_connexion(self, host, port, database, user, password):
         try:
             connexion = sqlite3.connect(host)

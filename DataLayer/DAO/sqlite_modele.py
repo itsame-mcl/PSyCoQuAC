@@ -4,7 +4,7 @@ from DataLayer.DAO.interface_modele import InterfaceModele
 
 
 class SQLiteModele(InterfaceModele):
-    
+
     @staticmethod
     def __sqlite_to_dao(data: dict) -> dict:
         data["position_champ_numero"] = literal_eval(data["position_champ_numero"])
