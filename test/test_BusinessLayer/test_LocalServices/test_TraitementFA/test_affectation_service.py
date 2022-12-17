@@ -1,5 +1,5 @@
 import os
-from random import seed, sample
+from random import seed
 from unittest import TestCase, mock
 from BusinessLayer.BusinessObjects.adresse import Adresse
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
