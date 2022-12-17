@@ -37,7 +37,7 @@ class CSVHandler(AbstractHandler):
                 voie = [str(row[index]) for index in model.correspondances.position_voie]
                 cp = [str(row[index]) for index in model.correspondances.position_cp]
                 ville = [str(row[index]) for index in model.correspondances.position_ville]
-                donnees_supplementaires = dict()
+                donnees_supplementaires = {}
                 for cle, position in model.correspondances.positions_supplementaires.items():
                     donnees_supplementaires[cle] = str(row[position])
                 adresse = Adresse(' '.join(numero), ' '.join(voie), ' '.join(cp), ' '.join(ville))

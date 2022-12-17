@@ -32,7 +32,7 @@ class RepartirView(AbstractView):
 
     def make_choice(self):
         if len(self.__liste_lots) > 0:
-            choices = list()
+            choices = []
             for lot in self.__liste_lots:
                 choices.append("Lot " + str(lot))
             choices.append("Q) Revenir au menu principal")

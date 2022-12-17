@@ -42,8 +42,8 @@ class InterfaceFicheAdresse(ABC):
 
     @staticmethod
     def _obtenir_statistiques_request_helper(criteria: list) -> str:
-        fields = list()
-        filters = list()
+        fields = []
+        filters = []
         if criteria[0]:
             fields.append('identifiant_pot')
         if criteria[1]:

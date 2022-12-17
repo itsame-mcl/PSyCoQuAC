@@ -125,7 +125,7 @@ class FicheAdresse(object):
         :return:
         renvoie un dictionnaire contenant les informations de la fiche adresse
         """
-        data = dict()
+        data = {}
         data["identifiant_fa"] = self.fiche_id
         data["identifiant_pot"] = self.agent_id
         data["identifiant_lot"] = self.lot_id

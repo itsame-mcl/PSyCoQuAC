@@ -40,7 +40,7 @@ class PGModele(InterfaceModele):
         with DBConnexion().connexion.cursor() as curseur:
             rows = curseur.execute("""SELECT identifiant_modele, regex_nom_fichier
             FROM modeles ORDER BY identifiant_modele""").fetchall()
-        answer = dict()
+        answer = {}
         for row in rows:
             answer[row["identifiant_modele"]] = row["regex_nom_fichier"]
         return answer

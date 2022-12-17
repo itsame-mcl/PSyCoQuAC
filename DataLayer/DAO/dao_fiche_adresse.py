@@ -31,7 +31,7 @@ class DAOFicheAdresse(metaclass=Singleton):
         renvoie la liste des fiches adresse de l'agent dont on a renseigné l'identifiant
         """
         data = self.__interface.recuperer_liste_fiches_adresse(identifiant, -1)
-        pot = list()
+        pot = []
         for row in data:
             pot.append(FicheAdresse.from_dict(row))
         return pot
@@ -47,7 +47,7 @@ class DAOFicheAdresse(metaclass=Singleton):
         renvoie la liste des fiches adresse dont on a renseigné l'identifiant
         """
         data = self.__interface.recuperer_liste_fiches_adresse(-1, identifiant)
-        lot = list()
+        lot = []
         for row in data:
             lot.append(FicheAdresse.from_dict(row))
         return lot

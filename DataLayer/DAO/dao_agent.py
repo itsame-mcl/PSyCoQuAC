@@ -51,7 +51,7 @@ class DAOAgent(metaclass=Singleton):
         renvoie la liste des superviseurs présents dans la base de données Agents de l'application PsyCoQuAC
         """
         data = self.__interface.recuperer_liste_agents(0)
-        liste = list()
+        liste = []
         for row in data:
             if row['est_superviseur']:
                 liste.append(agent_factory.AgentFactory.from_dict(row))
@@ -68,7 +68,7 @@ class DAOAgent(metaclass=Singleton):
         renvoie la liste des agents composant l'équipe du superviseur
         """
         data = self.__interface.recuperer_liste_agents(id_superviseur)
-        equipe = list()
+        equipe = []
         for row in data:
             equipe.append(agent_factory.AgentFactory.from_dict(row))
         return equipe
@@ -84,7 +84,7 @@ class DAOAgent(metaclass=Singleton):
         renvoie la liste des agents délégués présents dans l'équipe
         """
         data = self.__interface.recuperer_liste_agents(id_superviseur, True)
-        equipe = list()
+        equipe = []
         for row in data:
             if not row['est_superviseur']:
                 equipe.append(agent_factory.AgentFactory.from_dict(row))

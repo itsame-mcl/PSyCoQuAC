@@ -29,7 +29,7 @@ class Modele(object):
         return cls(data["nom_modele"], data["regex_nom_fichier"], correspondances, data["identifiant_modele"])
 
     def as_dict(self) -> dict:
-        data = dict()
+        data = {}
         data["identifiant_modele"] = self.identifiant
         data["nom_modele"] = self.nom_modele
         data["regex_nom_fichier"] = self.regex

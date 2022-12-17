@@ -37,7 +37,7 @@ class SQLiteAgent(InterfaceAgent):
         curseur.execute(request, {"id_superviseur": id_superviseur})
         rows = curseur.fetchall()
         curseur.close()
-        answer = list()
+        answer = []
         for row in rows:
             data = dict(zip(row.keys(), row))
             data = self.__sqlite_to_dao(data)
