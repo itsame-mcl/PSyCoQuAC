@@ -125,22 +125,7 @@ class FicheAdresse(object):
         :return:
         renvoie un dictionnaire contenant les informations de la fiche adresse
         """
-        data = {}
-        data["identifiant_fa"] = self.fiche_id
-        data["identifiant_pot"] = self.agent_id
-        data["identifiant_lot"] = self.lot_id
-        data["code_resultat"] = self.code_res
-        data["date_importation"] = self.date_importation
-        data["date_dernier_traitement"] = self.date_modification
-        data["initial_numero"] = self.adresse_initiale.numero
-        data["initial_voie"] = self.adresse_initiale.voie
-        data["initial_code_postal"] = self.adresse_initiale.cp
-        data["initial_ville"] = self.adresse_initiale.ville
-        data["final_numero"] = self.adresse_finale.numero
-        data["final_voie"] = self.adresse_finale.voie
-        data["final_code_postal"] = self.adresse_finale.cp
-        data["final_ville"] = self.adresse_finale.ville
-        data["coordonnees_wgs84"] = self.coords_wgs84
+        data = {"identifiant_fa": self.fiche_id, "identifiant_pot": self.agent_id, "identifiant_lot": self.lot_id, "code_resultat": self.code_res, "date_importation": self.date_importation, "date_dernier_traitement": self.date_modification, "initial_numero": self.adresse_initiale.numero, "initial_voie": self.adresse_initiale.voie, "initial_code_postal": self.adresse_initiale.cp, "initial_ville": self.adresse_initiale.ville, "final_numero": self.adresse_finale.numero, "final_voie": self.adresse_finale.voie, "final_code_postal": self.adresse_finale.cp, "final_ville": self.adresse_finale.ville, "coordonnees_wgs84": self.coords_wgs84}
         if expand:
             for key, value in self.champs_supplementaires.items():
                 data[key] = value
