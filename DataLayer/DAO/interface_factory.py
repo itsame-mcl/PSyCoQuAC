@@ -23,7 +23,7 @@ class InterfaceFactory(metaclass=Singleton):
             if type_dao == "Agent":
                 return slag.SQLiteAgent()
             raise NotImplementedError
-        elif os.environ["PSYCOQUAC_ENGINE"] == "PostgreSQL":
+        if os.environ["PSYCOQUAC_ENGINE"] == "PostgreSQL":
             if type_dao == "Connexion":
                 return pgcx.PGConnexion()
             if type_dao == "FicheAdresse":
@@ -33,5 +33,4 @@ class InterfaceFactory(metaclass=Singleton):
             if type_dao == "Agent":
                 return pgag.PGAgent()
             raise NotImplementedError
-        else:
-            raise NotImplementedError
+        raise NotImplementedError
