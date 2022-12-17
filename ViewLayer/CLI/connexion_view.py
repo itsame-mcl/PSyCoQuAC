@@ -25,6 +25,5 @@ class ConnexionView(AbstractView):
             if reessayer['retry']:
                 return ConnexionView()
             return start.StartView()
-        else:
-            Session().agent = agent
-            return MenuPrincipalView()
+        Session().agent = agent
+        return MenuPrincipalView()
