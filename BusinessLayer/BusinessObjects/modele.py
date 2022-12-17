@@ -29,15 +29,7 @@ class Modele(object):
         return cls(data["nom_modele"], data["regex_nom_fichier"], correspondances, data["identifiant_modele"])
 
     def as_dict(self) -> dict:
-        data = {}
-        data["identifiant_modele"] = self.identifiant
-        data["nom_modele"] = self.nom_modele
-        data["regex_nom_fichier"] = self.regex
-        data["position_champ_numero"] = self.correspondances.position_numero
-        data["position_champ_voie"] = self.correspondances.position_voie
-        data["position_champ_code_postal"] = self.correspondances.position_cp
-        data["position_champ_ville"] = self.correspondances.position_ville
-        data["position_champs_supplementaires"] = self.correspondances.positions_supplementaires
+        data = {"identifiant_modele": self.identifiant, "nom_modele": self.nom_modele, "regex_nom_fichier": self.regex, "position_champ_numero": self.correspondances.position_numero, "position_champ_voie": self.correspondances.position_voie, "position_champ_code_postal": self.correspondances.position_cp, "position_champ_ville": self.correspondances.position_ville, "position_champs_supplementaires": self.correspondances.positions_supplementaires}
         return data
 
     def __str__(self) -> str:
