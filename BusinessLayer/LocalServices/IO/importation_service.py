@@ -80,7 +80,7 @@ class ImportationService(metaclass=Singleton):
         :return:
         renvoie la liste des lots du superviseur étant à traiter par l'API
         """
-        lots = list()
+        lots = []
         res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur,
                                                      filtre_code_resultat="TA")
         for ligne in res:
@@ -103,7 +103,7 @@ class ImportationService(metaclass=Singleton):
         if verbose:
             print("Chargement du lot à traiter...")
         lot = DAOFicheAdresse().recuperer_lot(id_lot)
-        fiches_a_traiter = list()
+        fiches_a_traiter = []
         for fiche in lot:
             if fiche.code_res == "TA":
                 fiches_a_traiter.append(fiche)

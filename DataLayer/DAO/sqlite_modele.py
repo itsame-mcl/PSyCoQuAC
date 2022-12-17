@@ -37,7 +37,7 @@ class SQLiteModele(InterfaceModele):
         curseur.execute("SELECT identifiant_modele, regex_nom_fichier FROM modeles")
         rows = curseur.fetchall()
         curseur.close()
-        answer = dict()
+        answer = {}
         for row in rows:
             answer[row["identifiant_modele"]] = row["regex_nom_fichier"]
         return answer

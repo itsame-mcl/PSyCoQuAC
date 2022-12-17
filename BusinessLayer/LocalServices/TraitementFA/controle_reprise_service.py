@@ -92,7 +92,7 @@ class ControleRepriseService(metaclass=Singleton):
         renvoie la liste de fiches adresse que l'agent doit contrôler/reprendre
         """
         pot = DAOFicheAdresse().recuperer_pot(id_agent)
-        pot_cr = list()
+        pot_cr = []
         for fiche in pot:
             if controle and fiche.code_res == "TC":
                 pot_cr.append(fiche)

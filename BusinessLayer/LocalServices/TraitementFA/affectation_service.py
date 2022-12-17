@@ -250,7 +250,7 @@ class AffectationService(metaclass=Singleton):
         :return:
         renvoie la liste des lots du superviseur étant à affecter
         """
-        lots = list()
+        lots = []
         res = DAOFicheAdresse().obtenir_statistiques(par_lot=True, filtre_pot=-id_superviseur)
         for ligne in res:
             lots.append(ligne[0])

@@ -46,7 +46,7 @@ class PGFicheAdresse(InterfaceFicheAdresse):
             request = "SELECT * FROM fa ORDER BY identifiant_fa"
         with DBConnexion().connexion.cursor() as curseur:
             rows = curseur.execute(request, params).fetchall()
-        answer = list()
+        answer = []
         for row in rows:
             data = self.__pg_to_dao(row)
             answer.append(data)
@@ -181,7 +181,7 @@ class PGFicheAdresse(InterfaceFicheAdresse):
         request = self._obtenir_statistiques_request_helper(criteria)
         with DBConnexion().connexion.cursor(row_factory=tuple_row) as curseur:
             rows = curseur.execute(request).fetchall()
-        answer = list()
+        answer = []
         for row in rows:
             answer.append(tuple(row))
         return answer

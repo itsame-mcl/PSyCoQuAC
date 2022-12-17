@@ -59,7 +59,7 @@ class ImportExportView(AbstractView):
         if str.upper(answers['choix'][0]) == 'A':
             liste_lots = ImportationService().lots_a_traiter_api(Session().agent.agent_id)
             if len(liste_lots) > 0:
-                choices = list()
+                choices = []
                 for lot in liste_lots:
                     choices.append("Lot " + str(lot))
                 choices.append("Annuler")
@@ -80,7 +80,7 @@ class ImportExportView(AbstractView):
         if str.upper(answers['choix'][0]) == 'X':
             liste_lots = StatistiqueService().fiches_par_lot()
             if len(liste_lots) > 0:
-                choices = list()
+                choices = []
                 for ligne in liste_lots:
                     choices.append("Lot " + str(ligne[0]) + " - " + str(ligne[1]) + " adresses")
                 choices.append("Annuler")

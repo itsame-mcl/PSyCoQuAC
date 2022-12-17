@@ -27,7 +27,7 @@ class Agent(ABC):
         :return:
         renvoie un dictionnaire contenant les informations de l'agent
         """
-        data = dict()
+        data = {}
         data["identifiant_agent"] = self.agent_id
         data["quotite"] = self.quotite
         data["prenom"] = self.prenom
