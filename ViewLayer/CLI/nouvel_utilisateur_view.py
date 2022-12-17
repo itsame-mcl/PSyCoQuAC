@@ -11,9 +11,9 @@ class NouvelUtilisateurView(AbstractView):
                             {'type': 'input', 'name': 'nom', 'message': 'Nom :'},
                             {'type': 'list', 'name': 'est_superviseur', 'message': 'Rôle :',
                              'choices': ["Gestionnaire", "Superviseur"], 'default': 'Gestionnaire',
-                             'filter': lambda val: self.__role_filter(val), 'when': lambda val: not on_setup},
+                             'filter': self.__role_filter, 'when': lambda val: not on_setup},
                             {'type': 'input', 'name': 'quotite', 'message': 'Quotité de travail :',
-                             'filter': lambda val: float(val)},
+                             'filter': float},
                             {'type': 'input', 'name': 'nom_utilisateur', 'message': "Nom d'utilisateur :"},
                             {'type': 'password', 'name': 'mot_de_passe', 'message': 'Mot de passe :'}]
 

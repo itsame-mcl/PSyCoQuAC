@@ -22,19 +22,19 @@ class NouveauModeleView(AbstractView):
                             {'type': 'input', 'name': 'numero', 'message': "Dans quelles colonnes se trouvent les "
                             "informations relatives au numéro de l'adresse ? (vous pouvez saisir plusieurs valeurs "
                              "séparées par une virgule)",
-                             'filter': lambda ans: self.__filter_champs(ans)},
+                             'filter': self.__filter_champs},
                             {'type': 'input', 'name': 'voie', 'message': "Dans quelles colonnes se trouvent les "
                             "informations relatives au nom de la voie ? (vous pouvez saisir plusieurs valeurs "
                              "séparées par une virgule)",
-                             'filter': lambda ans: self.__filter_champs(ans)},
+                             'filter': self.__filter_champs},
                             {'type': 'input', 'name': 'cp', 'message': "Dans quelles colonnes se trouvent les "
                             "informations relatives au code postal ? (vous pouvez saisir plusieurs valeurs "
                              "séparées par une virgule)",
-                             'filter': lambda ans: self.__filter_champs(ans)},
+                             'filter': self.__filter_champs},
                             {'type': 'input', 'name': 'ville', 'message': "Dans quelles colonnes se trouvent les "
                             "informations relatives à la ville ? (vous pouvez saisir plusieurs valeurs "
                              "séparées par une virgule)",
-                             'filter': lambda ans: self.__filter_champs(ans)}]
+                             'filter': self.__filter_champs}]
         self.__champs_sup = [{'type': 'confirm', 'name': 'continuer', 'message': 'Voulez vous ajouter un champ'
                              'supplémentaire ?', 'default': False}]
         self.__infos_sup = [{'type': 'input', 'name': 'nom_champ', 'message': 'Quel est le nom du champ '
