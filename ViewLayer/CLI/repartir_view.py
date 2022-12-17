@@ -70,6 +70,5 @@ class RepartirView(AbstractView):
             if str.upper(answers_lot['choix'][0]) == "Q":
                 return mp.MenuPrincipalView()
             raise ValueError
-        else:
-            print("Vous n'avez aucun lot à affecter.")
-            return mp.MenuPrincipalView()
+        print("Vous n'avez aucun lot à affecter.")
+        return mp.MenuPrincipalView()

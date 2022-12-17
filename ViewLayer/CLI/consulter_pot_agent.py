@@ -74,5 +74,4 @@ class ConsulterPotView(AbstractView):
             if str.upper(answers['choix'][0]) == "Q":
                 return self.__caller
             raise ValueError
-        else:
-            return self.__caller
+        return self.__caller
