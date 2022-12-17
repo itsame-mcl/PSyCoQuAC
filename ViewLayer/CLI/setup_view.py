@@ -42,7 +42,7 @@ class SetupView(AbstractView):
     def __install_filter(val) -> bool:
         if val == "Créer une nouvelle installation PSyCoQuAC":
             return True
-        elif val == "Se connecter à une installation PSyCoQuAC existante":
+        if val == "Se connecter à une installation PSyCoQuAC existante":
             return False
 
     def make_choice(self):
@@ -110,5 +110,4 @@ class SetupView(AbstractView):
             succes = True
         if succes:
             return mp.MenuPrincipalView()
-        else:
-            return SetupView(self.__base_path)
+        return SetupView(self.__base_path)

@@ -24,8 +24,7 @@ class ConnexionView(AbstractView):
             reessayer = prompt(self.__prompt_reessayer)
             if reessayer['retry']:
                 return ConnexionView()
-            else:
-                return start.StartView()
+            return start.StartView()
         else:
             Session().agent = agent
             return MenuPrincipalView()

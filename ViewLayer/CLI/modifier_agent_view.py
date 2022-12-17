@@ -98,5 +98,4 @@ class ModifierAgentView(AbstractView):
                     continuer = False
         if self.__modal:
             return 0
-        else:
-            return mp.MenuPrincipalView()
+        return mp.MenuPrincipalView()

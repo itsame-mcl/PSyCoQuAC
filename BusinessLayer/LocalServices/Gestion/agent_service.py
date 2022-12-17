@@ -100,8 +100,7 @@ class AgentService(metaclass=Singleton):
             if nouveau_mot_de_passe_en_clair is None:
                 nouveau_mot_de_passe_en_clair = mot_de_passe_actuel_en_clair
             return DAOAgent().modifier_identifiants(id_agent, nouveau_nom_utilisateur, nouveau_mot_de_passe_en_clair)
-        else:
-            return False
+        return False
 
     @staticmethod
     def supprimer_agent(agent_a_supprimer: int) -> bool:

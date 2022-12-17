@@ -21,9 +21,7 @@ class StartView(AbstractView):
             succes = NouvelUtilisateurView(on_setup=True).make_choice()
             self.__creer_agent = not succes
             return self
-        else:
-            answers = prompt(self.__questions)
-            if 'q' in str.lower(answers['choix']):
-                return None
-            else:
-                return ConnexionView()
+        answers = prompt(self.__questions)
+        if 'q' in str.lower(answers['choix']):
+            return None
+        return ConnexionView()
