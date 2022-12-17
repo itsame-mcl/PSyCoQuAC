@@ -17,7 +17,7 @@ class SetupView(AbstractView):
                              'choices': ["Créer une nouvelle installation PSyCoQuAC",
                                          "Se connecter à une installation PSyCoQuAC existante"],
                              'default': 'Créer une nouvelle installation PSyCoQuAC',
-                             'filter': lambda val: self.__install_filter(val),
+                             'filter': self.__install_filter,
                              'when': lambda ans: self.__first_try},
                             {'type': 'list', 'name': 'engine', 'message': 'Quel est le moteur de '
                                                                           'base de données à utiliser ?',
