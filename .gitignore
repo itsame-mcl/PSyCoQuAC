@@ -137,3 +137,10 @@ sql/*.sqlite
 # Generic test files
 /test.py
 /test.csv
+/.flake8
+/.isort.cfg
+/.markdownlint.yaml
+/.trunk/out/
+/.trunk/trunk.yaml
+/.trunk/out/
+/.trunk/out/

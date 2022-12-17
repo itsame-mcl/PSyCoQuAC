@@ -1,4 +1,4 @@
-from random import sample
+from secrets import choice
 from math import floor
 from typing import Dict, List, Tuple
 from BusinessLayer.BusinessObjects.fiche_adresse import FicheAdresse
@@ -9,6 +9,9 @@ from utils.progress_bar import printProgressBar
 
 
 class AffectationService(metaclass=Singleton):
+    PROGRESSION = 'Progression :'
+    TERMINE = 'terminé'
+
     @staticmethod
     def __repartir_selon_quotites(valeur_cible: int, repartition: dict, charge: dict,
                                   type_fiche: str, poids_reprise: float, poids_controle: float) -> dict:
@@ -177,7 +180,12 @@ class AffectationService(metaclass=Singleton):
         :param taille_echantillon: taille de l'échantillon à tirer
         :return: un tuple composé d'une première liste de fiches échantillonnées, puis d'une liste de fiches validées
         """
-        echantillon_tc = sample(lot_fiches, taille_echantillon)
+        base_tirage = lot_fiches[:]
+        echantillon_tc = []
+        for _ in range(taille_echantillon):
+            selected = choice(base_tirage)
+            echantillon_tc.append(selected)
+            base_tirage.remove(selected)
         for fiche in lot_fiches:
             if fiche in echantillon_tc:
                 fiche.code_res = "TC"
@@ -202,7 +210,7 @@ class AffectationService(metaclass=Singleton):
         res = True
         progression = 0
         if verbose:
-            printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
+            printProgressBar(progression, len(lot), prefix=self.PROGRESSION, suffix=self.TERMINE, length=50)
         for id_agent, repartition_agent in repartition.items():
             fiches_agent_reprise = lot_tr[:repartition_agent['reprise']]
             if len(fiches_agent_reprise) > 0:
@@ -211,7 +219,7 @@ class AffectationService(metaclass=Singleton):
                 res = res * update
                 if verbose and update:
                     progression += len(ids_reprise)
-                    printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
+                    printProgressBar(progression, len(lot), prefix=self.PROGRESSION, suffix=self.TERMINE, length=50)
             fiches_agent_controle = (lot_tc[:repartition_agent['controle']])
             if len(fiches_agent_controle) > 0:
                 ids_controle = [fiche.fiche_id for fiche in fiches_agent_controle]
@@ -219,7 +227,7 @@ class AffectationService(metaclass=Singleton):
                 res = res * update
                 if verbose and update:
                     progression += len(ids_controle)
-                    printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
+                    printProgressBar(progression, len(lot), prefix=self.PROGRESSION, suffix=self.TERMINE, length=50)
             lot_tr = lot_tr[repartition_agent['reprise']:]
             lot_tc = lot_tc[repartition_agent['controle']:]
         if len(lot_va) > 0:
@@ -229,7 +237,7 @@ class AffectationService(metaclass=Singleton):
             res = res * update
             if verbose:
                 progression += len(ids_va)
-                printProgressBar(progression, len(lot), prefix='Progression :', suffix='terminé', length=50)
+                printProgressBar(progression, len(lot), prefix=self.PROGRESSION, suffix=self.TERMINE, length=50)
         return res
 
     @staticmethod
