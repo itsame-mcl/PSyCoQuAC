@@ -92,10 +92,7 @@ class ModifierAgentView(AbstractView):
                 if not succes:
                     print('La modification a échoué. Veuillez réessayer ultérieurement.')
                 answer_continuer = prompt(self.__continue_prompt)
-                if str.upper(answer_continuer['choix'][0]) == "O":
-                    continuer = True
-                else:
-                    continuer = False
+                continuer = str.upper(answer_continuer['choix'][0]) == "O"
         if self.__modal:
             return 0
         return mp.MenuPrincipalView()

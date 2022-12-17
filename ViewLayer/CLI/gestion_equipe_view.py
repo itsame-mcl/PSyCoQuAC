@@ -59,8 +59,5 @@ class GestionEquipeView(AbstractView):
                     if not succes:
                         print("L'opération de délégation a échoué. Veuillez réessayer ultérieurement.")
                 answer_continue = prompt(self.__continue)
-                if answer_continue['choix'] == "O":
-                    continuer = True
-                else:
-                    continuer = False
+                continuer = answer_continue['choix'] == "O"
         return mp.MenuPrincipalView()
