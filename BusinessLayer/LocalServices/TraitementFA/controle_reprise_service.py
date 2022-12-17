@@ -94,10 +94,8 @@ class ControleRepriseService(metaclass=Singleton):
         pot = DAOFicheAdresse().recuperer_pot(id_agent)
         pot_cr = list()
         for fiche in pot:
-            if controle:
-                if fiche.code_res == "TC":
-                    pot_cr.append(fiche)
-            if reprise:
-                if fiche.code_res == "TR":
-                    pot_cr.append(fiche)
+            if controle and fiche.code_res == "TC":
+                pot_cr.append(fiche)
+            if reprise and fiche.code_res == "TR":
+                pot_cr.append(fiche)
         return pot_cr
