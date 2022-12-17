@@ -24,7 +24,7 @@ class ControlerView(AbstractView):
                 if str.upper(answers['choix'][0]) == 'C':
                     res = ControleRepriseService().validation_fiche(self.__fiche, True)
                 else:
-                    res = ControleRepriseService().validation_fiche(self.__fiche, True)
+                    res = ControleRepriseService().validation_fiche(self.__fiche, False)
                 return res, self.__fiche
             elif str.upper(answers2['choix'][0]) == 'N':
                 res = False

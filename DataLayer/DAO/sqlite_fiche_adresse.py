@@ -105,9 +105,14 @@ class SQLiteFicheAdresse(InterfaceFicheAdresse):
         return res
 
     def modifier_agent_fiches_adresse(self, id_agent: int, code_resultat: str, id_fas: List[int]) -> bool:
-        request = "UPDATE fa SET identifiant_pot=:id_agent, code_resultat=:code_resultat WHERE identifiant_fa IN ({})".format(
-            ','.join(':{}'.format(i) for i in range(len(id_fas))))
-        params = {"id_agent": id_agent, "code_resultat": code_resultat}
+        if code_resultat != '':
+            request = "UPDATE fa SET identifiant_pot=:id_agent, code_resultat=:code_resultat WHERE identifiant_fa IN ({})".format(
+                ','.join(':{}'.format(i) for i in range(len(id_fas))))
+            params = {"id_agent": id_agent, "code_resultat": code_resultat}
+        else:
+            request = "UPDATE fa SET identifiant_pot=:id_agent WHERE identifiant_fa IN ({})".format(
+                ','.join(':{}'.format(i) for i in range(len(id_fas))))
+            params = {"id_agent": id_agent}
         params.update({str(i): id_agent for i, id_agent in enumerate(id_fas)})
         try:
             curseur = DBConnexion().connexion.cursor()
