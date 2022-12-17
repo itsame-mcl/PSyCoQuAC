@@ -21,7 +21,7 @@ class NouvelUtilisateurView(AbstractView):
     def __role_filter(val) -> bool:
         if val == "Gestionnaire":
             return False
-        elif val == "Superviseur":
+        if val == "Superviseur":
             return True
 
     def make_choice(self):

@@ -204,8 +204,7 @@ class DAOAgent(metaclass=Singleton):
         if data is not None:
             agent = agent_factory.AgentFactory.from_dict(data)
             return agent
-        else:
-            raise ConnectionRefusedError
+        raise ConnectionRefusedError
 
     def modifier_identifiants(self, id_agent: int, nom_utilisateur: str, mot_de_passe_en_clair: str) -> bool:
         """

@@ -16,24 +16,22 @@ class InterfaceFactory(metaclass=Singleton):
         if os.environ["PSYCOQUAC_ENGINE"] == "SQLite":
             if type_dao == "Connexion":
                 return slcx.SQLiteConnexion()
-            elif type_dao == "FicheAdresse":
+            if type_dao == "FicheAdresse":
                 return slfa.SQLiteFicheAdresse()
-            elif type_dao == "Modele":
+            if type_dao == "Modele":
                 return slmo.SQLiteModele()
-            elif type_dao == "Agent":
+            if type_dao == "Agent":
                 return slag.SQLiteAgent()
-            else:
-                raise NotImplementedError
+            raise NotImplementedError
         elif os.environ["PSYCOQUAC_ENGINE"] == "PostgreSQL":
             if type_dao == "Connexion":
                 return pgcx.PGConnexion()
-            elif type_dao == "FicheAdresse":
+            if type_dao == "FicheAdresse":
                 return pgfa.PGFicheAdresse()
-            elif type_dao == "Modele":
+            if type_dao == "Modele":
                 return pgmo.PGModele()
-            elif type_dao == "Agent":
+            if type_dao == "Agent":
                 return pgag.PGAgent()
-            else:
-                raise NotImplementedError
+            raise NotImplementedError
         else:
             raise NotImplementedError

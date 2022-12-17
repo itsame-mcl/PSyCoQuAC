@@ -51,10 +51,10 @@ class ConsulterPotView(AbstractView):
             if str.upper(answers['choix'][0]) == "P":
                 self.__curseur = (self.__curseur - 1) % len(self.__pot)
                 return self
-            elif str.upper(answers['choix'][0]) == "S":
+            if str.upper(answers['choix'][0]) == "S":
                 self.__curseur = (self.__curseur + 1) % len(self.__pot)
                 return self
-            elif str.upper(answers['choix'][0]) in ["C", "R"]:
+            if str.upper(answers['choix'][0]) in ["C", "R"]:
                 if fiche.code_res == "TC":
                     modal = ControlerView(fiche)
                 elif fiche.code_res == "TR":
@@ -71,9 +71,8 @@ class ConsulterPotView(AbstractView):
                 else:
                     print("La sauvegarde a échoué. Veuillez réessayer ultérieurement.")
                 return self
-            elif str.upper(answers['choix'][0]) == "Q":
+            if str.upper(answers['choix'][0]) == "Q":
                 return self.__caller
-            else:
-                raise ValueError
+            raise ValueError
         else:
             return self.__caller

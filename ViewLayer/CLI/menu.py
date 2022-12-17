@@ -24,27 +24,26 @@ class MenuPrincipalView(AbstractView):
     def make_choice(self):
         if Session().agent is None:
             return start.StartView()
-        else:
-            if Session().droits:
-                self.__questions[0]['choices'].insert(0, "I) Importer/Exporter des lots")
-                self.__questions[0]['choices'].insert(1, "F) Affecter des lots")
-                self.__questions[0]['choices'].append("G) Gérer l'équipe et les agents")
-            self.__questions[0]['choices'].append('Q) Me déconnecter')
-            answers = prompt(self.__questions)
-            if str.upper(answers['choix'][0]) == "P":
-                return ConsulterPotView()
-            elif str.upper(answers['choix'][0]) == "C":
-                return ConsulterPotView(controle=True, reprise=False)
-            elif str.upper(answers['choix'][0]) == "R":
-                return ConsulterPotView(controle=False, reprise=True)
-            elif str.upper(answers['choix'][0]) == "M":
-                return ModifierAgentView()
-            elif str.upper(answers['choix'][0]) == "Q":
-                SessionService().fermer_session()
-                return MenuPrincipalView()
-            elif str.upper(answers['choix'][0]) == "G":
-                return GestionEquipeView()
-            elif str.upper(answers['choix'][0]) == "I":
-                return ImportExportView()
-            elif str.upper(answers['choix'][0]) == "F":
-                return RepartirView()
+        if Session().droits:
+            self.__questions[0]['choices'].insert(0, "I) Importer/Exporter des lots")
+            self.__questions[0]['choices'].insert(1, "F) Affecter des lots")
+            self.__questions[0]['choices'].append("G) Gérer l'équipe et les agents")
+        self.__questions[0]['choices'].append('Q) Me déconnecter')
+        answers = prompt(self.__questions)
+        if str.upper(answers['choix'][0]) == "P":
+            return ConsulterPotView()
+        if str.upper(answers['choix'][0]) == "C":
+            return ConsulterPotView(controle=True, reprise=False)
+        if str.upper(answers['choix'][0]) == "R":
+            return ConsulterPotView(controle=False, reprise=True)
+        if str.upper(answers['choix'][0]) == "M":
+            return ModifierAgentView()
+        if str.upper(answers['choix'][0]) == "Q":
+            SessionService().fermer_session()
+            return MenuPrincipalView()
+        if str.upper(answers['choix'][0]) == "G":
+            return GestionEquipeView()
+        if str.upper(answers['choix'][0]) == "I":
+            return ImportExportView()
+        if str.upper(answers['choix'][0]) == "F":
+            return RepartirView()

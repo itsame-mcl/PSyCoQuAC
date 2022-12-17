@@ -39,7 +39,7 @@ class GestionEquipeView(AbstractView):
                 if answers['choix'] == "V":
                     id_agent = prompt(self.__prompt_agent())
                     return ConsulterPotView(id_agent['id'], caller=self)
-                elif answers['choix'] == "A":
+                if answers['choix'] == "A":
                     succes = NouvelUtilisateurView().make_choice()
                     if not succes:
                         print("L'ajout de l'agent a échoué. Veuillez réessayer ultérieurement.")

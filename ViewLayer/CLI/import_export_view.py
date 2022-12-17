@@ -56,7 +56,7 @@ class ImportExportView(AbstractView):
         if str.upper(answers['choix'][0]) == 'I':
             self.__importation()
             return ImportExportView()
-        elif str.upper(answers['choix'][0]) == 'A':
+        if str.upper(answers['choix'][0]) == 'A':
             liste_lots = ImportationService().lots_a_traiter_api(Session().agent.agent_id)
             if len(liste_lots) > 0:
                 choices = list()
@@ -77,7 +77,7 @@ class ImportExportView(AbstractView):
             else:
                 print("Tous les lots que vous avez importés ont déjà été traités par l'API.")
             return ImportExportView()
-        elif str.upper(answers['choix'][0]) == 'X':
+        if str.upper(answers['choix'][0]) == 'X':
             liste_lots = StatistiqueService().fiches_par_lot()
             if len(liste_lots) > 0:
                 choices = list()
@@ -99,7 +99,6 @@ class ImportExportView(AbstractView):
             else:
                 print("Aucun lot n'est disponible pour l'exportation.")
             return ImportExportView()
-        elif str.upper(answers['choix'][0]) == 'Q':
+        if str.upper(answers['choix'][0]) == 'Q':
             return mp.MenuPrincipalView()
-        else:
-            raise ValueError
+        raise ValueError

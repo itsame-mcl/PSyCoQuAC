@@ -67,10 +67,9 @@ class RepartirView(AbstractView):
                     elif choix_validation['choix'] == "Q":
                         continuer = False
                 return RepartirView()
-            elif str.upper(answers_lot['choix'][0]) == "Q":
+            if str.upper(answers_lot['choix'][0]) == "Q":
                 return mp.MenuPrincipalView()
-            else:
-                raise ValueError
+            raise ValueError
         else:
             print("Vous n'avez aucun lot à affecter.")
             return mp.MenuPrincipalView()
